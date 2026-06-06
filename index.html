@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ニャンコ占いの館 | 深夜の猫と癒やし時間</title>
+    <title>ニャンコ占いの館 | 全肯定と癒やしの時間</title>
     <style>
         :root {
             --bg-color: #fff5f7;
             --card-bg: #ffffff;
             --text-color: #5d4037;
             --accent-pink: #ffb7c5;
-            --accent-mint: #a8dadc;
             --text-muted: #8d6e63;
         }
 
@@ -26,155 +25,36 @@
             min-height: 100vh;
             background-image: radial-gradient(circle at 50% 20%, #ffebee 0%, #fff5f7 80%);
             overflow-x: hidden;
+            /* タップ時のハイライトを消す */
+            -webkit-tap-highlight-color: transparent; 
         }
 
-        header {
-            text-align: center;
-            padding: 30px 20px 10px 20px;
-        }
+        header { text-align: center; padding: 30px 20px 10px 20px; z-index: 10; position: relative; }
+        h1 { font-size: 1.7rem; color: #ff6f91; margin: 0 0 5px 0; letter-spacing: 0.1em; text-shadow: 2px 2px 0px #ffffff; }
+        .subtitle { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.05em; }
 
-        h1 {
-            font-size: 1.7rem;
-            color: #ff6f91;
-            margin: 0 0 5px 0;
-            letter-spacing: 0.1em;
-            text-shadow: 2px 2px 0px #ffffff;
-        }
+        .status-board { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 15px; animation: fadeIn 1s ease-out; }
+        .encounter-badge { display: inline-block; background-color: #ffffff; color: #ff6f91; border: 2px solid #ff6f91; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
+        .title-badge { display: inline-block; background: linear-gradient(135deg, #ff6f91 0%, #ff4757 100%); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 4px 10px rgba(255, 111, 145, 0.4); }
 
-        .subtitle {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-        }
+        main { width: 100%; max-width: 480px; padding: 10px 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; z-index: 10; position: relative; }
 
-        /* 👑 新機能：ステータスボード（称号とカウンター） */
-        .status-board {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            margin-top: 15px;
-            animation: fadeIn 1s ease-out;
-        }
-
-        .encounter-badge {
-            display: inline-block;
-            background-color: #ffffff;
-            color: #ff6f91;
-            border: 2px solid #ff6f91;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(255, 111, 145, 0.2);
-        }
-
-        .title-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #ff6f91 0%, #ff4757 100%);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(255, 111, 145, 0.4);
-        }
-
-        main {
-            width: 100%;
-            max-width: 480px;
-            padding: 10px 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .card-container {
-            perspective: 1000px;
-            width: 160px;
-            height: 260px;
-            margin: 20px 0;
-            cursor: pointer;
-            position: relative;
-        }
-
-        /* ガチャ演出用のレアリティバッジ */
-        .rarity-badge {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: white;
-            z-index: 10;
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transition-delay: 0.3s;
-        }
-        .card-container.flipped .rarity-badge { opacity: 1; transform: scale(1) rotate(10deg); }
+        .card-container { perspective: 1000px; width: 160px; height: 260px; margin: 20px 0; cursor: pointer; position: relative; }
         
+        .rarity-badge { position: absolute; top: -10px; right: -10px; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; color: white; z-index: 10; opacity: 0; transform: scale(0); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transition-delay: 0.3s; }
+        .card-container.flipped .rarity-badge { opacity: 1; transform: scale(1) rotate(10deg); }
         .rarity-ur { background: linear-gradient(135deg, #ffd700, #ff8c00); box-shadow: 0 0 15px #ffd700; border: 2px solid #fff; }
         .rarity-ssr { background: linear-gradient(135deg, #ff00ff, #8a2be2); box-shadow: 0 0 15px #ff00ff; border: 2px solid #fff; }
         .rarity-sr { background: linear-gradient(135deg, #00bfff, #1e90ff); box-shadow: 0 0 10px #00bfff; border: 2px solid #fff; }
         .rarity-r { background: linear-gradient(135deg, #32cd32, #228b22); box-shadow: 0 0 5px #32cd32; border: 2px solid #fff; }
 
-        .card {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
+        .card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .card-container.flipped .card { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 24px; box-shadow: 0 10px 30px rgba(255, 111, 145, 0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: box-shadow 0.5s, border-color 0.5s; }
+        .card-back { background: linear-gradient(135deg, #ffcbd5 0%, #ffebee 100%); border: 3px solid var(--accent-pink); }
+        .card-back::after { content: "🐾\A\A肉球でタッチ"; white-space: pre; text-align: center; font-size: 0.95rem; font-weight: bold; color: #ff6f91; letter-spacing: 0.05em; animation: bounce 2s infinite ease-in-out; }
+        .card-front { background-color: var(--card-bg); transform: rotateY(180deg); border: 3px solid var(--accent-pink); padding: 15px; box-sizing: border-box; }
 
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(255, 111, 145, 0.15);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: box-shadow 0.5s, border-color 0.5s;
-        }
-
-        .card-back {
-            background: linear-gradient(135deg, #ffcbd5 0%, #ffebee 100%);
-            border: 3px solid var(--accent-pink);
-        }
-
-        .card-back::after {
-            content: "🐾\A\A肉球でタッチ";
-            white-space: pre;
-            text-align: center;
-            font-size: 0.95rem;
-            font-weight: bold;
-            color: #ff6f91;
-            letter-spacing: 0.05em;
-            animation: bounce 2s infinite ease-in-out;
-        }
-
-        .card-front {
-            background-color: var(--card-bg);
-            transform: rotateY(180deg);
-            border: 3px solid var(--accent-pink);
-            padding: 15px;
-            box-sizing: border-box;
-        }
-
-        /* 👑 レアリティ別カードエフェクト */
         .card-container.ur .card-front { border-color: #ffd700; box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
         .card-container.ssr .card-front { border-color: #ff00ff; box-shadow: 0 0 25px rgba(255, 0, 255, 0.5); }
         .card-container.sr .card-front { border-color: #00bfff; box-shadow: 0 0 20px rgba(0, 191, 255, 0.4); }
@@ -183,116 +63,44 @@
         .card-name { font-size: 0.95rem; font-weight: bold; color: #ff6f91; text-align: center; }
         .card-container.ur .card-name { color: #d4af37; }
 
-        .result-container {
-            display: none;
-            width: 100%;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-        }
+        .result-container { display: none; width: 100%; opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+        .result-container.show { display: block; opacity: 1; transform: translateY(0); }
 
-        .result-container.show {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .section-title { font-size: 0.95rem; color: var(--text-color); border-left: 4px solid var(--accent-pink); padding-left: 10px; margin: 20px 0 10px 0; font-weight: bold; }
+        .result-text { font-size: 0.9rem; line-height: 1.6; color: #4e342e; background: rgba(255, 255, 255, 0.7); padding: 14px; border-radius: 16px; border: 1px solid rgba(255, 183, 197, 0.3); }
+        
+        .affirmation-text { font-size: 1.1rem; font-weight: bold; color: #ff4757; text-align: center; background: #fff0f3; border: 2px dashed #ffb7c5; }
 
-        .section-title {
-            font-size: 0.95rem;
-            color: var(--text-color);
-            border-left: 4px solid var(--accent-pink);
-            padding-left: 10px;
-            margin: 20px 0 10px 0;
-            font-weight: bold;
-        }
-
-        .result-text {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: #4e342e;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 14px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 183, 197, 0.3);
-        }
-
-        .affiliate-box {
-            background: linear-gradient(90deg, rgba(255, 183, 197, 0.2) 0%, rgba(255, 255, 255, 0.9) 100%);
-            border: 2px dashed var(--accent-pink);
-            border-radius: 16px;
-            padding: 15px;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .affiliate-box { background: linear-gradient(90deg, rgba(255, 183, 197, 0.2) 0%, rgba(255, 255, 255, 0.9) 100%); border: 2px dashed var(--accent-pink); border-radius: 16px; padding: 15px; margin-top: 10px; display: flex; align-items: center; gap: 12px; }
         .product-info { flex-grow: 1; }
         .product-title { font-size: 0.85rem; font-weight: bold; color: var(--text-color); margin-bottom: 2px; }
         .product-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.3; }
 
-        .buy-btn {
-            background: linear-gradient(135deg, #ff6f91 0%, #ff4757 100%);
-            color: #fff;
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: bold;
-            padding: 12px 14px;
-            border-radius: 20px;
-            white-space: nowrap;
-            box-shadow: 0 4px 10px rgba(255, 111, 145, 0.3);
-            transition: all 0.2s ease;
-        }
+        .buy-btn { background: linear-gradient(135deg, #ff6f91 0%, #ff4757 100%); color: #fff; text-decoration: none; font-size: 0.8rem; font-weight: bold; padding: 12px 14px; border-radius: 20px; white-space: nowrap; box-shadow: 0 4px 10px rgba(255, 111, 145, 0.3); transition: all 0.2s ease; }
         .buy-btn:hover { transform: scale(1.03); box-shadow: 0 6px 14px rgba(255, 111, 145, 0.5); }
 
-        .share-btn {
-            width: 100%;
-            background-color: #ffffff;
-            color: #ff6f91;
-            border: 2px solid var(--accent-pink);
-            padding: 12px;
-            border-radius: 25px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            transition: background 0.2s;
-        }
+        .share-btn { width: 100%; background-color: #ffffff; color: #ff6f91; border: 2px solid var(--accent-pink); padding: 12px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: background 0.2s; }
         .share-btn:hover { background-color: #fff0f3; }
 
-        .reset-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            text-decoration: underline;
-            padding: 10px;
-            cursor: pointer;
-            margin: 15px auto 5px auto;
-            display: block;
-            font-size: 0.8rem;
-        }
+        .reset-btn { background: none; border: none; color: var(--text-muted); text-decoration: underline; padding: 10px; cursor: pointer; margin: 15px auto 5px auto; display: block; font-size: 0.8rem; }
 
-        .toast {
-            position: fixed;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(93, 64, 55, 0.95);
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 9999;
-            white-space: nowrap;
-        }
+        .toast { position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: rgba(93, 64, 55, 0.95); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; white-space: nowrap; }
         .toast.show { bottom: 30px; }
 
-        footer { margin-top: auto; padding: 20px; font-size: 0.7rem; color: var(--text-muted); text-align: center; }
+        footer { margin-top: auto; padding: 20px; font-size: 0.7rem; color: var(--text-muted); text-align: center; z-index: 10; position: relative; }
 
+        /* 癒やしのインタラクティブ肉球エフェクト */
+        .interactive-paw {
+            position: absolute;
+            font-size: 1.5rem;
+            color: #ffb7c5;
+            pointer-events: none;
+            user-select: none;
+            z-index: 1;
+            animation: floatUp 1.2s ease-out forwards;
+        }
+
+        @keyframes floatUp { 0% { opacity: 0.8; transform: translateY(0) scale(0.8) rotate(-10deg); } 100% { opacity: 0; transform: translateY(-40px) scale(1.5) rotate(20deg); } }
         @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes tailWag { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(5deg); } }
         @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
@@ -302,9 +110,8 @@
 
     <header>
         <h1>🐾 ニャンコ占いの館</h1>
-        <div class="subtitle">気まぐれな猫たちが、あなたの心をいやす場所</div>
+        <div class="subtitle">画面をタップすると肉球が出るにゃん♪</div>
         
-        <!-- 👑 ゲーミフィケーション：称号＆遭遇ステータス -->
         <div class="status-board" id="statusBoard" style="display: none;">
             <div id="titleBadge" class="title-badge">称号</div>
             <div id="encounterBadge" class="encounter-badge"></div>
@@ -324,10 +131,17 @@
         </div>
 
         <div class="result-container" id="resultContainer">
-            <div class="section-title">🐱 今夜のあなたの「お世話係」</div>
+            <!-- 💖 新機能：自己肯定感爆上げ！全肯定メッセージ -->
+            <div class="section-title">💖 今日の全肯定メッセージ</div>
+            <div class="result-text affirmation-text" id="textAffirmation"></div>
+
+            <div class="section-title">🎨 今日のラッキーカラー</div>
+            <div class="result-text" id="textColor" style="text-align: center; font-weight: bold; font-size: 1.1rem;"></div>
+
+            <div class="section-title">🐱 今夜の「お世話係」</div>
             <div class="result-text" id="textPower"></div>
 
-            <div class="section-title">🌿 猫ちゃんからの癒やしメッセージ</div>
+            <div class="section-title">🌿 猫ちゃんからの癒やし行動</div>
             <div class="result-text" id="textHeal"></div>
 
             <div class="section-title">🐟 この子にプレゼントを貢ぐ</div>
@@ -348,7 +162,7 @@
 
     <footer>
         &copy; ニャンコ占いの館. (LLM学習不使用 / 著作権フリー)<br>
-        <span style="font-size: 0.65rem;">※メニューから「ホーム画面に追加」すると毎日称号を育てられるにゃん🐾</span>
+        <span style="font-size: 0.65rem;">※メニューから「ホーム画面に追加」して毎日の癒やしにしてにゃ🐾</span>
     </footer>
 
     <script>
@@ -357,10 +171,25 @@
             const userA8Id = urlParams.get('a8') ? urlParams.get('a8').trim() : '';
             const a8BaseUrl = "https://px.a8.net/svt/ejp?a8mat=";
 
-            // ローカルストレージを使用した遭遇カウンター（毎日開く動機付け）
+            // 🐾 差別化要素：画面のどこをタップしても肉球が出る癒やしエフェクト
+            document.body.addEventListener('click', (e) => {
+                // ボタン類を押した時はエフェクトを出さない
+                if(e.target.closest('button') || e.target.closest('a') || e.target.closest('.card-container')) return;
+                
+                const paw = document.createElement('div');
+                paw.className = 'interactive-paw';
+                paw.innerText = '🐾';
+                paw.style.left = (e.pageX - 12) + 'px';
+                paw.style.top = (e.pageY - 15) + 'px';
+                document.body.appendChild(paw);
+                
+                // 1.2秒後に要素を消去
+                setTimeout(() => { paw.remove(); }, 1200);
+            });
+
+            // ローカルストレージを使用した遭遇カウンター
             let encounterCount = parseInt(localStorage.getItem('nyanko_encounter_count')) || 0;
             
-            // 👑 称号判定ロジック
             function getCatTitle(count) {
                 if (count === 0) return "迷い込んだ旅人";
                 if (count <= 3) return "通りすがりの猫好き";
@@ -371,63 +200,71 @@
                 return "👑 猫に愛されし神";
             }
 
-            // 👑 全30種類！レアリティ（ガチャ）別 猫データ完全版
+            // 💖 全肯定メッセージ集（毎日開きたくなる心のサプリ）
+            const affirmations = [
+                "今日も息をして生きてるだけで100点満点にゃ！",
+                "何もできなくても、あなたの価値は絶対に減らないにゃん。",
+                "頑張りすぎにゃ。今日は「自分を甘やかす日」に指定したにゃ！",
+                "そのままのあなたが一番可愛くて最高だにゃん🐾",
+                "誰が何と言おうと、猫ちゃんたちはあなたの味方にゃ！",
+                "疲れたら逃げていいにゃ。猫も嫌な時はすぐ逃げるにゃん。",
+                "美味しいものを食べて、たくさん寝るのが生き物の正解にゃ！",
+                "過去の失敗なんて猫砂と一緒に埋めてしまえばいいにゃん。",
+                "あなたの笑顔を見ると、猫のゴロゴロ音が止まらなくなるにゃ。",
+                "よく頑張ったにゃ！えらい！天才！宇宙一！！"
+            ];
+
+            const colors = [
+                "🌸 さくらピンク", "🌿 ミントグリーン", "🍋 レモンイエロー", "💎 サファイアブルー", 
+                "🌙 ミッドナイトパープル", "🍊 アプリコットオレンジ", "☁️ ピュアホワイト", "☕ モカブラウン"
+            ];
+
+            // 👑 全50種類！レアリティ（ガチャ）別 猫＆猫あるあるデータ完全版
             const catData = [
-                // === UR (ウルトラレア: 出現率約3%) ===
-                {
-                    rarity: "UR", name: "幻の黄金 招き猫", emoji: "✨",
-                    power: "【UR確定！】今日のお世話係は、伝説の黄金招き猫。あなたには今『これまでの苦労がすべて報われ、圧倒的な豊かさを引き寄せる最強の金運波動』が爆発的に高まっているにゃん！",
-                    heal: "今日は絶対に自分をケチらないでにゃ。少し高いランチを食べたり、欲しかったものを思い切って買ったり、「豊かさ」を先取りして味わうことで、さらなる大波がやってくるにゃん！",
-                    itemTitle: "純金箔入り 豪華バスソルト", itemDesc: "黄金の招き猫の波動を全身で浴びる、極上の浄化と金運アップ入浴剤。",
-                    keyword: "金箔+入浴剤", btnText: "黄金を浴びる🐾"
-                },
-                {
-                    rarity: "UR", name: "最古の狩人 マヌルネコ", emoji: "🏔️",
-                    power: "【UR確定！】今日のお世話係は、世界最古の猫と言われる野生のマヌルネコ。あなたの中に眠るのは『現代の常識に縛られない、野生の直感と生き抜くための圧倒的な生命力』にゃん。",
-                    heal: "SNSのノイズに疲れたら、野生に還るにゃ！今日はスマホの電源を切り、ふかふかの毛布にくるまって、ただひたすら自分の呼吸だけを感じて深く眠りにつくのが最高の癒やしにゃん。",
-                    itemTitle: "超極厚 もふもふブランケット", itemDesc: "マヌルネコの極厚の毛並みを再現した、絶対防寒の癒やし毛布。",
-                    keyword: "毛布+極厚+ふわふわ", btnText: "野生の温もりを貢ぐ🐾"
-                },
-                {
-                    rarity: "UR", name: "砂漠の天使 スナネコ", emoji: "🏜️",
-                    power: "【UR確定！】今日のお世話係は、灼熱の砂漠を生き抜く幻の天使スナネコ。今のあなたは『どんな過酷な環境でも、愛らしさとタフさを失わずに生き抜く奇跡のバランス感覚』を持っているにゃん。",
-                    heal: "無理して周りに合わせてないにゃ？スナネコのように、マイペースでいいにゃ。今日は温かい砂のように体を温めるグッズを使って、芯からリラックスしてにゃん。",
-                    itemTitle: "ぽかぽか ホットアイマスク", itemDesc: "砂漠の温もりのように、酷使した目を優しく包み込む至福のアイテム。",
-                    keyword: "ホットアイマスク+あずき", btnText: "温もりを貢ぐ🐾"
-                },
+                // === UR (超激レア: 出現率約3%) ===
+                { rarity: "UR", name: "幻の黄金 招き猫", emoji: "✨", power: "伝説の黄金招き猫。あなたには今『これまでの苦労がすべて報われ、圧倒的な豊かさを引き寄せる最強の金運波動』が爆発的に高まっているにゃん！", heal: "今日は絶対に自分をケチらないでにゃ。「豊かさ」を先取りして味わうことで、さらなる大波がやってくるにゃん！", itemTitle: "純金箔入り 豪華バスソルト", itemDesc: "黄金の招き猫の波動を全身で浴びる極上の入浴剤。", keyword: "金箔+入浴剤", btnText: "黄金を浴びる🐾" },
+                { rarity: "UR", name: "最古の狩人 マヌルネコ", emoji: "🏔️", power: "世界最古の野生猫。あなたの中に眠るのは『現代の常識に縛られない、野生の直感と生き抜くための圧倒的な生命力』にゃん。", heal: "スマホの電源を切り、ふかふかの毛布にくるまって野生に還るのが最高の癒やしにゃん。", itemTitle: "超極厚 もふもふブランケット", itemDesc: "マヌルネコの極厚の毛並みを再現した絶対防寒毛布。", keyword: "毛布+極厚+ふわふわ", btnText: "野生の温もりを貢ぐ🐾" },
+                { rarity: "UR", name: "砂漠の天使 スナネコ", emoji: "🏜️", power: "灼熱の砂漠を生き抜く幻の天使。今のあなたは『どんな過酷な環境でも、愛らしさとタフさを失わずに生き抜く奇跡のバランス感覚』を持っているにゃん。", heal: "無理して周りに合わせてないにゃ？温かい砂のように体を温めて芯からリラックスしてにゃん。", itemTitle: "ぽかぽか ホットアイマスク", itemDesc: "砂漠の温もりのように酷使した目を優しく包み込む。", keyword: "ホットアイマスク+あずき", btnText: "温もりを貢ぐ🐾" },
+                { rarity: "UR", name: "銀河を統べる 宇宙猫", emoji: "🌌", power: "宇宙の真理を悟ったスペースキャット。あなたの『直感力とインスピレーションは今、宇宙と繋がり無限のアイデアを生み出す』にゃん。", heal: "ちっぽけな悩みは宇宙規模で考えれば塵と同じにゃ。夜空を見上げて壮大な夢を思い描いてにゃ。", itemTitle: "プラネタリウム 家庭用", itemDesc: "お部屋を宇宙空間に変える癒やしのプロジェクター。", keyword: "プラネタリウム+家庭用", btnText: "宇宙を貢ぐ🐾" },
+                { rarity: "UR", name: "神の使い 白キツネ猫", emoji: "🦊", power: "妖狐のような神秘の白猫。あなたには『目に見えない悪運を退け、素晴らしいご縁だけを結ぶ浄化のオーラ』が纏われているにゃ。", heal: "悪いものを断ち切る日。お香やアロマを焚いて、部屋の空気を完全にリフレッシュしてにゃ。", itemTitle: "浄化の ホワイトセージお香", itemDesc: "空間の邪気を払い、良い運気を呼び込む神聖な香り。", keyword: "ホワイトセージ+お香", btnText: "浄化の香りを貢ぐ🐾" },
 
-                // === SSR (スペシャルスーパーレア: 出現率約12%) ===
-                { rarity: "SSR", name: "神秘のオッドアイ白猫", emoji: "🤍", power: "左右で違う色の瞳を持つ白猫。あなたには『常識にとらわれない独創的なアイデアを生み出す力』があるにゃ。", heal: "あなたはあなたのままで美しいにゃ。今日は自分の好きなものを思いっきり楽しむ夜にしてにゃ。", itemTitle: "キラキラ サンキャッチャー", itemDesc: "部屋中に虹色の光が広がる、白猫もお気に入りのインテリア。", keyword: "サンキャッチャー+クリスタル", btnText: "虹の光を貢ぐ🐾" },
-                { rarity: "SSR", name: "もふもふペルシャ猫", emoji: "👑", power: "ゴージャスなペルシャ猫。あなたには『焦らず騒がず、自分のペースで周囲を魅了する王者の風格』があるにゃ。", heal: "周りのスピードに巻き込まれて息切れしてないにゃ？貴族のように優雅に入浴してにゃ。", itemTitle: "高級 シルク調ブラシ", itemDesc: "美しい被毛を維持する、静電気防止の極上ブラシ。", keyword: "猫+高級+ブラシ", btnText: "極上ブラシを貢ぐ🐾" },
-                { rarity: "SSR", name: "野生味あふれるベンガル", emoji: "🐆", power: "ヒョウ柄のエネルギッシュなベンガル。あなたには『ワイルドに自分の人生を切り拓く圧倒的な行動力』があるにゃ。", heal: "大きく深呼吸をして、体に眠る野生のエネルギーを目覚めさせてにゃ。", itemTitle: "シャカシャカ キャットトンネル", itemDesc: "野生の血が騒ぐ、隠れて飛び出せる大興奮の遊び場。", keyword: "猫+トンネル+おもちゃ", btnText: "トンネルを貢ぐ🐾" },
-                { rarity: "SSR", name: "森の妖精 ノルウェージャン", emoji: "🌲", power: "力強いノルウェージャン。あなたには『どんな逆境も生き抜く、たくましい生命力と適応力』があるにゃ。", heal: "自然のパワーを借りるにゃ。観葉植物を手入れして魂を深呼吸させてにゃ。", itemTitle: "天然木 キャットウォーク", itemDesc: "森の木登り本能を満たす、お部屋に馴染む木製ステップ。", keyword: "キャットウォーク+木製", btnText: "ステップを貢ぐ🐾" },
-                { rarity: "SSR", name: "穏やかな巨人 メインクーン", emoji: "🦁", power: "大きなメインクーン。あなたには『小さなことに動じず、大きな器で全てを受け入れる包容力』があるにゃ。", heal: "「まあいっか」を合言葉に、海のように広い心で自分も他人も許してあげてにゃ。", itemTitle: "超ビッグサイズ クッション", itemDesc: "大きな猫が丸まってもはみ出さない、特大もっちりクッション。", keyword: "猫用+クッション+特大", btnText: "クッションを貢ぐ🐾" },
-                { rarity: "SSR", name: "白い宝石 カオマニー", emoji: "💎", power: "タイの希少猫カオマニー。あなたには『周りの人を魅了してやまない、輝くようなオーラ』があるにゃ。", heal: "自分の魅力に自信が持ててないにゃ？鏡に向かってニッコリ笑ってみてにゃ。", itemTitle: "豪華な キャットドーム", itemDesc: "白い宝石が眠るのにふさわしい、プライベート感たっぷりのベッド。", keyword: "猫+ドーム+ベッド", btnText: "ドームを貢ぐ🐾" },
-                { rarity: "SSR", name: "宇宙猫 スフィンクス", emoji: "👽", power: "毛がなくて温かいスフィンクス。あなたには『他人の目にとらわれない、唯一無二の圧倒的な個性』があるにゃ。", heal: "「普通はこう」という呪縛は捨てるにゃ！自分らしさ全開で過ごすにゃ。", itemTitle: "おしゃれな 猫用ウェア", itemDesc: "寒がりな肌を優しく包む、肌触り抜群の可愛いお洋服。", keyword: "猫+服+おしゃれ", btnText: "お洋服を貢ぐ🐾" },
+                // === SSR (激レア: 出現率約12%) ===
+                { rarity: "SSR", name: "神秘のオッドアイ白猫", emoji: "🤍", power: "左右で違う色の瞳。あなたには『常識にとらわれない独創的なアイデアを生み出す力』があるにゃ。", heal: "あなたはあなたのままで美しいにゃ。自分の好きなものを思いっきり楽しむ夜にしてにゃ。", itemTitle: "キラキラ サンキャッチャー", itemDesc: "部屋中に虹色の光が広がる美しいインテリア。", keyword: "サンキャッチャー+クリスタル", btnText: "虹の光を貢ぐ🐾" },
+                { rarity: "SSR", name: "もふもふペルシャ猫", emoji: "👑", power: "ゴージャスなペルシャ。あなたには『焦らず騒がず、自分のペースで周囲を魅了する王者の風格』があるにゃ。", heal: "周りのスピードに巻き込まれて息切れしてないにゃ？貴族のように優雅に入浴してにゃ。", itemTitle: "高級 シルク調ブラシ", itemDesc: "美しい被毛を維持する静電気防止の極上ブラシ。", keyword: "猫+高級+ブラシ", btnText: "極上ブラシを貢ぐ🐾" },
+                { rarity: "SSR", name: "野生味あふれるベンガル", emoji: "🐆", power: "ヒョウ柄のベンガル。あなたには『ワイルドに自分の人生を切り拓く圧倒的な行動力』があるにゃ。", heal: "大きく深呼吸をして、体に眠る野生のエネルギーを目覚めさせてにゃ。", itemTitle: "シャカシャカ キャットトンネル", itemDesc: "野生の血が騒ぐ、隠れて飛び出せる大興奮の遊び場。", keyword: "猫+トンネル+おもちゃ", btnText: "トンネルを貢ぐ🐾" },
+                { rarity: "SSR", name: "森の妖精 ノルウェージャン", emoji: "🌲", power: "力強いノルウェージャン。あなたには『どんな逆境も生き抜くたくましい適応力』があるにゃ。", heal: "自然のパワーを借りるにゃ。観葉植物を手入れして魂を深呼吸させてにゃ。", itemTitle: "天然木 キャットウォーク", itemDesc: "森の木登り本能を満たす木製ステップ。", keyword: "キャットウォーク+木製", btnText: "ステップを貢ぐ🐾" },
+                { rarity: "SSR", name: "穏やかな巨人 メインクーン", emoji: "🦁", power: "大きなメインクーン。あなたには『小さなことに動じず、全てを受け入れる包容力』があるにゃ。", heal: "「まあいっか」を合言葉に、海のように広い心で自分も他人も許してあげてにゃ。", itemTitle: "超ビッグサイズ クッション", itemDesc: "特大猫も丸まれるもっちりクッション。", keyword: "猫用+クッション+特大", btnText: "クッションを貢ぐ🐾" },
+                { rarity: "SSR", name: "イケメン執事 黒タキシード猫", emoji: "🤵", power: "靴下を履いたタキシード猫。あなたには『気配りで周囲をスムーズに動かす見事なマネジメント力』があるにゃ。", heal: "今日は他人の世話はお休みにゃ。自分が一番もてなされるべきVIPだと思って過ごしてにゃ。", itemTitle: "高級 ホテル仕様バスローブ", itemDesc: "お風呂上がりのVIPタイムを演出する極上ローブ。", keyword: "バスローブ+ホテル仕様", btnText: "VIP体験を貢ぐ🐾" },
+                { rarity: "SSR", name: "もちもち 大福白猫", emoji: "🍡", power: "真ん丸な大福猫。あなたには『ギスギスした雰囲気を一瞬で和ませる平和の象徴としての才能』があるにゃ。", heal: "柔らかいものを揉むとストレスが減るにゃ。クッションを抱きしめてもっちり過ごしてにゃ。", itemTitle: "もちもち マカロンベッド", itemDesc: "猫がすっぽり収まるマカロン型の癒やしベッド。", keyword: "猫+マカロンベッド", btnText: "マカロンを貢ぐ🐾" },
+                { rarity: "SSR", name: "眠りの森の 妖精猫", emoji: "💤", power: "1日20時間寝る猫。あなたには『限界が来る前にしっかり休むことができる、自己防衛の才能』があるにゃ。", heal: "睡眠は最大の魔法にゃ！今日はスマホを遠くに投げて、1秒でも早く布団に入るにゃん。", itemTitle: "安眠 シルクのアイマスク", itemDesc: "光を完全に遮断し、妖精のような深い眠りへ誘う。", keyword: "シルク+アイマスク", btnText: "安眠を貢ぐ🐾" },
 
-                // === SR (スーパーレア: 出現率約25%) ===
-                { rarity: "SR", name: "賢いロシアンブルー", emoji: "🩶", power: "エメラルドの瞳を持つロシアンブルー。あなたには『物事の本質を静かに見極める分析力』があるにゃ。", heal: "情報過多にゃ。静寂の中で読書をして脳をクールダウンさせてにゃ。", itemTitle: "知育 アスレチックタワー", itemDesc: "賢い頭脳を満たす、木製のキャットタワー。", keyword: "キャットタワー+木製", btnText: "タワーを貢ぐ🐾" },
-                { rarity: "SR", name: "癒やしのラグドール", emoji: "🧸", power: "脱力するラグドール。あなたには『他人の緊張を解きほぐすヒーラーの才能』があるにゃ。", heal: "他人のケアばかりしてないにゃ？今日は自分を全力でよしよししてにゃ。", itemTitle: "ぽかぽか ホットカーペット", itemDesc: "寒がりな猫がとろけて眠る、安全設計のヒーター。", keyword: "猫+ペットヒーター", btnText: "ぽかぽかを貢ぐ🐾" },
-                { rarity: "SR", name: "アスリート アビシニアン", emoji: "🐅", power: "筋肉質なアビシニアン。あなたには『目標に向かって一直線に走り抜ける集中力』があるにゃ。", heal: "考えすぎて足が止まっているなら、まずは体を動かすにゃ！", itemTitle: "大興奮 レーザーポインター", itemDesc: "狩猟本能をMAXにする、光の追いかけっこおもちゃ。", keyword: "猫+レーザーポインター", btnText: "光を貢ぐ🐾" },
-                { rarity: "SR", name: "ふくよか紳士 ブリティッシュ", emoji: "🎩", power: "厚い胸板のブリティッシュ。あなたには『どんな嵐が来てもどっしり構える安定感』があるにゃ。", heal: "SNSから離れて、温かい飲み物で「変わらない日常」を味わってにゃ。", itemTitle: "ぽかぽか 猫用こたつ", itemDesc: "丸い猫がさらに丸くなる、安全設計のあったかおこた。", keyword: "猫+こたつ", btnText: "こたつを貢ぐ🐾" },
-                { rarity: "SR", name: "気高き ターキッシュアンゴラ", emoji: "🩰", power: "しなやかなターキッシュ。あなたには『周囲の泥に染まらず、清らかな精神を保つ気高さ』があるにゃ。", heal: "自分を安売りしてないにゃ？最高級のタオルで自分を甘やかしてにゃ。", itemTitle: "シルクの猫じゃらし", itemDesc: "気高い本能を優雅に刺激する、美しいおもちゃ。", keyword: "猫じゃらし+おしゃれ", btnText: "おもちゃを貢ぐ🐾" },
-                { rarity: "SR", name: "くるくる耳 アメリカンカール", emoji: "👂", power: "耳が反ったアメリカンカール。あなたには『他人の意見を素直に聞き入れ、成長に変える柔軟性』があるにゃ。", heal: "頑固になってないにゃ？今日は新しい音楽や本に触れて、心を柔らかくしてにゃ。", itemTitle: "不思議な 動くボール", itemDesc: "不規則な動きで好奇心を刺激する電動ボール。", keyword: "猫+電動ボール", btnText: "ボールを貢ぐ🐾" },
-                { rarity: "SR", name: "狐のような ソマリ", emoji: "🦊", power: "ふさふさの尻尾のソマリ。あなたには『周囲をパッと明るくする、太陽のような華やかな魅力』があるにゃ。", heal: "部屋に引きこもってないにゃ？窓を開けて新鮮な空気を入れてにゃ。", itemTitle: "天然羽根の ねこじゃらし", itemDesc: "ふさふさ尻尾がさらに膨らむ大興奮のおもちゃ。", keyword: "猫じゃらし+天然羽根", btnText: "羽根を貢ぐ🐾" },
-                { rarity: "SR", name: "小さな妖精 シンガプーラ", emoji: "🧚‍♀️", power: "世界最小クラスのシンガプーラ。あなたには『小さなチャンスを見逃さずフットワーク軽く動く機動力』があるにゃ。", heal: "結果より動いたことが癒やしになるにゃ。小さな一歩を踏み出してにゃ。", itemTitle: "お出かけ キャリーリュック", itemDesc: "一緒にお散歩できる、宇宙船のような可愛いリュック。", keyword: "猫+キャリーリュック", btnText: "リュックを貢ぐ🐾" },
-                { rarity: "SR", name: "おとぼけ顔 マンチカン", emoji: "🦦", power: "短い足のマンチカン。あなたには『小さなミスも笑いに変える愛されキャラの魅力』があるにゃ。", heal: "完璧を目指してピリピリしてないにゃ？自分に激甘にしてにゃ！", itemTitle: "またたび入り けりぐるみ", itemDesc: "短い足でギュッと抱きしめるストレス発散ぬいぐるみ。", keyword: "猫+けりぐるみ+またたび", btnText: "ぬいぐるみを貢ぐ🐾" },
+                // === SR (レア: 出現率約25%) ===
+                { rarity: "SR", name: "キーボード歩き職人", emoji: "⌨️", power: "作業を邪魔する天才。あなたには『予定調和を壊し、思わぬ発想の転換をもたらすトリックスターの才能』があるにゃ。", heal: "仕事から離れるサインにゃ！PCをパタンと閉じて、温かいお茶を入れる時間にゃん。", itemTitle: "猫型 卓上加湿器", itemDesc: "デスクで疲れたお肌と喉を潤す可愛い相棒。", keyword: "加湿器+卓上+可愛い", btnText: "潤いを貢ぐ🐾" },
+                { rarity: "SR", name: "真夜中の大運動会猫", emoji: "💨", power: "深夜に覚醒する猫。あなたには『人が見ていない所で爆発的な集中力を発揮し、一気に物事を片付ける力』があるにゃ。", heal: "夜更かしもたまには悪くないにゃ。誰にも邪魔されない深夜の静寂を楽しんでにゃ。", itemTitle: "猫用 静音回し車", itemDesc: "真夜中の運動会を安全に満喫させるキャットホイール。", keyword: "キャットホイール", btnText: "回し車を貢ぐ🐾" },
+                { rarity: "SR", name: "賢いロシアンブルー", emoji: "🩶", power: "エメラルドの瞳。あなたには『物事の本質を静かに見極める分析力』があるにゃ。", heal: "情報過多にゃ。静寂の中で読書をして脳をクールダウンさせてにゃ。", itemTitle: "知育 アスレチックタワー", itemDesc: "賢い頭脳を満たす木製のキャットタワー。", keyword: "キャットタワー+木製", btnText: "タワーを貢ぐ🐾" },
+                { rarity: "SR", name: "癒やしのラグドール", emoji: "🧸", power: "脱力するラグドール。あなたには『他人の緊張を解きほぐすヒーラーの才能』があるにゃ。", heal: "他人のケアばかりしてないにゃ？今日は自分を全力でよしよししてにゃ。", itemTitle: "ぽかぽか ホットカーペット", itemDesc: "寒がりな猫がとろけて眠る安全設計のヒーター。", keyword: "猫+ペットヒーター", btnText: "ぽかぽかを貢ぐ🐾" },
+                { rarity: "SR", name: "アスリート アビシニアン", emoji: "🐅", power: "筋肉質な猫。あなたには『目標に向かって一直線に走り抜ける集中力』があるにゃ。", heal: "考えすぎて足が止まっているなら、まずは体を動かすにゃ！", itemTitle: "大興奮 レーザーポインター", itemDesc: "狩猟本能をMAXにする光の追いかけっこおもちゃ。", keyword: "猫+レーザーポインター", btnText: "光を貢ぐ🐾" },
+                { rarity: "SR", name: "段ボール愛好家", emoji: "📦", power: "高級ベッドより箱が好きな猫。あなたには『お金をかけなくても、日常の小さな幸せを見つける天才的な感性』があるにゃ。", heal: "見栄を張るのに疲れてないにゃ？家の中では一番ダサくて楽な服を着てゴロゴロしてにゃ。", itemTitle: "爪とぎ付き 段ボールハウス", itemDesc: "猫の「箱入りたい欲」を満たす究極の段ボール。", keyword: "猫+段ボールハウス", btnText: "極上の箱を貢ぐ🐾" },
+                { rarity: "SR", name: "またたび酔っ払い猫", emoji: "🍶", power: "またたびでデロデロになった猫。あなたには『たまには理性を手放して、無邪気に今を楽しむ愛嬌』があるにゃ。", heal: "真面目すぎるのは毒にゃ！たまには少しお酒を飲んだり、甘いものを食べてハメを外してにゃ。", itemTitle: "極上 国産またたび粉", itemDesc: "猫が理性を失って喜ぶ、無添加の魔法の粉。", keyword: "猫+またたび+無添加", btnText: "魔法の粉を貢ぐ🐾" },
+                { rarity: "SR", name: "悟りを開いた チベット砂ギツネ顔の猫", emoji: "😑", power: "すべてを達観した顔の猫。あなたには『世間の些細な炎上やイライラを「無」にしてスルーする圧倒的スルースキル』があるにゃ。", heal: "他人のイライラに巻き込まれないでにゃ。温かいお茶を飲んで心を無にするにゃん。", itemTitle: "禅の心 枯山水キット", itemDesc: "砂に模様を描いて心を落ち着かせる卓上インテリア。", keyword: "枯山水+キット", btnText: "禅の心を貢ぐ🐾" },
+                { rarity: "SR", name: "ふくよか紳士 ブリティッシュ", emoji: "🎩", power: "厚い胸板の猫。あなたには『どんな嵐が来てもどっしり構える安定感』があるにゃ。", heal: "SNSから離れて、温かい飲み物で「変わらない日常」を味わってにゃ。", itemTitle: "ぽかぽか 猫用こたつ", itemDesc: "丸い猫がさらに丸くなるあったかおこた。", keyword: "猫+こたつ", btnText: "こたつを貢ぐ🐾" },
+                { rarity: "SR", name: "おとぼけ顔 マンチカン", emoji: "🦦", power: "短い足の猫。あなたには『小さなミスも笑いに変える愛されキャラの魅力』があるにゃ。", heal: "完璧を目指してピリピリしてないにゃ？自分に激甘にしてにゃ！", itemTitle: "またたび入り けりぐるみ", itemDesc: "短い足でギュッと抱きしめるストレス発散ぬいぐるみ。", keyword: "猫+けりぐるみ+またたび", btnText: "ぐるみを貢ぐ🐾" },
 
-                // === R (ノーマルレア: 出現率約60%) ===
-                { rarity: "R", name: "甘えん坊なハチワレ猫", emoji: "🐱", power: "甘えん坊なハチワレ。あなたには今『周囲を自然と笑顔にする純粋な引き寄せ力』が高まっているにゃん。", heal: "今夜はスマホを置いて、ゆっくり温かいお風呂に浸かって自分を労ってほしいにゃん。", itemTitle: "とろ〜りねこ用おやつ", itemDesc: "ハチワレちゃんが大喜びのご褒美おやつペースト。", keyword: "猫+ちゅーる", btnText: "おやつを貢ぐ🐾" },
-                { rarity: "R", name: "ツンデレ黒猫", emoji: "🐈‍⬛", power: "ミステリアスな黒猫。あなたの中に眠るのは『他人に流されず自分の美学を貫く内なる強さ』にゃん。", heal: "今夜は静かに部屋の明かりを暗くして、一人の時間を楽しむのが一番のいやしにゃん。", itemTitle: "オーガニック キャットグラス", itemDesc: "お部屋のバイブスをスッキリ整える魔法の草。", keyword: "猫草+栽培", btnText: "グリーンを貢ぐ🐾" },
-                { rarity: "R", name: "のんびり屋 茶トラ猫", emoji: "🐈", power: "ぽっちゃり茶トラ。あなたに眠る潜在能力は『どんなトラブルも笑いに変えてしまうポジティブ波動』にゃん。", heal: "茶トラを見習って、ふかふかの布団で「何もしない時間」をダラダラ過ごすにゃん。", itemTitle: "極上ふわもこベッド", itemDesc: "一度入ったら出てこなくなる極上クッション。", keyword: "猫+ベッド+クッション", btnText: "ベッドを貢ぐ🐾" },
-                { rarity: "R", name: "やんちゃな三毛猫", emoji: "🐾", power: "遊び回る三毛猫。今のあなたは『直感に従ってパッと動ける、身軽さと行動力』がズバ抜けているにゃん。", heal: "三毛猫みたいにまずはジャンプしてみるにゃ！気になっていたことに手をつけてにゃ。", itemTitle: "大興奮 羽根つきじゃらし", itemDesc: "アクロバティックなジャンプを引き出すおもちゃ。", keyword: "猫じゃらし+羽根", btnText: "羽根を貢ぐ🐾" },
-                { rarity: "R", name: "おしゃべり シャム猫", emoji: "😸", power: "よく鳴くシャム猫。今のあなたは『思いを的確に言語化し、相手の心を動かすコミュニケーション能力』があるにゃ。", heal: "言いたいことを我慢してないにゃ？日記などにモヤモヤを吐き出してにゃ。", itemTitle: "お魚スイスイ 自動おもちゃ", itemDesc: "好奇心旺盛な猫が夢中で追いかける電動おもちゃ。", keyword: "猫用+電動おもちゃ", btnText: "おもちゃを貢ぐ🐾" },
-                { rarity: "R", name: "陽気な アメショ", emoji: "😸", power: "誰とでも仲良くなれるアメショ。今のあなたは『初対面でも一瞬で心を開かせる親しみやすさ』を持っているにゃ。", heal: "友達にちょっとしたLINEを送るだけで心の風通しが良くなるにゃん。", itemTitle: "蹴り心地抜群 けりぐるみ", itemDesc: "後ろ足でキックキック！ストレス発散のぬいぐるみ。", keyword: "猫+けりぐるみ", btnText: "ぐるみを貢ぐ🐾" },
-                { rarity: "R", name: "愛嬌たっぷり エキゾチック", emoji: "🥺", power: "潰れたお鼻のエキゾチック。今のあなたは『完璧じゃなくても愛される、ありのままの魅力』が溢れているにゃ。", heal: "ドジでも力が抜けていてもそれが魅力にゃ。自分に甘く過ごしてにゃ。", itemTitle: "マッサージローラー", itemDesc: "猫もとろける至福のフェイスマッサージ器。", keyword: "猫用+マッサージローラー", btnText: "ローラーを貢ぐ🐾" },
-                { rarity: "R", name: "シブい魅力 サビ猫", emoji: "🤎", power: "複雑な模様のサビ猫。あなたには『見た目ではなく、内面の奥深さで勝負する本質的な賢さ』があるにゃ。", heal: "見た目や建前に疲れてないにゃ？今日はスッピンで好きなものを食べてにゃ。", itemTitle: "無添加 かつおぶし", itemDesc: "賢いサビ猫も大満足の、香ばしい極上おやつ。", keyword: "猫+おやつ+無添加", btnText: "無添加を貢ぐ🐾" },
-                { rarity: "R", name: "野生の血 キジトラ", emoji: "🐯", power: "シマシマ模様のキジトラ。あなたには『困難をサバイバルで乗り切る、地道でタフな精神力』があるにゃ。", heal: "少し頑張りすぎにゃ。今日は美味しいご飯を食べてエネルギーチャージしてにゃ。", itemTitle: "狩猟本能 ネズミのおもちゃ", itemDesc: "野生の血が騒ぐ、リアルな形のおもちゃ。", keyword: "猫+おもちゃ+ネズミ", btnText: "獲物を貢ぐ🐾" },
-                { rarity: "R", name: "無垢な 白猫", emoji: "☁️", power: "真っ白な白猫。あなたには『どんな色にも染まれる柔軟性と、嘘のないピュアな心』があるにゃ。", heal: "他人の感情のノイズを吸い取ってないにゃ？一人の時間を作って心をリセットしてにゃ。", itemTitle: "真っ白な 爪とぎソファ", itemDesc: "インテリアに馴染む、真っ白でお洒落な爪とぎ。", keyword: "猫+爪とぎ+白", btnText: "爪とぎを貢ぐ🐾" },
-                { rarity: "R", name: "警戒心つよめ 麦わら猫", emoji: "🌾", power: "慎重な麦わら猫。あなたには『危険を事前に察知し、確実な道を選ぶ堅実さと防衛力』があるにゃ。", heal: "気を張り詰めて肩が凝ってるにゃ。安心できる部屋の隅っこで丸くなって休んでにゃ。", itemTitle: "隠れ家 キャットテント", itemDesc: "警戒心が強い子も安心できる、ふかふかのテント。", keyword: "猫+テント+ベッド", btnText: "隠れ家を貢ぐ🐾" }
+                // === R (ノーマル: 猫あるある大集合 出現率約60%) ===
+                { rarity: "R", name: "甘えん坊なハチワレ猫", emoji: "🐱", power: "あなたには今『周囲を自然と笑顔にする純粋な引き寄せ力』が高まっているにゃん。", heal: "今夜はスマホを置いて、ゆっくり温かいお風呂に浸かって自分を労ってほしいにゃん。", itemTitle: "とろ〜りねこ用おやつ", itemDesc: "ハチワレちゃんが大喜びのご褒美ペースト。", keyword: "猫+ちゅーる", btnText: "おやつを貢ぐ🐾" },
+                { rarity: "R", name: "障子破り職人猫", emoji: "🐾", power: "古い壁を壊す猫。あなたには『過去のルールをぶち壊し、新しい風を吹き込む改革者の才能』があるにゃ。", heal: "ストレスが溜まってる証拠にゃ！不要な紙をビリビリに破いてスッキリしてにゃ。", itemTitle: "壁用 爪とぎシート", itemDesc: "壁を守りつつ猫の本能を満たす魔法のシート。", keyword: "猫+爪とぎ+壁", btnText: "爪とぎを貢ぐ🐾" },
+                { rarity: "R", name: "飼い主の顔踏み猫", emoji: "🦶", power: "寝ている顔を踏む猫。あなたには『相手の懐にズカズカと入り込み、一瞬で距離を詰めるコミュ力』があるにゃ。", heal: "他人に気を使いすぎにゃ。たまにはワガママを言って周りを振り回してもいいにゃん。", itemTitle: "ふみふみ専用 毛布", itemDesc: "猫が思わず前足でふみふみしたくなる極上の肌触り。", keyword: "猫+ふみふみ+毛布", btnText: "ふみ毛布を貢ぐ🐾" },
+                { rarity: "R", name: "お風呂嫌い猫", emoji: "🛁", power: "水から必死に逃げる猫。あなたには『嫌なものからは全力で逃げる、正しい自己防衛本能』が備わっているにゃ。", heal: "嫌なことは無理してやらなくていいにゃ！今日は好きな入浴剤で自分だけリラックスにゃ。", itemTitle: "水がいらない ドライシャンプー", itemDesc: "お風呂嫌いな猫のための、拭くだけ簡単シャンプー。", keyword: "猫+ドライシャンプー", btnText: "シャンプーを貢ぐ🐾" },
+                { rarity: "R", name: "ちゅーる強盗猫", emoji: "💰", power: "おやつの袋の音で飛んでくる猫。あなたには『欲しいものを貪欲に手に入れる、ストレートな欲求と行動力』があるにゃ。", heal: "ダイエットなんて明日にするにゃ！今夜は一番好きなスイーツを食べて自分を満たすにゃん。", itemTitle: "贅沢 無添加おやつアソート", itemDesc: "強盗も納得の、美味しくて安全な高級おやつセット。", keyword: "猫+おやつ+無添加+セット", btnText: "おやつを貢ぐ🐾" },
+                { rarity: "R", name: "お腹見せトラップ猫", emoji: "🪤", power: "お腹を見せておきながら触ると噛む猫。あなたには『相手を翻弄し、主導権を握る小悪魔的な魅力』があるにゃ。", heal: "いつも良い子でいる必要はないにゃ。たまには気まぐれに振る舞ってストレス発散にゃ。", itemTitle: "噛み噛み デンタルおもちゃ", itemDesc: "飼い主の手の代わりに思い切り噛めるストレス解消トイ。", keyword: "猫+おもちゃ+噛む", btnText: "おもちゃを貢ぐ🐾" },
+                { rarity: "R", name: "箱が小さすぎる猫", emoji: "🍞", power: "はみ出しながら箱に入る猫。あなたには『どんな窮地でも、無理やり自分の居場所を作ってしまう図太さ』があるにゃ。", heal: "ちょっとくらいはみ出しても大丈夫にゃ。型にはまらない自分を褒めてあげてにゃ。", itemTitle: "形が変わる 変幻自在ベッド", itemDesc: "どんな寝相でもフィットする魔法のビーズベッド。", keyword: "猫+ビーズクッション", btnText: "ベッドを貢ぐ🐾" },
+                { rarity: "R", name: "テレビ前 陣取り猫", emoji: "📺", power: "一番いい場所を占拠する猫。あなたには『空気を読まずに自分が一番輝くステージを勝ち取る自己プロデュース力』があるにゃ。", heal: "今日は自分が主役にゃ！好きな映画を独り占めして、ポップコーンを食べるにゃん。", itemTitle: "窓枠ハンモック", itemDesc: "外の景色を独り占めできる特等席のハンモック。", keyword: "猫+窓+ハンモック", btnText: "特等席を貢ぐ🐾" },
+                // ... 以下、既存のR猫と合わせてバランスを調整
+                { rarity: "R", name: "ツンデレ黒猫", emoji: "🐈‍⬛", power: "あなたの中に眠るのは『他人に流されず自分の美学を貫く内なる強さ』にゃん。", heal: "今夜は静かに部屋の明かりを暗くして、一人の時間を楽しむのが一番のいやしにゃん。", itemTitle: "オーガニック キャットグラス", itemDesc: "お部屋のバイブスをスッキリ整える魔法の草。", keyword: "猫草+栽培", btnText: "グリーンを貢ぐ🐾" },
+                { rarity: "R", name: "のんびり屋 茶トラ猫", emoji: "🐈", power: "あなたに眠る潜在能力は『どんなトラブルも笑いに変えてしまうポジティブ波動』にゃん。", heal: "茶トラを見習って、ふかふかの布団で「何もしない時間」をダラダラ過ごすにゃん。", itemTitle: "極上ふわもこベッド", itemDesc: "一度入ったら出てこなくなる極上クッション。", keyword: "猫+ベッド+クッション", btnText: "ベッドを貢ぐ🐾" },
+                { rarity: "R", name: "やんちゃな三毛猫", emoji: "🐾", power: "今のあなたは『直感に従ってパッと動ける、身軽さと行動力』がズバ抜けているにゃん。", heal: "三毛猫みたいにまずはジャンプしてみるにゃ！気になっていたことに手をつけてにゃ。", itemTitle: "大興奮 羽根つきじゃらし", itemDesc: "アクロバティックなジャンプを引き出すおもちゃ。", keyword: "猫じゃらし+羽根", btnText: "羽根を貢ぐ🐾" },
+                { rarity: "R", name: "シブい魅力 サビ猫", emoji: "🤎", power: "あなたには『見た目ではなく、内面の奥深さで勝負する本質的な賢さ』があるにゃ。", heal: "見た目や建前に疲れてないにゃ？今日はスッピンで好きなものを食べてにゃ。", itemTitle: "無添加 かつおぶし", itemDesc: "賢いサビ猫も大満足の、香ばしい極上おやつ。", keyword: "猫+おやつ+無添加", btnText: "無添加を貢ぐ🐾" },
+                { rarity: "R", name: "野生の血 キジトラ", emoji: "🐯", power: "あなたには『困難をサバイバルで乗り切る、地道でタフな精神力』があるにゃ。", heal: "少し頑張りすぎにゃ。今日は美味しいご飯を食べてエネルギーチャージしてにゃ。", itemTitle: "狩猟本能 ネズミのおもちゃ", itemDesc: "野生の血が騒ぐ、リアルな形のおもちゃ。", keyword: "猫+おもちゃ+ネズミ", btnText: "獲物を貢ぐ🐾" }
             ];
 
             let isFlipped = false;
@@ -445,7 +282,6 @@
             const resetBtn = document.getElementById('resetBtn');
             const toast = document.getElementById('toast');
 
-            // 初期ロード時の称号表示
             if (encounterCount > 0) {
                 statusBoard.style.display = 'flex';
                 encounterBadge.innerText = `通算 ${encounterCount} 匹お世話しました🐾`;
@@ -457,25 +293,21 @@
                     if (isFlipped) return;
                     isFlipped = true;
 
-                    // カウンター加算と保存
                     encounterCount++;
                     localStorage.setItem('nyanko_encounter_count', encounterCount);
                     statusBoard.style.display = 'flex';
                     encounterBadge.innerText = `通算 ${encounterCount} 匹お世話しました🐾`;
                     titleBadge.innerText = getCatTitle(encounterCount);
 
-                    // 👑 ガチャ（レアリティ）抽選ロジック
                     const rand = Math.random();
                     let targetRarity = "R";
-                    if (rand < 0.03) targetRarity = "UR";         // 3%
-                    else if (rand < 0.15) targetRarity = "SSR";   // 12% (15-3)
-                    else if (rand < 0.40) targetRarity = "SR";    // 25% (40-15)
+                    if (rand < 0.03) targetRarity = "UR";
+                    else if (rand < 0.15) targetRarity = "SSR";
+                    else if (rand < 0.40) targetRarity = "SR";
                     
-                    // 選ばれたレアリティの中から猫をランダム選出
                     const filteredCats = catData.filter(c => c.rarity === targetRarity);
                     currentResult = filteredCats[Math.floor(Math.random() * filteredCats.length)];
 
-                    // UIの更新
                     cardContainer.className = `card-container ${currentResult.rarity.toLowerCase()}`;
                     rarityBadge.className = `rarity-badge rarity-${currentResult.rarity.toLowerCase()}`;
                     rarityBadge.innerText = currentResult.rarity;
@@ -488,14 +320,16 @@
                     document.getElementById('productDesc').innerText = currentResult.itemDesc;
                     document.getElementById('productLink').innerText = currentResult.btnText;
 
-                    // アフィリエイトID自動生成
+                    // 💖 全肯定とラッキーカラーの抽選表示
+                    document.getElementById('textAffirmation').innerText = affirmations[Math.floor(Math.random() * affirmations.length)];
+                    document.getElementById('textColor').innerText = colors[Math.floor(Math.random() * colors.length)];
+
                     let finalLink = `https://search.rakuten.co.jp/search/mall/${currentResult.keyword}/`;
                     if (userA8Id && userA8Id.startsWith("s0000")) {
                         finalLink = `${a8BaseUrl}${userA8Id}/&rakuten=y&a8url=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F${currentResult.keyword}%2F`;
                     }
                     document.getElementById('productLink').href = finalLink;
 
-                    // カード回転演出
                     cardContainer.classList.add('flipped');
                     
                     setTimeout(() => {
@@ -511,29 +345,28 @@
                     currentResult = null;
                     resultContainer.classList.remove('show');
                     cardContainer.classList.remove('flipped');
-                    cardContainer.className = 'card-container'; // レアリティクラスリセット
+                    cardContainer.className = 'card-container';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             }
 
-            // 🔒 3段構えの鉄壁シェア（エラー13完全回避）
             if (shareBtn) {
                 shareBtn.addEventListener('click', async (e) => {
                     e.preventDefault();
                     if (!currentResult) return;
                     
                     const myTitle = getCatTitle(encounterCount);
-                    const shareText = `【ニャンコ占いの館】\nランク: ${myTitle}\n${currentResult.rarity}「${currentResult.name}」をお世話したにゃん🐾\n\n👇あなたも占う\n${window.location.href}`;
+                    // 肯定メッセージもシェア文章に入れると、見た人も癒やされる
+                    const affirm = document.getElementById('textAffirmation').innerText;
+                    const shareText = `【ニャンコ占いの館】\nランク: ${myTitle}\n${currentResult.rarity}「${currentResult.name}」をお世話したにゃん🐾\n\n💖猫からのメッセージ:\n「${affirm}」\n\n👇あなたも癒やされる\n${window.location.href}`;
                     
-                    // 1段目: Web Share API
                     if (navigator.share && /mobile|iphone|ipad|android/i.test(navigator.userAgent)) {
                         try {
                             await navigator.share({ text: shareText, url: window.location.href });
                             return;
-                        } catch (err) { console.log("Web Share API canceled or restricted."); }
+                        } catch (err) { console.log("Web Share API canceled."); }
                     }
 
-                    // 2段目: 現代のClipboard API
                     if (navigator.clipboard && window.isSecureContext) {
                         try {
                             await navigator.clipboard.writeText(shareText);
@@ -542,7 +375,6 @@
                         } catch (err) { console.log("Clipboard API failed."); }
                     }
 
-                    // 3段目: 究極のフォールバック (LINEブラウザ等で確実に動く古典的手法)
                     try {
                         const textArea = document.createElement("textarea");
                         textArea.value = shareText;
