@@ -30,6 +30,12 @@
         .bg-stamp { position: absolute; font-size: 2rem; opacity: 0.15; transform: rotate(-15deg); user-select: none; }
         body.theme-night .bg-stamp { opacity: 0.1; color: #fff; }
 
+        /* 箱庭ねこ（集めた猫のルーム）用のアニメーション */
+        .roaming-cat { position: absolute; user-select: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); z-index: 1; transition: all 5s linear; pointer-events: none; }
+        @keyframes walkRight { 0% { transform: translateX(-50px) scaleX(-1); } 100% { transform: translateX(100vw) scaleX(-1); } }
+        @keyframes walkLeft { 0% { transform: translateX(100vw); } 100% { transform: translateX(-50px); } }
+        @keyframes sleeping { 0%, 100% { transform: scale(1) translateY(0); } 50% { transform: scale(1.05) translateY(-3px); } }
+
         /* =========================================
            2. ヘッダーとステータス
         ========================================= */
@@ -68,8 +74,9 @@
         .card-front { background-color: var(--card-bg); transform: rotateY(180deg); border-color: var(--accent-color); padding: 15px; box-sizing: border-box; }
 
         .card-emoji { font-size: 4rem; margin-bottom: 8px; animation: float 3s infinite ease-in-out; }
-        .card-mood { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px; }
-        .card-name { font-size: 0.95rem; font-weight: bold; color: var(--accent-color); text-align: center; }
+        /* 改善4: カードの文字を見やすくクッキリ化 */
+        .card-mood { font-size: 0.75rem; color: var(--text-main); margin-bottom: 2px; background: rgba(255,255,255,0.7); padding: 2px 8px; border-radius: 10px; font-weight: bold; }
+        .card-name { font-size: 0.95rem; font-weight: 900; color: var(--accent-color); text-align: center; background: rgba(255,255,255,0.85); padding: 4px 10px; border-radius: 12px; text-shadow: 1px 1px 0px #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 5px; }
 
         /* ガチャ溜め演出用 */
         @keyframes shakeLittle { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px) rotate(-1deg); } 75% { transform: translateX(2px) rotate(1deg); } }
@@ -109,6 +116,11 @@
         .affection-meter { width: 100%; height: 6px; background: rgba(0,0,0,0.1); border-radius: 3px; overflow: hidden; margin-bottom: 5px; position: relative; }
         .affection-fill { height: 100%; background: linear-gradient(90deg, #ff9a9e, #ff6f91); width: 0%; transition: width 0.5s ease-out; }
         .affection-label { font-size: 0.65rem; color: var(--accent-color); text-align: right; margin-top: 2px; font-weight: bold; }
+
+        /* 改善3: おねだり吹き出しスタイル */
+        .product-speech { background: white; border: 2px solid var(--accent-color); border-radius: 15px; padding: 12px; margin-bottom: 8px; font-size: 0.85rem; color: var(--accent-color); font-weight: bold; position: relative; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 2; line-height: 1.4; animation: float 3s infinite ease-in-out; }
+        .product-speech::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); border-width: 10px 10px 0; border-style: solid; border-color: var(--accent-color) transparent transparent transparent; display: block; width: 0; }
+        .product-speech::before { content: ''; position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%); border-width: 8px 8px 0; border-style: solid; border-color: white transparent transparent transparent; display: block; width: 0; z-index: 1; }
 
         .product-info { text-align: center; }
         .product-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; color: #d81b60; }
@@ -193,6 +205,9 @@
 
     <!-- 背景スタンプコンテナ -->
     <div id="stampContainer"></div>
+    
+    <!-- 改善1: 箱庭ねこ（集めたねこ）用コンテナ -->
+    <div id="catRoomContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden;"></div>
 
     <!-- フラッシュ演出 -->
     <div id="flashOverlay"></div>
@@ -242,7 +257,14 @@
                 <button class="breathe-trigger-btn" onclick="startBreathing()">🧘‍♀️ 猫ちゃんと1分間深呼吸する</button>
             </div>
 
+            <!-- 改善2: 記録とねこプチ情報 -->
+            <div class="section-title">📝 今日の記録とねこプチ情報</div>
+            <div class="result-text" id="textTrivia" style="font-size: 0.85rem; background: rgba(255, 240, 245, 0.8); border: 1px dashed var(--accent-color);"></div>
+
             <div class="section-title" id="affiliateHeader">🐟 猫ちゃんがあなたにおねだりしてるにゃ</div>
+            <!-- 改善3: 猫からのダイレクトなおねだり吹き出し -->
+            <div class="product-speech" id="productSpeech">ここに吹き出しが入るにゃん</div>
+            
             <div class="affiliate-box">
                 <!-- 改善3: おねだりゲージの追加 -->
                 <div style="width: 100%; text-align: left;">
@@ -422,6 +444,32 @@
             "他人の期待になんて応えなくていいにゃ。自分のために生きるにゃ！",
             "よく頑張ったにゃ！えらい！天才！宇宙一！！"
         ];
+        
+        // 改善2: ねこプチ情報（トリビア）
+        const catTrivias = [
+            "猫のゴロゴロ音（約25〜50Hz）には、人間の骨や細胞の修復を早める癒やし効果があると言われてるにゃ！",
+            "猫の鼻の模様（鼻紋）は、人間の指紋と同じで世界に一つだけのオリジナルにゃん。",
+            "猫がゆっくりまばたきするのは「大好き」「信頼してる」という愛情表現のサインにゃ！",
+            "猫は一生の約70%を寝て過ごすにゃ。休むことも立派なお仕事にゃん。",
+            "猫が前足でふみふみするのは、子猫時代の安心感を思い出している至福の時にゃ。",
+            "猫の耳は片方ずつ別々に動かせるにゃ。180度回転させて音の出所を探ってるにゃん。",
+            "猫がしっぽをピンと立てて近づいてくる時は、ご機嫌で甘えたいサインにゃ💕",
+            "猫は甘味を感じないにゃ。だからスイーツよりお肉やお魚に夢中になるにゃん。"
+        ];
+
+        // 改善3: おねだり吹き出しメッセージの生成
+        function getOnedariMessage(catName, userName) {
+            const safeName = userName === "あなた" ? "ご主人" : userName;
+            const msgs = [
+                `「${safeName}ちゃん、これがあったらもっと一緒にいられるにゃ💕」`,
+                `「今の私にはこれが絶対必要にゃ！${safeName}ちゃん、おねがいにゃ〜！」`,
+                `「ねえねえ、これ買ってくれたら特別にお腹モフモフさせてあげるにゃ🐾」`,
+                `「これ、${safeName}ちゃんへのプレゼントに私が選んだにゃ！（※支払いはお願いにゃ）」`,
+                `「これが部屋にあったら、毎日最高にハッピーな気分でお出迎えするにゃん✨」`
+            ];
+            return msgs[Math.floor(Math.random() * msgs.length)];
+        }
+
         const bgStampEmojis = ["🐾", "💕", "🐱", "✨", "🐟", "🎀", "⭐", "🎵", "💤"];
 
         // =========================================
@@ -432,6 +480,7 @@
             updateLoginStreak();
             updateNameDisplay();
             loadStamps();
+            loadCatRoom(); // 改善1: 箱庭ねこの読み込み
 
             // 肉球クリックエフェクト
             document.body.addEventListener('click', (e) => {
@@ -611,6 +660,12 @@
             document.getElementById('productTitle').innerText = displayTitle;
             document.getElementById('productDesc').innerText = currentResult.itemDesc;
 
+            // 改善2 & 3: 日付、プチ情報、おねだり吹き出しのセット
+            const todayStr = new Date().toLocaleDateString('ja-JP');
+            const trivia = catTrivias[Math.floor(Math.random() * catTrivias.length)];
+            document.getElementById('textTrivia').innerHTML = `📅 <strong>${todayStr} の記録</strong><br><br>💡 <strong>ねこプチ情報：</strong><br>${trivia}`;
+            document.getElementById('productSpeech').innerText = getOnedariMessage(currentResult.name, userName);
+
             // パーソナライズド・ボタンテキスト
             const btnText = userName === "あなた" 
                 ? `${currentResult.name} にプレゼントする🐾`
@@ -627,6 +682,9 @@
                 const resContainer = document.getElementById('resultContainer');
                 resContainer.classList.add('show');
                 resContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // ガチャ後に箱庭を更新して仲間入りを演出
+                loadCatRoom();
             }, 600);
         }
 
@@ -739,6 +797,48 @@
             const container = document.getElementById('stampContainer');
             container.innerHTML = '';
             bgStamps.forEach(stamp => renderStamp(stamp));
+        }
+
+        // 改善1: 集めたねこを背景に放つ（箱庭機能）
+        function loadCatRoom() {
+            const container = document.getElementById('catRoomContainer');
+            container.innerHTML = '';
+            const collectedIds = Object.keys(affectionData);
+            if(collectedIds.length === 0) return;
+
+            // 画面がうるさくならないよう最大8匹まで
+            const maxCats = Math.min(collectedIds.length, 8);
+            for(let i=0; i<maxCats; i++) {
+                const randomId = collectedIds[Math.floor(Math.random() * collectedIds.length)];
+                const catInfo = catData.find(c => c.id == randomId);
+                if(!catInfo) continue;
+
+                const catEl = document.createElement('div');
+                catEl.className = 'roaming-cat';
+                catEl.innerText = catInfo.emoji;
+
+                // ランダムな高さ（下から5%〜35%あたりをウロウロさせる）
+                catEl.style.bottom = (Math.random() * 30 + 5) + '%';
+                
+                // 行動パターンの抽選
+                const action = Math.random();
+                if(action < 0.35) {
+                    // 寝てる (画面のどこかで固定)
+                    catEl.style.left = (Math.random() * 80 + 10) + '%';
+                    catEl.style.animation = 'sleeping 3s infinite ease-in-out';
+                    catEl.innerText += '💤';
+                    catEl.style.fontSize = '2.5rem';
+                } else if(action < 0.65) {
+                    // 右へ歩く
+                    catEl.style.fontSize = '2.5rem';
+                    catEl.style.animation = `walkRight ${Math.random() * 15 + 15}s linear infinite`;
+                } else {
+                    // 左へ歩く
+                    catEl.style.fontSize = '2.5rem';
+                    catEl.style.animation = `walkLeft ${Math.random() * 15 + 15}s linear infinite`;
+                }
+                container.appendChild(catEl);
+            }
         }
 
         window.clearStamps = function() {
