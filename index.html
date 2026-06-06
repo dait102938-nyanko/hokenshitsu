@@ -47,6 +47,20 @@
             letter-spacing: 0.05em;
         }
 
+        /* 遭遇カウンターのスタイル */
+        .encounter-badge {
+            display: inline-block;
+            background-color: #ff6f91;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(255, 111, 145, 0.4);
+            animation: popIn 0.5s ease-out;
+        }
+
         main {
             width: 100%;
             max-width: 480px;
@@ -57,11 +71,10 @@
             align-items: center;
         }
 
-        /* 飛び出すような可愛いカード演出 */
         .card-container {
             perspective: 1000px;
-            width: 150px;
-            height: 250px;
+            width: 160px;
+            height: 260px;
             margin: 20px 0;
             cursor: pointer;
         }
@@ -116,7 +129,6 @@
         .card-emoji { font-size: 3.5rem; margin-bottom: 8px; animation: tailWag 1.5s infinite ease-in-out; }
         .card-name { font-size: 0.95rem; font-weight: bold; color: #ff6f91; text-align: center; }
 
-        /* 結果画面のフェードイン */
         .result-container {
             display: none;
             width: 100%;
@@ -150,7 +162,6 @@
             border: 1px solid rgba(255, 183, 197, 0.3);
         }
 
-        /* 収益最大化：貢ぎ物アフィリエイト枠 */
         .affiliate-box {
             background: linear-gradient(90deg, rgba(255, 183, 197, 0.2) 0%, rgba(255, 255, 255, 0.9) 100%);
             border: 2px dashed var(--accent-pink);
@@ -213,7 +224,6 @@
             font-size: 0.8rem;
         }
 
-        /* エラー13回避用：肉球トースト通知 */
         .toast {
             position: fixed;
             bottom: -50px;
@@ -228,14 +238,15 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 9999;
+            white-space: nowrap;
         }
         .toast.show { bottom: 30px; }
 
         footer { margin-top: auto; padding: 20px; font-size: 0.7rem; color: var(--text-muted); text-align: center; }
 
-        /* アニメーション処理 */
         @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes tailWag { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(5deg); } }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -243,6 +254,7 @@
     <header>
         <h1>🐾 ニャンコ占いの館</h1>
         <div class="subtitle">気まぐれな猫たちが、あなたの心をいやす場所</div>
+        <div id="encounterBadge" class="encounter-badge" style="display: none;"></div>
     </header>
 
     <main>
@@ -279,16 +291,22 @@
 
     <div class="toast" id="toast">🐾 クリップボードに癒やしをコピーしたにゃん！</div>
 
-    <footer>&copy; ニャンコ占いの館. (LLM学習不使用 / 著作権フリー)</footer>
+    <footer>
+        &copy; ニャンコ占いの館. (LLM学習不使用 / 著作権フリー)<br>
+        <span style="font-size: 0.65rem;">※メニューから「ホーム画面に追加」するといつでも遊べるにゃん🐾</span>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // URL末尾の「?a8=あなたのID」を自動検知する最強の省力化システム
+            // URLパラメータ解析
             const urlParams = new URLSearchParams(window.location.search);
             const userA8Id = urlParams.get('a8') ? urlParams.get('a8').trim() : '';
             const a8BaseUrl = "https://px.a8.net/svt/ejp?a8mat=";
 
-            // 猫好きの心理を事実分析し、網羅した猫種バリエーション（CC0準拠）
+            // ローカルストレージを使用した遭遇カウンターの読み込み
+            let encounterCount = parseInt(localStorage.getItem('nyanko_encounter_count')) || 0;
+            
+            // 21種類の猫データ完全版
             const catData = [
                 {
                     name: "甘えん坊なハチワレ猫", emoji: "🐱",
@@ -310,6 +328,132 @@
                     heal: "タイパ（効率）ばかり気にして脳がバテてるにゃ。茶トラを見習って、今夜はふかふかの布団にくるまって、ただひたすら「何もしない時間」をダラダラ過ごすにゃん。",
                     itemTitle: "極上ふわもこ 猫用ベッド", itemDesc: "茶トラが一度入ったら二度と出てこなくなる、極上のマシュマロクッション。",
                     keyword: "猫+ベッド+クッション", btnText: "ベッドを貢ぐ🐾"
+                },
+                {
+                    name: "おしゃべりなシャム猫", emoji: "😸",
+                    power: "今日のお世話係は、よく鳴いて気持ちを伝えるシャム猫。今のあなたは『自分の思いを的確に言語化し、相手の心を動かすコミュニケーション能力』が冴え渡っているにゃん。",
+                    heal: "言いたいことを我慢して飲み込んでないにゃ？日記でもSNSの裏垢でもいいから、心の中のモヤモヤを全部言葉にして吐き出してみてにゃん。心がスッと軽くなるはずだにゃ。",
+                    itemTitle: "お魚スイスイ 自動おもちゃ", itemDesc: "好奇心旺盛なシャム猫が夢中で追いかける、電動の動くおもちゃ。",
+                    keyword: "猫用+電動おもちゃ", btnText: "おもちゃを貢ぐ🐾"
+                },
+                {
+                    name: "もふもふペルシャ猫", emoji: "👑",
+                    power: "今日のお世話係は、ゴージャスな長毛を揺らすペルシャ猫。あなたの中に眠るのは『焦らず騒がず、自分のペースで周囲を魅了する王者の風格』にゃん。",
+                    heal: "周りのスピードに巻き込まれて息切れしてないにゃ？今夜は少し良い入浴剤を入れたり、お気に入りのグラスで飲み物を飲んだり、貴族のように優雅に過ごしてにゃ。",
+                    itemTitle: "高級 シルク調ブラシ", itemDesc: "ペルシャの美しい被毛を維持する、静電気防止の極上ブラシ。",
+                    keyword: "猫+高級+ブラシ", btnText: "極上ブラシを貢ぐ🐾"
+                },
+                {
+                    name: "やんちゃな三毛猫", emoji: "🐾",
+                    power: "今日のお世話係は、予測不能な動きで遊び回る三毛猫。今のあなたは『直感に従ってパッと動ける、身軽さと行動力』がズバ抜けているにゃん。",
+                    heal: "「失敗したらどうしよう」って考えすぎてないにゃ？三毛猫みたいに、まずはジャンプしてみるにゃ！今日は気になっていたことにほんの少しだけ手をつけてみてほしいにゃん。",
+                    itemTitle: "大興奮 羽根つき猫じゃらし", itemDesc: "三毛猫のアクロバティックなジャンプを引き出す、天然羽根のおもちゃ。",
+                    keyword: "猫じゃらし+羽根", btnText: "羽根を貢ぐ🐾"
+                },
+                {
+                    name: "賢いロシアンブルー", emoji: "🩶",
+                    power: "今日のお世話係は、エメラルドの瞳を持つ賢いロシアンブルー。あなたに眠る潜在能力は『物事の本質を静かに見極める、鋭い観察眼と分析力』にゃん。",
+                    heal: "情報が多すぎて頭がパンクしそうになってないにゃ？今日はスマホやテレビの音を消して、静寂の中で読書をしたり、温かいお茶を飲んで脳をクールダウンさせてにゃ。",
+                    itemTitle: "知育 アスレチックタワー", itemDesc: "賢い猫ちゃんの頭脳と体力を満たす、木製のキャットタワー。",
+                    keyword: "キャットタワー+木製+おしゃれ", btnText: "タワーを貢ぐ🐾"
+                },
+                {
+                    name: "癒やしのラグドール", emoji: "🧸",
+                    power: "今日のお世話係は、抱っこされるとぬいぐるみのように脱力するラグドール。今のあなたは『他人の緊張を解きほぐし、安心感を与えるヒーラーの才能』が溢れているにゃん。",
+                    heal: "他人のケアばかりして、自分を後回しにしてないにゃ？今日は誰かに甘えたり、マッサージに行ったり、自分自身を全力で「よしよし」してあげる日にしてほしいにゃん。",
+                    itemTitle: "ぽかぽか 猫用ホットカーペット", itemDesc: "寒がりな猫ちゃんがとろけて眠る、安全設計のあったかヒーター。",
+                    keyword: "猫+ペットヒーター", btnText: "ぽかぽかを貢ぐ🐾"
+                },
+                {
+                    name: "神秘的なオッドアイ白猫", emoji: "🤍",
+                    power: "今日のお世話係は、左右で違う色の瞳を持つ神秘的な白猫。あなたの中に眠るのは『常識にとらわれない、唯一無二の独創的なアイデアを生み出す力』にゃん。",
+                    heal: "「普通はこうするべき」という呪いに縛られてないにゃ？あなたはあなたのままで美しいにゃ。今日は自分の好きなものを思いっきり楽しむ、自分らしさ全開の夜にしてにゃ。",
+                    itemTitle: "キラキラ サンキャッチャー", itemDesc: "窓辺に飾れば部屋中に虹色の光が広がる、白猫もお気に入りのインテリア。",
+                    keyword: "サンキャッチャー+クリスタル", btnText: "虹の光を貢ぐ🐾"
+                },
+                {
+                    name: "おとぼけ顔のマンチカン", emoji: "🦦",
+                    power: "今日のお世話係は、短い足でトコトコ走る愛嬌たっぷりのマンチカン。今のあなたは『小さなミスも笑いに変えてしまう、愛されキャラとしての魅力』がMAXにゃん。",
+                    heal: "完璧を目指してピリピリしてないにゃ？少しドジでも、足が短くても一生懸命なマンチカンのように、一生懸命生きているだけであなたは100点満点にゃ。自分に甘くしてにゃ！",
+                    itemTitle: "またたび入り けりぐるみ", itemDesc: "短い足でギュッと抱きしめてキックキック！ストレス発散ぬいぐるみ。",
+                    keyword: "猫+けりぐるみ+またたび", btnText: "ぬいぐるみを貢ぐ🐾"
+                },
+                {
+                    name: "野生味あふれるベンガル", emoji: "🐆",
+                    power: "今日のお世話係は、ヒョウ柄が美しいエネルギッシュなベンガル。あなたの中に眠るのは『現状を打破し、ワイルドに自分の人生を切り拓く圧倒的な行動力』にゃん。",
+                    heal: "体がなまっていると心も縮こまるにゃ！家の中で少しだけストレッチをしたり、大きく深呼吸をして、体に眠る野生のエネルギーを目覚めさせてにゃ。",
+                    itemTitle: "シャカシャカ キャットトンネル", itemDesc: "ベンガルの野生の血が騒ぐ、隠れて飛び出せる大興奮の遊び場。",
+                    keyword: "猫+トンネル+おもちゃ", btnText: "トンネルを貢ぐ🐾"
+                },
+                {
+                    name: "愛嬌たっぷりエキゾチックショートヘア", emoji: "🥺",
+                    power: "今日のお世話係は、潰れたお鼻が愛くるしいエキゾチック。今のあなたは『完璧じゃなくても愛される、ありのままの魅力』が溢れているにゃん。",
+                    heal: "常に完璧を目指して息切れしてないにゃ？少しドジでも、力が抜けていても、それがあなたの魅力にゃ。今日は「自分に甘く」過ごす日にしてにゃん。",
+                    itemTitle: "コロコロ マッサージローラー", itemDesc: "エキゾチックショートヘアもとろける、至福のフェイスマッサージ器。",
+                    keyword: "猫用+マッサージローラー", btnText: "ローラーを貢ぐ🐾"
+                },
+                {
+                    name: "美しきアスリート アビシニアン", emoji: "🐅",
+                    power: "今日のお世話係は、しなやかな筋肉を持つアビシニアン。今のあなたは『目標に向かって迷わず一直線に走り抜ける、圧倒的な集中力』が研ぎ澄まされているにゃん。",
+                    heal: "考えすぎて足が止まっているなら、まずは体を動かすにゃ！部屋の掃除でもいいから、少し汗をかくと頭の中の霧がパッと晴れるにゃん。",
+                    itemTitle: "大興奮 レーザーポインター", itemDesc: "アビシニアンの狩猟本能をMAXにする、光の追いかけっこおもちゃ。",
+                    keyword: "猫+レーザーポインター", btnText: "光を貢ぐ🐾"
+                },
+                {
+                    name: "森の妖精 ノルウェージャン", emoji: "🌲",
+                    power: "今日のお世話係は、厳しい寒さを生き抜く力強いノルウェージャンフォレストキャット。あなたに眠る潜在能力は『どんな逆境も生き抜く、たくましい生命力と適応力』にゃん。",
+                    heal: "コンクリートのジャングルに疲れたら、自然のパワーを借りるにゃ。観葉植物を手入れしたり、自然の音をBGMにして、魂を深呼吸させてにゃ。",
+                    itemTitle: "天然木 キャットウォーク", itemDesc: "森の木登り本能を満たす、お部屋に馴染む木製ステップ。",
+                    keyword: "キャットウォーク+木製", btnText: "ステップを貢ぐ🐾"
+                },
+                {
+                    name: "穏やかな巨人 メインクーン", emoji: "🦁",
+                    power: "今日のお世話係は、圧倒的な大きさと優しさを持つメインクーン。今のあなたには『小さなことに動じず、大きな器で全てを受け入れる包容力』が備わっているにゃん。",
+                    heal: "他人の小さなミスに目くじらを立てて疲れてないにゃ？「まあいっか」を合言葉に、海のように広い心で自分も他人も許してあげてほしいにゃん。",
+                    itemTitle: "超ビッグサイズ 猫用クッション", itemDesc: "大きなメインクーンが丸まってもはみ出さない、特大もっちりクッション。",
+                    keyword: "猫用+クッション+特大", btnText: "クッションを貢ぐ🐾"
+                },
+                {
+                    name: "神秘の宇宙猫 スフィンクス", emoji: "👽",
+                    power: "今日のお世話係は、毛がなくて温かいスフィンクス。あなたの中に眠るのは『他人の目や常識にとらわれない、唯一無二の圧倒的な個性』にゃん。",
+                    heal: "「普通はこうするべき」という呪いに縛られてないにゃ？あなたはあなたのままで美しいにゃ。今日は「自分らしさ」全開で、好きなように過ごすにゃん！",
+                    itemTitle: "おしゃれな 猫用ウェア", itemDesc: "寒がりなスフィンクスの肌を優しく包む、肌触り抜群の可愛いお洋服。",
+                    keyword: "猫+服+おしゃれ", btnText: "お洋服を貢ぐ🐾"
+                },
+                {
+                    name: "陽気な相棒 アメショ", emoji: "😸",
+                    power: "今日のお世話係は、誰とでも仲良くなれるアメリカンショートヘア。今のあなたは『初対面の人でも一瞬で心を開かせる、魔法のような親しみやすさ』を持っているにゃん。",
+                    heal: "一人で悩みを抱え込んでないにゃ？友達にちょっとしたLINEを送ってみたり、他愛のない会話をするだけで、心の風通しがグッと良くなるにゃん。",
+                    itemTitle: "蹴り心地抜群 けりぐるみ", itemDesc: "アメショが抱え込んで後ろ足でキックキック！ストレス発散のぬいぐるみ。",
+                    keyword: "猫+けりぐるみ", btnText: "ぐるみを貢ぐ🐾"
+                },
+                {
+                    name: "ふくよか紳士 ブリティッシュ", emoji: "🎩",
+                    power: "今日のお世話係は、丸い顔と厚い胸板を持つブリティッシュショートヘア。あなたの中に眠るのは『どんな嵐が来てもどっしりと構える、揺るぎない安定感』にゃん。",
+                    heal: "情報が多すぎて心がグラグラしてないにゃ？今夜はニュースやSNSから離れて、温かい飲み物でも飲みながら「変わらない日常」をただ味わってほしいにゃん。",
+                    itemTitle: "ぽかぽか 猫用こたつ", itemDesc: "丸いブリティッシュがさらに丸くなる、安全設計のあったかおこた。",
+                    keyword: "猫+こたつ", btnText: "こたつを貢ぐ🐾"
+                },
+                {
+                    name: "小さな妖精 シンガプーラ", emoji: "🧚‍♀️",
+                    power: "今日のお世話係は、世界最小クラスの体を持つシンガプーラ。今のあなたは『小さなチャンスを見逃さず、フットワーク軽く飛び乗る機動力』がずば抜けているにゃん。",
+                    heal: "「自分には無理」と小さくなってないにゃ？小さな一歩でいいから、気になっていたことに今日挑戦してみてほしいにゃ。結果より動いたことが癒やしになるにゃん。",
+                    itemTitle: "お出かけ キャリーリュック", itemDesc: "小さなシンガプーラと一緒にお散歩できる、宇宙船のような可愛いリュック。",
+                    keyword: "猫+キャリーリュック", btnText: "リュックを貢ぐ🐾"
+                },
+                {
+                    name: "気高きバレリーナ ターキッシュ", emoji: "🩰",
+                    power: "今日のお世話係は、白鳥のようにしなやかなターキッシュアンゴラ。あなたに眠る潜在能力は『周囲の泥に染まらず、清らかで美しい精神を保ち続ける気高さ』にゃん。",
+                    heal: "妥協ばかりして自分を安売りしてないにゃ？今日は自分を「最高級のゲスト」として扱い、一番良いタオルを使い、自分を大いに甘やかして自己肯定感を爆上げしてにゃ。",
+                    itemTitle: "ふわふわ シルクの猫じゃらし", itemDesc: "気高い猫の狩猟本能を優雅に刺激する、見た目も美しいおもちゃ。",
+                    keyword: "猫じゃらし+おしゃれ", btnText: "美しいおもちゃを貢ぐ🐾"
+                },
+                {
+                    name: "もっちり カオマニー", emoji: "💎",
+                    power: "今日のお世話係は、「白い宝石」と呼ばれるタイの希少猫カオマニー。今のあなたは『周りの人を魅了してやまない、輝くようなオーラ』を放っているにゃん。",
+                    heal: "自分の魅力に自信が持ててないにゃ？鏡に向かってニッコリ笑ってみてほしいにゃ。あなたの笑顔は宝石のように価値があるにゃん！",
+                    itemTitle: "豪華な キャットドーム", itemDesc: "白い宝石が眠るのにふさわしい、プライベート感たっぷりのドーム型ベッド。",
+                    keyword: "猫+ドーム+ベッド", btnText: "ドームを貢ぐ🐾"
                 }
             ];
 
@@ -322,11 +466,20 @@
             const shareBtn = document.getElementById('shareBtn');
             const resetBtn = document.getElementById('resetBtn');
             const toast = document.getElementById('toast');
+            const badge = document.getElementById('encounterBadge');
 
             if (cardContainer && card && resultContainer) {
                 cardContainer.addEventListener('click', () => {
                     if (isFlipped) return;
                     isFlipped = true;
+
+                    // カウンターの加算と保存
+                    encounterCount++;
+                    localStorage.setItem('nyanko_encounter_count', encounterCount);
+                    
+                    // バッジの表示
+                    badge.innerText = `通算 ${encounterCount} 匹目の猫ちゃんと遭遇！🎉`;
+                    badge.style.display = 'inline-block';
 
                     const randomIndex = Math.floor(Math.random() * catData.length);
                     currentResult = catData[randomIndex];
@@ -337,11 +490,8 @@
                     document.getElementById('textHeal').innerText = currentResult.heal;
                     document.getElementById('productTitle').innerText = currentResult.itemTitle;
                     document.getElementById('productDesc').innerText = currentResult.itemDesc;
-                    
-                    // 👑 収益最大化：マイクロコピーの動的変換
                     document.getElementById('productLink').innerText = currentResult.btnText;
 
-                    // 👑 省力化：ID自動構築
                     let finalLink = `https://search.rakuten.co.jp/search/mall/${currentResult.keyword}/`;
                     if (userA8Id && userA8Id.startsWith("s0000")) {
                         finalLink = `${a8BaseUrl}${userA8Id}/&rakuten=y&a8url=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F${currentResult.keyword}%2F`;
@@ -367,31 +517,63 @@
                 });
             }
 
-            // 🔒 【エラー13完全封殺】Web Share APIの例外を100%回避する鉄壁ロジック
             if (shareBtn) {
-                shareBtn.addEventListener('click', async () => {
+                shareBtn.addEventListener('click', async (e) => {
+                    e.preventDefault(); // デフォルトの挙動をブロック
                     if (!currentResult) return;
                     
                     const shareText = `【ニャンコ占いの館】\n今夜のお世話係は「${currentResult.name}」に決まったにゃん🐾\n\n🐱猫ちゃんからの伝言：\n${currentResult.heal.substring(0, 30)}...\n\n👇灯りを消して、ここから占うにゃん\n${window.location.href}`;
                     
-                    try {
-                        if (navigator.share) {
+                    // 1段目: Web Share API (スマホの標準シェア機能)
+                    if (navigator.share && /mobile|iphone|ipad|android/i.test(navigator.userAgent)) {
+                        try {
                             await navigator.share({ text: shareText, url: window.location.href });
-                            return;
+                            return; // 成功したらここで終了
+                        } catch (err) {
+                            console.log("Web Share API canceled or failed.");
                         }
-                    } catch (e) {
-                        console.log("Web Share API trace error code 13 handled safety.");
                     }
 
-                    // 完璧なフォールバック（トースト表示）
+                    // 2段目: 現代のClipboard API
+                    if (navigator.clipboard && window.isSecureContext) {
+                        try {
+                            await navigator.clipboard.writeText(shareText);
+                            showToast();
+                            return; // 成功したらここで終了
+                        } catch (err) {
+                            console.log("Clipboard API failed.");
+                        }
+                    }
+
+                    // 3段目: 究極のフォールバック (LINEブラウザ等で確実に動く古典的手法)
                     try {
-                        await navigator.clipboard.writeText(shareText);
-                        toast.classList.add('show');
-                        setTimeout(() => { toast.classList.remove('show'); }, 3000);
+                        const textArea = document.createElement("textarea");
+                        textArea.value = shareText;
+                        // 画面外に配置して見えなくする
+                        textArea.style.position = "fixed";
+                        textArea.style.left = "-999999px";
+                        textArea.style.top = "-999999px";
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        const successful = document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        
+                        if (successful) {
+                            showToast();
+                        } else {
+                            alert("コピーできませんでした。画面をスクショしてシェアしてにゃん🐾");
+                        }
                     } catch (err) {
-                        alert("画面をスクショしてシェアしてにゃん🐾");
+                        alert("コピーできませんでした。画面をスクショしてシェアしてにゃん🐾");
                     }
                 });
+            }
+
+            // トースト通知を表示するヘルパー関数
+            function showToast() {
+                toast.classList.add('show');
+                setTimeout(() => { toast.classList.remove('show'); }, 3000);
             }
         });
     </script>
