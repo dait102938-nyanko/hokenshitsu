@@ -145,12 +145,22 @@
         .book-item.collected.rarity-ssr-border { border: 2px solid #ff00ff; background: #fce4ec; }
         .book-item.collected.rarity-sr-border { border: 2px solid #00bfff; background: #e1f5fe; }
         .book-item.collected.rarity-r-border { border: 2px solid #32cd32; background: #e8f5e9; }
+
+        /* 追加: ハッピーキャット・パレード（ねこ飛び交い）演出用 */
+        .cat-shower-item { position: absolute; pointer-events: none; z-index: 9998; font-size: 2rem; animation: floatShower linear forwards; }
+        @keyframes floatShower { 0% { opacity: 0; transform: translateY(100vh) scale(0.5) rotate(0deg); } 10% { opacity: 1; transform: translateY(80vh) scale(1) rotate(10deg); } 90% { opacity: 1; transform: translateY(20vh) scale(1) rotate(-10deg); } 100% { opacity: 0; transform: translateY(-10vh) scale(1.5) rotate(20deg); } }
+        
+        /* 追加: 図鑑の推しレベル（好感度）表示 */
+        .affection-stars { font-size: 0.6rem; color: #ff6f91; margin-top: 2px; }
     </style>
 </head>
 <body>
     
     <!-- 追加: ガチャフラッシュ演出用 -->
     <div class="flash-overlay" id="flashOverlay"></div>
+    
+    <!-- 追加: ねこ飛び交い演出（パレード）用コンテナ -->
+    <div id="catShowerContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998; overflow: hidden;"></div>
 
     <!-- 背景にスタンプを貯めるキャンバス -->
     <div class="stamp-container" id="stampContainer"></div>
@@ -239,6 +249,7 @@
             { id: "sec2", rarity: "SEC", name: "時をかける スチームパンク猫", emoji: "🕰️", power: "過去と未来を行き来する猫。後悔も不安もすべて私が巻き戻してあげるにゃ。あなたは「今」だけを楽しめばいいにゃん。", itemTitle: "アンティーク調 砂時計", itemDesc: "時間の流れを優しく可視化する癒やしアイテム。", keyword: "砂時計+アンティーク" },
             { id: "sec3", rarity: "SEC", name: "深海を泳ぐ マーメイド猫", emoji: "🧜‍♀️", power: "深い海の底から来た幻の猫にゃ。どんなに心が沈んでも、私が優しく包み込んで浮上させてあげるにゃん。", itemTitle: "癒やしの 海月アクアリウム", itemDesc: "ゆらゆら揺れるクラゲが深い癒やしをもたらす卓上水槽。", keyword: "アクアリウム+クラゲ" },
             { id: "sec4", rarity: "SEC", name: "次元を渡る クァンタム猫", emoji: "🌀", power: "あらゆる並行世界を行き来する量子猫にゃ。あなたが望めば、どんな未来線にでも移動できる最強の引き寄せ力を授けるにゃん。", itemTitle: "不思議な 万華鏡", itemDesc: "覗くたびに別の世界が見える、光の芸術品。", keyword: "万華鏡+オイル" },
+            { id: "sec5", rarity: "SEC", name: "奇跡の 虹架け猫", emoji: "🌈", power: "雨上がりにだけ姿を現す幻の猫。あなたの流した涙の数だけ、美しく輝く大きな虹の橋を架けてあげるにゃん。", itemTitle: "クリスタル サンキャッチャー", itemDesc: "部屋中に奇跡の虹色を散りばめる光のインテリア。", keyword: "サンキャッチャー+スワロフスキー" },
             
             // UR (超激レア - 出現率約4%)
             { id: "ur1", rarity: "UR", name: "幻の黄金 招き猫", emoji: "✨", power: "伝説の黄金招き猫にゃ。これまでの苦労がすべて報われ、圧倒的な豊かさが押し寄せてくるにゃん！", itemTitle: "純金箔入り 豪華バスソルト", itemDesc: "黄金の波動を全身で浴びる極上の入浴剤。", keyword: "金箔+入浴剤" },
@@ -247,6 +258,7 @@
             { id: "ur4", rarity: "UR", name: "高貴なる神秘 スフィンクス", emoji: "👽", power: "被毛を持たない美しき猫。表面的な飾りに惑わされず、物事の「本質」を見抜くクリアな視界を授けるにゃん。", itemTitle: "シルク100% ナイトキャップ", itemDesc: "ありのままの美しさを保ち、摩擦から守るアイテム。", keyword: "シルク+ナイトキャップ" },
             { id: "ur5", rarity: "UR", name: "神の使い 白狐猫", emoji: "🦊", power: "妖狐のような神秘の白猫。目に見えない悪運を退け、素晴らしいご縁だけを結ぶ浄化のオーラを纏っているにゃ。", itemTitle: "浄化の ホワイトセージ", itemDesc: "空間の邪気を払い、良い運気を呼び込む神聖な香り。", keyword: "ホワイトセージ+お香" },
             { id: "ur6", rarity: "UR", name: "幸運の鍵しっぽ ジャパニーズボブテイル", emoji: "🔑", power: "曲がった短いしっぽで幸運を引っ掛けてくる猫。今日、あなたに思いがけないラッキーな出来事が舞い込むにゃん！", itemTitle: "開運 水晶のサンキャッチャー", itemDesc: "光を集めて部屋中に幸運の虹を散りばめるアイテム。", keyword: "サンキャッチャー+水晶" },
+            { id: "ur7", rarity: "UR", name: "福を呼ぶ 奇跡のオスの三毛猫", emoji: "🍀", power: "数万分の一の確率で生まれる伝説の三毛猫。存在自体が奇跡の私に出会えたあなたには、絶対的な幸運が約束されているにゃ！", itemTitle: "四つ葉のクローバー 栽培キット", itemDesc: "幸運を自分の手で育てて引き寄せる癒やしキット。", keyword: "四つ葉のクローバー+栽培セット" },
             
             // SSR (激レア - 出現率約15%)
             { id: "ssr1", rarity: "SSR", name: "神秘のオッドアイ白猫", emoji: "🤍", power: "オッドアイの力で、常識にとらわれない独創的なアイデアとインスピレーションが降りてくるにゃ。", itemTitle: "キラキラ サンキャッチャー", itemDesc: "部屋中に虹色の光が広がる美しいインテリア。", keyword: "サンキャッチャー+クリスタル" },
@@ -259,6 +271,7 @@
             { id: "ssr8", rarity: "SSR", name: "星の瞳 オシキャット", emoji: "🐆", power: "ヒョウのような美しい斑点を持つ猫。野生の勘が冴え渡り、チャンスを逃さず確実に仕留める力を与えるにゃん。", itemTitle: "シャカシャカ キャットトンネル", itemDesc: "野生の血が騒ぐ、隠れて飛び出せる大興奮の遊び場。", keyword: "猫+トンネル" },
             { id: "ssr9", rarity: "SSR", name: "雪の精霊 スノーシュー", emoji: "⛄", power: "雪靴を履いたような白い足先の猫。あなたの歩む道に積もった障害を、静かに溶かして進みやすくしてあげるにゃ。", itemTitle: "ぽかぽか ルームソックス", itemDesc: "冷えた足先を雪の精霊のように優しく温める靴下。", keyword: "ルームソックス+もこもこ" },
             { id: "ssr10", rarity: "SSR", name: "巻き毛の妖精 ラパーマ", emoji: "🐑", power: "くるくるのパーマヘアを持つ猫。凝り固まった考えをほぐし、柔軟でユニークな発想を引き出すにゃん。", itemTitle: "頭皮マッサージ ブラシ", itemDesc: "くるくるマッサージで頭の凝りをほぐす極上ブラシ。", keyword: "頭皮マッサージ+ブラシ" },
+            { id: "ssr11", rarity: "SSR", name: "芸術のミューズ バリニーズ", emoji: "🩰", power: "しなやかで優雅なバレリーナのような猫。あなたの内に眠る美的センスと表現力を最高潮に高めてあげるにゃん。", itemTitle: "アロマティック キャンドル", itemDesc: "揺れる炎と香りで芸術的なインスピレーションを刺激。", keyword: "アロマキャンドル+おしゃれ" },
 
             // SR (レア - 出現率約30%)
             { id: "sr1", rarity: "SR", name: "キーボード歩き職人", emoji: "⌨️", power: "作業を邪魔しにきたにゃ！予定調和を壊し、思わぬ発想の転換をもたらしてあげるにゃん。", itemTitle: "猫型 卓上加湿器", itemDesc: "デスクで疲れたお肌と喉を潤す可愛い相棒。", keyword: "加湿器+卓上+可愛い" },
@@ -273,6 +286,7 @@
             { id: "sr10", rarity: "SR", name: "安全第一 現場猫", emoji: "👷", power: "「ヨシ！」指差し確認を怠らない猫。今日のあなたはミスなく完璧にタスクをこなす安定感があるにゃ。", itemTitle: "猫用 安全首輪", itemDesc: "もしもの時に外れる、猫想いの安全設計カラー。", keyword: "猫+首輪+セーフティ" },
             { id: "sr11", rarity: "SR", name: "見返り美人 ソマリ", emoji: "🦊", power: "キツネのようなふさふさの尻尾を持つ猫。去り際まで美しく、周囲の視線を釘付けにする魅力が高まっているにゃ。", itemTitle: "高級 ヘアオイル", itemDesc: "ソマリのしっぽのような、艶やかで美しい髪を作る。", keyword: "ヘアオイル+オーガニック" },
             { id: "sr12", rarity: "SR", name: "何も考えていない 虚無猫", emoji: "😶", power: "頭の中が空っぽの猫。複雑に考えすぎるあなたの脳内をリセットし、究極の「無」の癒やしを与えるにゃん。", itemTitle: "ぷにぷに 肉球スクイーズ", itemDesc: "無心で握り潰して脳を空っぽにする癒やしグッズ。", keyword: "スクイーズ+肉球" },
+            { id: "sr13", rarity: "SR", name: "こたつむり猫", emoji: "🍊", power: "こたつから絶対に一生出ない猫。今日は無理して動かず、徹底的に自分を温めて守り抜く防御力が高まっているにゃ。", itemTitle: "着る毛布", itemDesc: "人間もこたつむりになれる最強の防寒着。", keyword: "着る毛布+もこもこ" },
 
             // R (ノーマル - 出現率約50%)
             { id: "r1", rarity: "R", name: "甘えん坊なハチワレ", emoji: "🐱", power: "周囲を自然と笑顔にする純粋な引き寄せ力が高まっているにゃん。私みたいに甘えるのも大事にゃ。", itemTitle: "とろ〜りねこ用おやつ", itemDesc: "大喜びのご褒美ペースト。", keyword: "猫+ちゅーる" },
@@ -289,7 +303,8 @@
             { id: "r12", rarity: "R", name: "足元すりすり マーキング猫", emoji: "🐾", power: "大事な人にはしっかり愛情表現するにゃ。あなたの素直な愛情が、大切な人との絆を深めるにゃん。", itemTitle: "ブラッシング グローブ", itemDesc: "撫でるだけで抜け毛が取れる魔法のグローブ。", keyword: "猫+ブラッシング+グローブ" },
             { id: "r13", rarity: "R", name: "網戸クライマー", emoji: "🧗", power: "高い壁があれば登りたくなるにゃ！困難に立ち向かうチャレンジ精神がみなぎっているにゃん。", itemTitle: "壁掛け式 キャットステップ", itemDesc: "猫の登りたい欲を満たす、お洒落な壁掛けステップ。", keyword: "キャットステップ+壁掛け" },
             { id: "r14", rarity: "R", name: "虫を狙う クラッキング猫", emoji: "🦟", power: "「カカカッ」と鳴いて獲物を狙うにゃ。一つの目標に対する異常な執着と集中力を発揮できるにゃん。", itemTitle: "自動で動く 猫用おもちゃ", itemDesc: "猫の狩猟本能を延々と刺激する電動おもちゃ。", keyword: "猫+おもちゃ+自動" },
-            { id: "r15", rarity: "R", name: "お腹たぽたぽ ルーズスキン猫", emoji: "🍮", power: "たるんだお腹は急所を守るための進化にゃ。余裕と遊びを持たせることで、トラブルを柔軟に回避できるにゃん。", itemTitle: "ダイエット用 キャットフード", itemDesc: "たぽたぽお腹を健康的にケアする専用フード。", keyword: "猫+ダイエットフード" }
+            { id: "r15", rarity: "R", name: "お腹たぽたぽ ルーズスキン猫", emoji: "🍮", power: "たるんだお腹は急所を守るための進化にゃ。余裕と遊びを持たせることで、トラブルを柔軟に回避できるにゃん。", itemTitle: "ダイエット用 キャットフード", itemDesc: "たぽたぽお腹を健康的にケアする専用フード。", keyword: "猫+ダイエットフード" },
+            { id: "r16", rarity: "R", name: "お尻トントン要求猫", emoji: "🍑", power: "お尻を高く上げて叩かれるのを待つ猫。時には人に頼って、物理的に背中を押してもらう素直さも大切にゃん。", itemTitle: "肩こり マッサージ器", itemDesc: "お尻ではなく、疲れたあなたの肩や腰をトントンほぐす。", keyword: "マッサージ器+肩こり" }
         ];
 
         const moods = ["超絶甘えん坊な", "少し眠そうな", "何かを企んでいる", "お腹を空かせた", "なでてほしい", "パトロール中の", "丸くなっている", "獲物を狙う", "ご機嫌ナナメな", "スリスリしてくる"];
@@ -315,6 +330,8 @@
         // データの読み込み
         let encounterCount = parseInt(localStorage.getItem('nyanko_encounter_count')) || 0;
         let collection = JSON.parse(localStorage.getItem('nyanko_collection')) || [];
+        // 追加: 猫ごとの好感度（なでなで・遭遇回数）記録
+        let affectionData = JSON.parse(localStorage.getItem('nyanko_affection')) || {};
         
         // 連続ログイン判定ロジック
         const todayStr = new Date().toDateString();
@@ -379,6 +396,27 @@
             }
         };
 
+        // 追加: ねこが飛び交う「ハッピーキャット・パレード」演出
+        window.startCatShower = function(amount = 30) {
+            const container = document.getElementById('catShowerContainer');
+            const emojis = ['🐈', '🐾', '💖', '✨', '🐱', '😻', '🐟', '🌈'];
+            for(let i=0; i<amount; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = 'cat-shower-item';
+                    el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                    el.style.left = Math.random() * 100 + 'vw';
+                    el.style.fontSize = (Math.random() * 2 + 1.5) + 'rem';
+                    const duration = Math.random() * 2 + 2; // 2~4s
+                    el.style.animationDuration = duration + 's';
+                    container.appendChild(el);
+                    
+                    // アニメーション終了後に削除
+                    setTimeout(() => el.remove(), duration * 1000);
+                }, i * 100); // パラパラと出す
+            }
+        };
+
         // --- 4. メイン処理（ガチャ・結果表示） ---
         const urlParams = new URLSearchParams(window.location.search);
         const userA8Id = urlParams.get('a8') ? urlParams.get('a8').trim() : '';
@@ -426,6 +464,10 @@
                         flash.classList.add('fadeOut'); 
                         setTimeout(() => flash.classList.remove('fadeOut'), 1000); 
                     }, 150);
+                    
+                    // 追加: 豪華なねこ飛び交い演出（SSR以上で発動）
+                    let showerAmount = targetRarity === 'SEC' ? 60 : (targetRarity === 'UR' ? 40 : 20);
+                    startCatShower(showerAmount);
                 }
 
                 // UI反映実行
@@ -457,6 +499,11 @@
                     container.classList.remove('is-new');
                 }
 
+                // 追加: 好感度（引いた回数）の更新
+                if (!affectionData[currentResult.id]) affectionData[currentResult.id] = 0;
+                affectionData[currentResult.id] += 1;
+                localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
+
                 // 記録更新（回数）
                 encounterCount++;
                 localStorage.setItem('nyanko_encounter_count', encounterCount);
@@ -484,6 +531,16 @@
                 heart.style.top = (rect.top + window.scrollY) + 'px';
                 document.body.appendChild(heart);
                 setTimeout(() => heart.remove(), 1000);
+            }
+
+            // 追加: なでなで時の好感度アップ＆たまにミニシャワー
+            if (currentResult) {
+                if (!affectionData[currentResult.id]) affectionData[currentResult.id] = 0;
+                affectionData[currentResult.id] += 1;
+                localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
+                
+                // なでなで連打で幸せが溢れる演出（30%の確率でミニパレード）
+                if (Math.random() < 0.3) startCatShower(10);
             }
 
             // 🐾 多様化した蓄積するスタンプエフェクト（思い出が背景に刻印される）
@@ -529,8 +586,13 @@
                 const div = document.createElement('div');
                 if (collection.includes(cat.id)) {
                     div.className = `book-item collected rarity-${cat.rarity.toLowerCase()}-border`;
-                    div.innerText = cat.emoji;
-                    div.title = `[${cat.rarity}] ${cat.name}`;
+                    
+                    // 追加: 好感度（ハート）の計算と表示
+                    const level = affectionData[cat.id] || 1;
+                    const hearts = level >= 10 ? '💖💖💖' : (level >= 5 ? '💖💖' : '💖');
+                    
+                    div.innerHTML = `${cat.emoji}<div class="affection-stars">${hearts}</div>`;
+                    div.title = `[${cat.rarity}] ${cat.name}\n好感度(出会い＆なでた回数): ${level}回`;
                     collectedCount++;
                 } else {
                     div.className = 'book-item';
