@@ -102,8 +102,14 @@
         .breathe-trigger-btn:hover { background: var(--accent-color); color: white; }
 
         /* アフィリエイト枠（マネタイズ特化） */
-        .affiliate-box { background: rgba(255,255,255,0.8); border: 3px solid var(--accent-color); border-radius: 16px; padding: 15px; margin-top: 10px; display: flex; flex-direction: column; align-items: stretch; gap: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .affiliate-box { background: rgba(255,255,255,0.8); border: 3px solid var(--accent-color); border-radius: 16px; padding: 15px; margin-top: 10px; display: flex; flex-direction: column; align-items: stretch; gap: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; }
         body.theme-night .affiliate-box { background: rgba(0,0,0,0.5); }
+        
+        /* おねだりゲージ（好感度バー） */
+        .affection-meter { width: 100%; height: 6px; background: rgba(0,0,0,0.1); border-radius: 3px; overflow: hidden; margin-bottom: 5px; position: relative; }
+        .affection-fill { height: 100%; background: linear-gradient(90deg, #ff9a9e, #ff6f91); width: 0%; transition: width 0.5s ease-out; }
+        .affection-label { font-size: 0.65rem; color: var(--accent-color); text-align: right; margin-top: 2px; font-weight: bold; }
+
         .product-info { text-align: center; }
         .product-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; color: #d81b60; }
         .product-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
@@ -128,6 +134,7 @@
         .modal.show { display: flex; opacity: 1; }
         .modal-content { background: var(--card-bg); padding: 25px; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; position: relative; border: 3px solid var(--accent-color); color: var(--text-main); }
         
+        /* 改善1: 文字数制限を30文字へ変更 */
         .name-input { width: 80%; padding: 10px; border: 2px solid var(--accent-color); border-radius: 10px; font-size: 1rem; margin-top: 15px; text-align: center; }
         .save-btn { margin-top: 15px; background: var(--accent-color); color: white; border: none; padding: 10px 20px; border-radius: 15px; font-weight: bold; cursor: pointer; }
 
@@ -170,7 +177,9 @@
 
         /* スクショモード */
         body.screenshot-mode header, body.screenshot-mode .sns-btn-group, body.screenshot-mode .breathe-btn-wrapper, body.screenshot-mode .reset-btn, body.screenshot-mode footer, body.screenshot-mode .clear-stamp-btn { display: none !important; }
-        .screenshot-overlay { display: none; position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; z-index: 9999; }
+        
+        /* 改善2: スクショ案内を被らないように画面最下部に固定 */
+        .screenshot-overlay { display: none; position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; z-index: 9999; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         body.screenshot-mode .screenshot-overlay { display: block; }
 
         @keyframes floatUp { 0% { opacity: 0.8; transform: translateY(0) scale(0.8) rotate(-10deg); } 100% { opacity: 0; transform: translateY(-40px) scale(1.5) rotate(20deg); } }
@@ -235,6 +244,14 @@
 
             <div class="section-title" id="affiliateHeader">🐟 猫ちゃんがあなたにおねだりしてるにゃ</div>
             <div class="affiliate-box">
+                <!-- 改善3: おねだりゲージの追加 -->
+                <div style="width: 100%; text-align: left;">
+                    <div class="affection-meter">
+                        <div class="affection-fill" id="affectionFill"></div>
+                    </div>
+                    <div class="affection-label" id="affectionLabel">好感度レベル: 1</div>
+                </div>
+                
                 <div class="product-info">
                     <div class="product-title" id="productTitle"></div>
                     <div class="product-desc" id="productDesc"></div>
@@ -264,7 +281,7 @@
         <div class="modal-content">
             <h2 style="color:var(--accent-color); margin-top:0;">🐾 お名前を教えてにゃ</h2>
             <p style="font-size: 0.85rem; color:var(--text-muted);">猫ちゃんがあなたを名前で呼びます</p>
-            <input type="text" id="nameInput" class="name-input" placeholder="例: はなこ" maxlength="10">
+            <input type="text" id="nameInput" class="name-input" placeholder="例: はなこ" maxlength="30">
             <button class="save-btn" onclick="saveName()">決定にゃん！</button>
         </div>
     </div>
@@ -343,7 +360,6 @@
             { id: 26, rarity: "SR", name: "アスリート アビシニアン", emoji: "🐅", power: "筋肉は裏切らないにゃ！「[NAME]」、悩んだ時はとりあえず体を動かすにゃ！血流が良くなれば、大抵のメンタル不調は吹っ飛ぶにゃん！", itemTitle: "ストレッチ バンド", itemDesc: "手軽に体をほぐす。", keyword: "ストレッチバンド" },
             { id: 27, rarity: "SR", name: "段ボール愛好家", emoji: "📦", power: "高級なベッドより、ただの箱が最高にゃ。「[NAME]」、幸せのハードルは極限まで下げていいにゃ。今日美味しい水を飲めただけで大成功にゃん。", itemTitle: "無印良品 人をダメにするソファ", itemDesc: "人間用の極上段ボール。", keyword: "ビーズクッション" },
             { id: 28, rarity: "SR", name: "またたび 酔っ払い猫", emoji: "🍶", power: "デロデロ〜にゃ。「[NAME]」も、たまには理性を手放してハメを外すにゃ！真面目すぎるのは毒にゃん。甘いものをドカ食いしていいにゃ！", itemTitle: "高級 チョコレート", itemDesc: "人間用のまたたび。", keyword: "ゴディバ+チョコレート" },
-            // ... (トークン節約のため、29-38のSR、39-73のRの文章は少し簡略化しつつしっかり定義する)
             { id: 29, rarity: "SR", name: "ふくよか紳士 ブリティッシュ", emoji: "🎩", power: "どっしり構えるにゃ。「[NAME]」、小さな嵐は過ぎ去るのを待つのが一番。美味しい紅茶を飲んで、ただそこにある日常を味わってにゃ。", itemTitle: "アールグレイ 紅茶", itemDesc: "紳士の嗜み。", keyword: "アールグレイ+ティーバッグ" },
             { id: 30, rarity: "SR", name: "おとぼけ マンチカン", emoji: "🦦", power: "足が短くても気にしないにゃ！「[NAME]」のコンプレックスも、見方を変えれば愛嬌にゃん。自分に激甘な評価を下していい日にゃ。", itemTitle: "スイーツ アソート", itemDesc: "自分への激甘ご褒美。", keyword: "スイーツ+詰め合わせ" },
             { id: 31, rarity: "SR", name: "ゴミ箱ダイバー", emoji: "🗑️", power: "ガサガサ…お宝発見にゃ！「[NAME]」、視点を変えれば不要な経験なんてないにゃ。失敗も笑い話（お宝）に変換してしまえにゃん。", itemTitle: "アロマキャンドル", itemDesc: "ゴミ箱の匂いを消す癒やし。", keyword: "アロマキャンドル" },
@@ -573,11 +589,19 @@
             const aText = affirmations[Math.floor(Math.random() * affirmations.length)].replace(/\[NAME\]/g, userName);
             document.getElementById('textAffirmation').innerText = aText;
 
-            // --- ✨ マネタイズ極大化ロジック（好感度アップセル） ---
+            // --- ✨ マネタイズ極大化ロジック（おねだりゲージとアップセル） ---
             const aff = affectionData[currentCatId] || 1;
             let displayTitle = currentResult.itemTitle;
             let searchKeyword = currentResult.keyword;
             
+            // ゲージの計算 (最大レベル5として、20回でMAX)
+            const maxAffection = 20;
+            const percentage = Math.min((aff / maxAffection) * 100, 100);
+            const level = Math.min(Math.ceil(aff / 4), 5); // 4回ごとにレベルアップ
+
+            document.getElementById('affectionFill').style.width = `${percentage}%`;
+            document.getElementById('affectionLabel').innerText = `この子の好感度レベル: ${level} / 5`;
+
             // 好感度が10以上なら「高級」アイテムへ誘導
             if (aff >= 10) {
                 displayTitle = `【推し限定】極上 ${currentResult.itemTitle}`;
@@ -652,6 +676,13 @@
             const x = Math.floor(Math.random() * 90) + 5; // 5-95%
             const y = Math.floor(Math.random() * 90) + 5; // 5-95%
             addStampToBg(emoji, x, y);
+
+            // メーターもリアルタイム更新
+            const maxAffection = 20;
+            const percentage = Math.min((aff / maxAffection) * 100, 100);
+            const level = Math.min(Math.ceil(aff / 4), 5);
+            document.getElementById('affectionFill').style.width = `${percentage}%`;
+            document.getElementById('affectionLabel').innerText = `この子の好感度レベル: ${level} / 5`;
 
             // 高好感度でたまにパレード
             if (aff > 15 && Math.random() < 0.3) {
