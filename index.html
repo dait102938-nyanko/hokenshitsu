@@ -119,9 +119,17 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
         @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* 背景スタンプ（なでなでの痕跡）用スタイル */
+        .stamp-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 0; }
+        .bg-stamp { position: absolute; opacity: 0; animation: fadeStampIn 1s forwards; filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.1)); }
+        @keyframes fadeStampIn { to { opacity: 0.35; } }
     </style>
 </head>
 <body>
+    
+    <!-- 背景にスタンプを貯めるキャンバス -->
+    <div class="stamp-container" id="stampContainer"></div>
 
     <header>
         <h1 id="mainTitle">🐾 ニャンコ占いの館</h1>
@@ -178,6 +186,7 @@
             </div>
 
             <button class="reset-btn" id="resetBtn">別の猫ちゃんを呼ぶ</button>
+            <button class="reset-btn" onclick="clearStamps()" style="margin-top: 0; font-size: 0.7rem; color: rgba(0,0,0,0.3);">🧹 背景の思い出をリセットする</button>
         </div>
     </main>
 
@@ -204,25 +213,31 @@
             // SEC (Secret - 出現率約1%)
             { id: "sec1", rarity: "SEC", name: "銀河を創りし 宇宙猫", emoji: "🌌", power: "宇宙の真理を悟った幻のスペースキャットにゃ。あなたの直感は今、宇宙と繋がり無限の可能性を引き寄せるにゃん！", itemTitle: "家庭用 プラネタリウム", itemDesc: "お部屋を宇宙空間に変える究極の癒やし。", keyword: "プラネタリウム+家庭用" },
             { id: "sec2", rarity: "SEC", name: "時をかける スチームパンク猫", emoji: "🕰️", power: "過去と未来を行き来する猫。後悔も不安もすべて私が巻き戻してあげるにゃ。あなたは「今」だけを楽しめばいいにゃん。", itemTitle: "アンティーク調 砂時計", itemDesc: "時間の流れを優しく可視化する癒やしアイテム。", keyword: "砂時計+アンティーク" },
+            { id: "sec3", rarity: "SEC", name: "深海を泳ぐ マーメイド猫", emoji: "🧜‍♀️", power: "深い海の底から来た幻の猫にゃ。どんなに心が沈んでも、私が優しく包み込んで浮上させてあげるにゃん。", itemTitle: "癒やしの 海月アクアリウム", itemDesc: "ゆらゆら揺れるクラゲが深い癒やしをもたらす卓上水槽。", keyword: "アクアリウム+クラゲ" },
             
             // UR (超激レア - 出現率約4%)
             { id: "ur1", rarity: "UR", name: "幻の黄金 招き猫", emoji: "✨", power: "伝説の黄金招き猫にゃ。これまでの苦労がすべて報われ、圧倒的な豊かさが押し寄せてくるにゃん！", itemTitle: "純金箔入り 豪華バスソルト", itemDesc: "黄金の波動を全身で浴びる極上の入浴剤。", keyword: "金箔+入浴剤" },
             { id: "ur2", rarity: "UR", name: "最古の狩人 マヌルネコ", emoji: "🏔️", power: "現代の常識に縛られない、野生の直感と生き抜くための圧倒的な生命力が目覚めるにゃん。", itemTitle: "超極厚 もふもふブランケット", itemDesc: "極厚の毛並みを再現した絶対防寒毛布。", keyword: "毛布+極厚+ふわふわ" },
             { id: "ur3", rarity: "UR", name: "砂漠の天使 スナネコ", emoji: "🏜️", power: "どんな過酷な環境でも、愛らしさを失わずに生き抜く奇跡のバランス感覚があなたにはあるにゃ。", itemTitle: "ぽかぽか ホットアイマスク", itemDesc: "砂漠の温もりのように酷使した目を包み込む。", keyword: "ホットアイマスク+あずき" },
+            { id: "ur4", rarity: "UR", name: "高貴なる神秘 スフィンクス", emoji: "👽", power: "被毛を持たない美しき猫。表面的な飾りに惑わされず、物事の「本質」を見抜くクリアな視界を授けるにゃん。", itemTitle: "シルク100% ナイトキャップ", itemDesc: "ありのままの美しさを保ち、摩擦から守るアイテム。", keyword: "シルク+ナイトキャップ" },
             
             // SSR (激レア - 出現率約15%)
             { id: "ssr1", rarity: "SSR", name: "神秘のオッドアイ白猫", emoji: "🤍", power: "オッドアイの力で、常識にとらわれない独創的なアイデアとインスピレーションが降りてくるにゃ。", itemTitle: "キラキラ サンキャッチャー", itemDesc: "部屋中に虹色の光が広がる美しいインテリア。", keyword: "サンキャッチャー+クリスタル" },
             { id: "ssr2", rarity: "SSR", name: "もふもふペルシャ猫", emoji: "👑", power: "ゴージャスな私が来たからには安心にゃ。自分のペースで優雅に過ごせば全て上手くいくにゃん。", itemTitle: "高級 シルク調ブラシ", itemDesc: "美しい被毛を維持する極上ブラシ。", keyword: "猫+高級+ブラシ" },
             { id: "ssr3", rarity: "SSR", name: "イケメン執事 タキシード猫", emoji: "🤵", power: "気配りで周囲をスムーズに動かす見事なマネジメント力が高まっているにゃ。今日はVIPとして過ごしてにゃ。", itemTitle: "高級 ホテル仕様バスローブ", itemDesc: "お風呂上がりのVIPタイムを演出するローブ。", keyword: "バスローブ+ホテル仕様" },
             { id: "ssr4", rarity: "SSR", name: "眠りの森の 妖精猫", emoji: "💤", power: "限界が来る前にしっかり休むことができる、自己防衛の才能があるにゃ。睡眠は最大の魔法にゃ！", itemTitle: "安眠 シルクのアイマスク", itemDesc: "光を完全に遮断し、妖精のような深い眠りへ。", keyword: "シルク+アイマスク" },
-            
+            { id: "ssr5", rarity: "SSR", name: "小さな妖精 シンガプーラ", emoji: "🧚", power: "世界最小の純血種。小さくてもエネルギーは無限大にゃ。あなたの内なる好奇心と行動力を爆発させるにゃん！", itemTitle: "キラキラ 万華鏡", itemDesc: "覗くたびに違う世界が見える、小さな魔法の筒。", keyword: "万華鏡" },
+            { id: "ssr6", rarity: "SSR", name: "雪原の王 サイベリアン", emoji: "❄️", power: "極寒を生き抜く強靭な猫。どんな冷たい逆境でも、自らの熱量で溶かして進むたくましさを授けるにゃん。", itemTitle: "極厚 プレミアム毛布", itemDesc: "雪原の王も納得の、最高級の暖かさと重厚感。", keyword: "プレミアム毛布+極厚" },
+
             // SR (レア - 出現率約30%)
             { id: "sr1", rarity: "SR", name: "キーボード歩き職人", emoji: "⌨️", power: "作業を邪魔しにきたにゃ！予定調和を壊し、思わぬ発想の転換をもたらしてあげるにゃん。", itemTitle: "猫型 卓上加湿器", itemDesc: "デスクで疲れたお肌と喉を潤す可愛い相棒。", keyword: "加湿器+卓上+可愛い" },
             { id: "sr2", rarity: "SR", name: "真夜中の大運動会猫", emoji: "💨", power: "人が見ていない所で爆発的な集中力を発揮し、一気に物事を片付ける力を授けるにゃん！", itemTitle: "猫用 静音回し車", itemDesc: "真夜中の運動会を安全に満喫させるホイール。", keyword: "キャットホイール" },
             { id: "sr3", rarity: "SR", name: "段ボール愛好家", emoji: "📦", power: "お金をかけなくても、日常の小さな幸せを見つける天才的な感性が今のあなたにはあるにゃ。", itemTitle: "爪とぎ付き 段ボールハウス", itemDesc: "猫の「箱入りたい欲」を満たす究極の段ボール。", keyword: "猫+段ボールハウス" },
             { id: "sr4", rarity: "SR", name: "またたび酔っ払い猫", emoji: "🍶", power: "たまには理性を手放して、無邪気に今を楽しむ愛嬌が必要にゃ。ハメを外して甘えるにゃん。", itemTitle: "極上 国産またたび粉", itemDesc: "猫が理性を失って喜ぶ、無添加の魔法の粉。", keyword: "猫+またたび+無添加" },
             { id: "sr5", rarity: "SR", name: "悟りを開いた チベットスナギツネ顔", emoji: "😑", power: "世間の些細な炎上やイライラを「無」にしてスルーする圧倒的スルースキルを授けるにゃ。", itemTitle: "禅の心 枯山水キット", itemDesc: "砂に模様を描いて心を落ち着かせるインテリア。", keyword: "枯山水+キット" },
-            
+            { id: "sr6", rarity: "SR", name: "リモートワーク監視猫", emoji: "💻", power: "画面の前に陣取るプロ。働きすぎなあなたを強制終了させ、心身のバランスを取り戻させる才能があるにゃ。", itemTitle: "疲れ目専用 目元マッサージャー", itemDesc: "監視猫が休めと言っている。目を温めて揉みほぐす。", keyword: "目元エステ+マッサージ" },
+            { id: "sr7", rarity: "SR", name: "袋に特攻する猫", emoji: "🛍️", power: "スーパーの袋の音がすると飛んでくるにゃ。未知の領域にも躊躇なく飛び込む、勇気と冒険心を授けるにゃん。", itemTitle: "開けてワクワク お取り寄せスイーツ", itemDesc: "何が入っているかはお楽しみの魔法の箱。", keyword: "お取り寄せスイーツ+詰め合わせ" },
+
             // R (ノーマル - 出現率約50%)
             { id: "r1", rarity: "R", name: "甘えん坊なハチワレ", emoji: "🐱", power: "周囲を自然と笑顔にする純粋な引き寄せ力が高まっているにゃん。私みたいに甘えるのも大事にゃ。", itemTitle: "とろ〜りねこ用おやつ", itemDesc: "大喜びのご褒美ペースト。", keyword: "猫+ちゅーる" },
             { id: "r2", rarity: "R", name: "障子破り職人", emoji: "🐾", power: "過去のルールをぶち壊し、新しい風を吹き込む改革者の才能があなたにはあるにゃ。", itemTitle: "壁用 爪とぎシート", itemDesc: "壁を守りつつ本能を満たす魔法のシート。", keyword: "猫+爪とぎ+壁" },
@@ -230,7 +245,10 @@
             { id: "r4", rarity: "R", name: "のんびり屋 茶トラ", emoji: "🐈", power: "どんなトラブルも「ま、いっか」で笑いに変えてしまう最強のポジティブ波動をプレゼントするにゃん。", itemTitle: "極上ふわもこベッド", itemDesc: "一度入ったら出てこなくなる極上クッション。", keyword: "猫+ベッド+クッション" },
             { id: "r5", rarity: "R", name: "お腹見せトラップ猫", emoji: "🪤", power: "相手を翻弄し、主導権を握る小悪魔的な魅力があるにゃ。たまには気まぐれに振る舞ってにゃ。", itemTitle: "噛み噛み デンタルおもちゃ", itemDesc: "思い切り噛めるストレス解消トイ。", keyword: "猫+おもちゃ+噛む" },
             { id: "r6", rarity: "R", name: "ちゅーる強盗猫", emoji: "💰", power: "欲しいものを貪欲に手に入れる、ストレートな欲求と行動力があるにゃ。我慢は禁物にゃ！", itemTitle: "贅沢 無添加おやつ", itemDesc: "強盗も納得の、美味しくて安全な高級おやつ。", keyword: "猫+おやつ+無添加" },
-            { id: "r7", rarity: "R", name: "やんちゃな三毛猫", emoji: "🧶", power: "直感に従ってパッと動ける、身軽さと行動力がズバ抜けているにゃん。まずはジャンプしてみるにゃ！", itemTitle: "大興奮 羽根つきじゃらし", itemDesc: "アクロバティックなジャンプを引き出すおもちゃ。", keyword: "猫じゃらし+羽根" }
+            { id: "r7", rarity: "R", name: "やんちゃな三毛猫", emoji: "🧶", power: "直感に従ってパッと動ける、身軽さと行動力がズバ抜けているにゃん。まずはジャンプしてみるにゃ！", itemTitle: "大興奮 羽根つきじゃらし", itemDesc: "アクロバティックなジャンプを引き出すおもちゃ。", keyword: "猫じゃらし+羽根" },
+            { id: "r8", rarity: "R", name: "渋い魅力の サビ猫", emoji: "🤎", power: "見た目の派手さではなく、賢さと内面の奥深さで勝負する本質的な魅力があなたにはあるにゃ。", itemTitle: "無添加 高級かつおぶし", itemDesc: "通なサビ猫も唸る、香り高い本物の味。", keyword: "かつおぶし+無添加" },
+            { id: "r9", rarity: "R", name: "おしゃべりな シャム猫", emoji: "🗣️", power: "自分の意見をしっかり伝えるコミュニケーション能力が高まっているにゃ。今日は本音で話していいにゃん。", itemTitle: "喉を潤す マヌカハニー", itemDesc: "たくさん話した後は、極上のハチミツで喉を労る。", keyword: "マヌカハニー" },
+            { id: "r10", rarity: "R", name: "野生の血 キジトラ", emoji: "🐯", power: "困難をサバイバルで乗り切る、地道でタフな精神力があるにゃ。どんな壁も乗り越えられるにゃん。", itemTitle: "猫用 アスレチックタワー", itemDesc: "野生の血を滾らせる、本能を満たすタワー。", keyword: "キャットタワー+木製" }
         ];
 
         const moods = ["超絶甘えん坊な", "少し眠そうな", "何かを企んでいる", "お腹を空かせた", "なでてほしい", "パトロール中の", "丸くなっている", "獲物を狙う", "ご機嫌ナナメな", "スリスリしてくる"];
@@ -290,6 +308,35 @@
         if (hour >= 5 && hour < 12) { document.body.classList.add('theme-morning'); mainTitle.innerText = "🌅 朝のニャンコ占い"; } 
         else if (hour >= 12 && hour < 18) { mainTitle.innerText = "☀️ 陽だまりニャンコ占い"; } 
         else { document.body.classList.add('theme-night'); mainTitle.innerText = "🌙 深夜のニャンコ保健室"; }
+
+        // --- 背景スタンプ（なでなでの痕跡）管理機能 ---
+        const stampContainer = document.getElementById('stampContainer');
+        let savedStamps = JSON.parse(localStorage.getItem('nyanko_stamps')) || [];
+        
+        // 初期ロード時にスタンプを描画
+        function renderStamps() {
+            stampContainer.innerHTML = '';
+            savedStamps.forEach(s => {
+                const el = document.createElement('div');
+                el.className = 'bg-stamp';
+                el.innerText = s.emoji;
+                el.style.left = s.x + 'vw';
+                el.style.top = s.y + 'vh';
+                el.style.fontSize = s.size + 'rem';
+                el.style.transform = `rotate(${s.rot}deg)`;
+                stampContainer.appendChild(el);
+            });
+        }
+        renderStamps(); // ページ読み込み時に実行
+
+        // リセット機能（グローバル関数化）
+        window.clearStamps = function() {
+            if(confirm("画面に刻まれた猫ちゃんとの思い出（スタンプ）を消去しますか？")) {
+                savedStamps = [];
+                localStorage.removeItem('nyanko_stamps');
+                renderStamps();
+            }
+        };
 
         // --- 4. メイン処理（ガチャ・結果表示） ---
         const urlParams = new URLSearchParams(window.location.search);
@@ -358,17 +405,42 @@
 
         // --- 5. 究極の癒やし：なでなで機能 ---
         document.getElementById('petBtn').addEventListener('click', (e) => {
-            // ハートエフェクト
+            // ハートエフェクト (一時的な飛び散りアニメーション)
             for(let i=0; i<3; i++){
                 const heart = document.createElement('div');
                 heart.className = 'floating-heart';
-                heart.innerText = ['💖','✨','🐾'][Math.floor(Math.random()*3)];
+                heart.innerText = ['💖','✨','🐾','💕'][Math.floor(Math.random()*4)];
                 const rect = e.target.getBoundingClientRect();
                 heart.style.left = (rect.left + Math.random() * rect.width) + 'px';
                 heart.style.top = (rect.top + window.scrollY) + 'px';
                 document.body.appendChild(heart);
                 setTimeout(() => heart.remove(), 1000);
             }
+
+            // 🐾 蓄積するスタンプエフェクト（思い出が背景に刻印される）
+            const newStamp = {
+                emoji: ['🐾', '💕', '🐱', '✨'][Math.floor(Math.random()*4)],
+                x: Math.random() * 90, // vw
+                y: Math.random() * 90 + 5, // vh (上部は少し避ける)
+                size: Math.random() * 1.5 + 1.0, // 1.0rem ~ 2.5rem
+                rot: Math.random() * 60 - 30 // -30deg ~ 30deg
+            };
+            
+            savedStamps.push(newStamp);
+            // 上限100個を超えたら古いものから消す（重くならないための安全装置）
+            if(savedStamps.length > 100) savedStamps.shift();
+            localStorage.setItem('nyanko_stamps', JSON.stringify(savedStamps));
+            
+            // 新しいスタンプをその場で画面に追加
+            const el = document.createElement('div');
+            el.className = 'bg-stamp';
+            el.innerText = newStamp.emoji;
+            el.style.left = newStamp.x + 'vw';
+            el.style.top = newStamp.y + 'vh';
+            el.style.fontSize = newStamp.size + 'rem';
+            el.style.transform = `rotate(${newStamp.rot}deg)`;
+            stampContainer.appendChild(el);
+
             // テキスト変化
             document.getElementById('petResponse').innerText = petResponses[Math.floor(Math.random() * petResponses.length)];
         });
