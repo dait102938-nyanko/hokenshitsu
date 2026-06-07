@@ -156,12 +156,13 @@
         .buy-btn { color: #fff; text-decoration: none; font-size: 0.9rem; font-weight: bold; padding: 14px 20px; border-radius: 25px; text-align: center; transition: transform 0.2s; display: block; }
         .buy-btn:hover { transform: scale(1.03); animation: none; }
         
+        /* 改善点: AmazonとYahoo!の美しい専用ボタンカラーを追加 */
         .btn-rakuten { background: linear-gradient(135deg, #bf0000 0%, #ff4d4d 100%); box-shadow: 0 4px 12px rgba(191, 0, 0, 0.3); animation: attentionPulse 2.5s infinite; }
-        .btn-tiktok { background: linear-gradient(135deg, #010101 0%, #333333 100%); border: 2px solid #fe2c55; box-shadow: 0 4px 12px rgba(254, 44, 85, 0.3); }
-        .btn-watts { background: linear-gradient(135deg, #00a651 0%, #00713d 100%); box-shadow: 0 4px 12px rgba(0, 166, 81, 0.3); }
+        .btn-amazon { background: linear-gradient(135deg, #232f3e 0%, #37475a 100%); border: 2px solid #ff9900; box-shadow: 0 4px 12px rgba(35, 47, 62, 0.3); }
+        .btn-yahoo { background: linear-gradient(135deg, #ff0033 0%, #ff3366 100%); box-shadow: 0 4px 12px rgba(255, 0, 51, 0.3); }
 
         /* =========================================
-           5. モーダル類
+           5. モーダル類（名前・図鑑・合言葉・トロフィー）
         ========================================= */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; }
         .modal.show { display: flex; opacity: 1; }
@@ -337,8 +338,8 @@
 
                 <div class="product-links-group" id="productLinksGroup">
                     <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-rakuten" id="productLinkRakuten">楽天市場で探す🐾</a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-tiktok" id="productLinkTikTok">TikTok Shopで見つける🎬</a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-watts" id="productLinkWatts">ワッツ100均雑貨を開封🛒</a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-amazon" id="productLinkAmazon">Amazonで探す📦</a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-yahoo" id="productLinkYahoo">Yahoo!でお得に揃える🛍️</a>
                 </div>
             </div>
 
@@ -706,8 +707,8 @@
             };
 
             document.getElementById('productLinkRakuten').addEventListener('click', handleAffiliateClick);
-            document.getElementById('productLinkTikTok').addEventListener('click', handleAffiliateClick);
-            document.getElementById('productLinkWatts').addEventListener('click', handleAffiliateClick);
+            document.getElementById('productLinkAmazon').addEventListener('click', handleAffiliateClick);
+            document.getElementById('productLinkYahoo').addEventListener('click', handleAffiliateClick);
         });
 
         function updateTheme() {
@@ -954,25 +955,27 @@
             const todayStr = new Date().toLocaleDateString('ja-JP');
             const trivia = catTrivias[Math.floor(Math.random() * catTrivias.length)];
             document.getElementById('textTrivia').innerHTML = `📅 <strong>${todayStr} の記録</strong><br><br>💡 <strong>ねこプチ情報：</strong><br>${trivia}`;
-            document.getElementById('productSpeech').innerText = getOnedariMessage(currentResult.name, userName);
+            
+            const safeUser = userName === "あなた" ? "ご主人" : userName;
+            const msgs = [
+                `「${safeUser}ちゃん、これがあったらもっと一緒にいられるにゃ💕」`,
+                `「今の私にはこれが絶対必要にゃ！${safeUser}ちゃん、おねがいにゃ〜！」`,
+                `「ねえねえ、これ買ってくれたら特別にお腹モフモフさせてあげるにゃ🐾」`
+            ];
+            document.getElementById('productSpeech').innerText = msgs[Math.floor(Math.random() * msgs.length)];
 
-            document.getElementById('productLinkRakuten').innerHTML = `楽天市場で<br>「${displayTitle}」を贈る🐾`;
-            document.getElementById('productLinkTikTok').innerHTML = `TikTok Shopで<br>「${searchKeyword.replace(/\+/g, ' ')}」動画を探す🎬`;
-            document.getElementById('productLinkWatts').innerHTML = `ワッツ(100均)で<br>「${currentResult.keyword}」をお得に揃える🛒`;
-
+            // 三大経済圏リンクの生成
+            const cleanKeyword = searchKeyword.replace(/\+/g, ' ');
+            
             let finalLinkRakuten = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(searchKeyword)}/`;
-            let finalLinkTikTok = `https://www.tiktok.com/search?q=${encodeURIComponent(searchKeyword)}`;
-            let finalLinkWatts = `https://watts-online.jp/products/list?name=${encodeURIComponent(currentResult.keyword)}`;
-
             if (userA8Id && userA8Id.startsWith("s0000")) {
                 finalLinkRakuten = `${a8BaseUrl}${userA8Id}/&rakuten=y&a8url=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F${encodeURIComponent(searchKeyword)}%2F`;
-                finalLinkTikTok = `${a8BaseUrl}${userA8Id}/&a8url=${encodeURIComponent(finalLinkTikTok)}`;
-                finalLinkWatts = `${a8BaseUrl}${userA8Id}/&a8url=${encodeURIComponent(finalLinkWatts)}`;
             }
-            
             document.getElementById('productLinkRakuten').href = finalLinkRakuten;
-            document.getElementById('productLinkTikTok').href = finalLinkTikTok;
-            document.getElementById('productLinkWatts').href = finalLinkWatts;
+            
+            // LinkSwitchによる全自動収益化対応の直リンク
+            document.getElementById('productLinkAmazon').href = `https://www.amazon.co.jp/s?k=${encodeURIComponent(cleanKeyword)}`;
+            document.getElementById('productLinkYahoo').href = `https://shopping.yahoo.co.jp/search?p=${encodeURIComponent(cleanKeyword)}`;
 
             setTimeout(() => {
                 const resContainer = document.getElementById('resultContainer');
@@ -990,7 +993,6 @@
             document.getElementById('resultContainer').classList.remove('show-slow');
             const cardContainer = document.getElementById('cardContainer');
             cardContainer.className = 'card-container';
-            cardContainer.classList.remove('ready');
             document.querySelector('.card-front').className = 'card-front';
             document.getElementById('petReaction').classList.remove('show');
             
@@ -1142,7 +1144,7 @@
         }
 
         window.clearStamps = function() {
-            if(confirm("背景のスタンプと貢ぎ物をすべて消去しますか？")) {
+            if(confirm("背景の思い出（スタンプとプレゼント）をすべて消去しますか？")) {
                 bgStamps = [];
                 roomItems = [];
                 localStorage.removeItem('nyanko_bg_stamps');
@@ -1432,5 +1434,10 @@
             setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
     </script>
+    <!-- LinkSwitchタグ (バリューコマース全自動収益化) -->
+    <script type="text/javascript" language="javascript">
+        var vc_pid = "892628071";
+    </script>
+    <script type="text/javascript" src="//aml.valuecommerce.com/vcdal.js" async></script>
 </body>
 </html>
