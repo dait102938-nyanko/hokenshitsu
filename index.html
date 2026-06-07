@@ -138,7 +138,7 @@
         .breathe-trigger-btn { background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); font-size: 0.95rem; font-weight: bold; padding: 12px 25px; border-radius: 30px; cursor: pointer; transition: all 0.3s; }
         .breathe-trigger-btn:hover { background: var(--accent-color); color: white; }
 
-        /* アフィリエイト枠（3ショップ対応版拡張CSS） */
+        /* アフィリエイト枠 */
         .affiliate-box { background: rgba(255,255,255,0.8); border: 3px solid var(--accent-color); border-radius: 16px; padding: 15px; margin-top: 10px; display: flex; flex-direction: column; align-items: stretch; gap: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; }
         body.theme-night .affiliate-box { background: rgba(0,0,0,0.5); }
         
@@ -388,7 +388,7 @@
         <div class="modal-content book-content">
             <button class="close-modal-btn" onclick="closeBookModal()">✖</button>
             <h2 style="color:var(--accent-color); margin-top:0;">📖 出会った猫図鑑</h2>
-            <div class="book-stats">収集率: <span id="bookProgress">0/100</span></div>
+            <div class="book-stats">収集率: <span id="bookProgress">0/120</span></div>
             <div class="book-grid" id="bookGrid"></div>
         </div>
     </div>
@@ -474,7 +474,7 @@
         const a8BaseUrl = "https://px.a8.net/svt/ejp?a8mat=";
 
         // =========================================
-        // 2. データ群 (【究極拡張】全100種猫)
+        // 2. データ群 (【限界突破】全120種猫)
         // =========================================
         const catData = [
             // --- SEC (3種) ---
@@ -498,7 +498,7 @@
             { id: 16, rarity: "SSR", name: "もちもち 大福白猫", emoji: "🍡", power: "私が丸いからって笑ったにゃ？でも「[NAME]」も、ピリピリするより丸い方が可愛いにゃん。角を立てずに、もちもち生きていくのが正解にゃ。", itemTitle: "マカロン ベッド", itemDesc: "もちもちの極み。", keyword: "マカロンクッション" },
             { id: 17, rarity: "SSR", name: "眠りの森の 妖精猫", emoji: "💤", power: "1日20時間寝る私が断言するにゃ。「[NAME]」、今の悩みは寝不足のせいにゃ！今すぐスマホを投げて、布団にダイブする魔法をかけるにゃん。", itemTitle: "シルク アイマスク", itemDesc: "光を遮断し妖精の眠りへ。", keyword: "シルク+アイマスク" },
             { id: 18, rarity: "SSR", name: "お風呂出待ち 忠犬猫", emoji: "🛁", power: "「[NAME]」が溺れないか心配でずっと待ってたにゃ！生きててくれて良かった！だから自分をもっと大切にして、体を温めるにゃん。", itemTitle: "炭酸 入浴剤セット", itemDesc: "芯から温まる癒やし。", keyword: "バブ+入浴剤" },
-            // --- SR (32種: 既存20+新規12) ---
+            // --- SR (32種) ---
             { id: 19, rarity: "SR", name: "キーボード歩き職人", emoji: "⌨️", power: "わざと邪魔しに来たにゃ。「[NAME]」、仕事/勉強しすぎ！画面から目を離して、私のお腹を撫でる時間を強制的にもうけるにゃん！", itemTitle: "ホットアイマスク", itemDesc: "PC疲れの目を癒やす。", keyword: "ホットアイマスク" },
             { id: 20, rarity: "SR", name: "真夜中の大運動会猫", emoji: "💨", power: "深夜に覚醒したにゃ！シャーッ！「[NAME]」も溜まったストレスは、誰も見てない所で大暴れして発散すればいいにゃ。私が伴走するにゃん！", itemTitle: "フォームローラー", itemDesc: "家でゴロゴロ筋膜リリース。", keyword: "フォームローラー" },
             { id: 21, rarity: "SR", name: "安全第一 現場猫", emoji: "👷", power: "ヨシ！「[NAME]」の今日の安全確認はバッチリにゃ！ちょっとくらいのミスは「ヨシ！」で済ませて、生きて帰ってきた自分を褒めるにゃん。", itemTitle: "安全第一 マグカップ", itemDesc: "ヨシ！とお茶を飲む。", keyword: "現場猫+グッズ" },
@@ -519,7 +519,6 @@
             { id: 36, rarity: "SR", name: "水飲み下手くそ猫", emoji: "💧", power: "顔がびしょびしょにゃ。「[NAME]」、不器用でも一生懸命生きてるだけで満点にゃ！完璧じゃない自分を愛してあげる日にしてにゃん。", itemTitle: "高級 今治タオル", itemDesc: "びしょびしょの顔を拭く。", keyword: "今治タオル+フェイスタオル" },
             { id: 37, rarity: "SR", name: "猫集会 議長", emoji: "🗣️", power: "今夜の議題は「[NAME]」の幸せについてにゃ。満場一致で「もっと自分を甘やかすべき」と決議されたにゃ。遠慮は無用にゃん！", itemTitle: "マッサージ クッション", itemDesc: "議長推薦の癒やし。", keyword: "マッサージクッション" },
             { id: 38, rarity: "SR", name: "影の支配者 黒豹気取り", emoji: "🐈‍⬛", power: "私は強いにゃ。「[NAME]」も、心の中に強い黒豹を飼うにゃ！誰にも媚びない強気な姿勢で、明日は胸を張って歩くがよいにゃん。", itemTitle: "姿勢矯正 クッション", itemDesc: "背筋を伸ばして堂々と。", keyword: "姿勢矯正クッション" },
-            // 新規追加SR
             { id: 74, rarity: "SR", name: "サウナ愛好猫", emoji: "♨️", power: "整ったにゃ〜。「[NAME]」、頭の中がごちゃごちゃなら、一度たっぷり汗をかいて強制リセットするにゃん。サウナは命の洗濯にゃ！", itemTitle: "サウナハット", itemDesc: "熱から頭を守る必須アイテム。", keyword: "サウナハット" },
             { id: 75, rarity: "SR", name: "ヨガマスター猫", emoji: "🧘", power: "呼吸を整えるにゃ。「[NAME]」、焦りは浅い呼吸から来るにゃん。目を閉じて、宇宙と繋がるイメージで深く息を吸い込むにゃ。", itemTitle: "お香 セット", itemDesc: "心を落ち着かせる香り。", keyword: "お香+セット" },
             { id: 76, rarity: "SR", name: "株トレーダー猫", emoji: "📈", power: "チャートが右肩上がりにゃ！「[NAME]」の人生もこれから急上昇する相場に入ったにゃん。自分という最高の資産に投資を続けるにゃ！", itemTitle: "金運アップ 財布", itemDesc: "お金を呼び込む魔法の財布。", keyword: "長財布+金運" },
@@ -532,8 +531,14 @@
             { id: 83, rarity: "SR", name: "名探偵猫", emoji: "🕵️", power: "謎はすべて解けたにゃ！「[NAME]」の悩みの原因は、単なる『考えすぎ』にゃん。難しく考えず、シンプルに直感に従うのが正解だにゃ。", itemTitle: "推理 小説", itemDesc: "脳を別世界に飛ばす。", keyword: "ミステリー小説" },
             { id: 84, rarity: "SR", name: "天文学者猫", emoji: "🔭", power: "星が綺麗にゃ〜。「[NAME]」、宇宙の広さに比べたら、今の悩みなんてミジンコ以下にゃん。夜空を見上げて、悩みを宇宙に溶かすにゃ。", itemTitle: "月球儀 ライト", itemDesc: "手元に宇宙を。", keyword: "月球儀" },
             { id: 85, rarity: "SR", name: "天才ハッカー猫", emoji: "🕶️", power: "カタカタ…ターン！「[NAME]」の脳内に侵入したネガティブウイルスは、私が完全に駆除しておいたにゃん。これでサクサク動けるはずだにゃ！", itemTitle: "メカニカル キーボード", itemDesc: "打鍵感でストレス解消。", keyword: "メカニカルキーボード" },
+            // 新規追加SR(5種)
+            { id: 101, rarity: "SR", name: "忍者猫", emoji: "🥷", power: "ドロン！「[NAME]」、嫌な相手からは忍者のように気配を消して逃げるのが最強の護身術にゃ。ストレス源から物理的に距離を置くにゃん！", itemTitle: "マッサージ ガン", itemDesc: "隠れて凝りをほぐす。", keyword: "マッサージガン" },
+            { id: 102, rarity: "SR", name: "侍猫", emoji: "⚔️", power: "拙者にお任せあれ。「[NAME]」の前に立ちはだかる困難は、この名刀（爪）で一刀両断してやるにゃ！武士の情けで今日は休むがよいにゃん。", itemTitle: "お香 伽羅", itemDesc: "武将も愛した癒やしの香り。", keyword: "お香+伽羅" },
+            { id: 103, rarity: "SR", name: "宇宙飛行士猫", emoji: "🧑‍🚀", power: "無重力にゃ〜。「[NAME]」、肩に乗っかっている重いプレッシャーは、全部地球の引力のせいにゃ。宇宙レベルで見れば全部ちっぽけなことだにゃん。", itemTitle: "無重力 クッション", itemDesc: "お尻が宙に浮く感覚。", keyword: "ゲルクッション" },
+            { id: 104, rarity: "SR", name: "パイロット猫", emoji: "✈️", power: "テイクオフ！「[NAME]」の人生の操縦桿は、あなた自身が握っているにゃ。他人に乱気流へ巻き込まれないよう、高度を上げて飛ぶにゃん！", itemTitle: "トラベル ネックピロー", itemDesc: "どこでも快適な眠りを。", keyword: "ネックピロー" },
+            { id: 105, rarity: "SR", name: "消防士猫", emoji: "🚒", power: "ウ〜ッ！「[NAME]」の心の中で燃え上がっているイライラは、私が全力で鎮火してやるにゃ！とりあえず冷たい水でも飲んでクールダウンだにゃん！", itemTitle: "炭酸水 メーカー", itemDesc: "シュワッと爽快リセット。", keyword: "ソーダストリーム" },
 
-            // --- R (50種: 既存35 + 新規15) ---
+            // --- R (65種) ---
             { id: 39, rarity: "R", name: "甘えん坊 ハチワレ", emoji: "🐱", power: "スリスリ…「[NAME]」、もっと私を構うにゃ！他人に気を使うより、自分と私を甘やかすのが最優先課題にゃん。", itemTitle: "ねこ用ちゅーる", itemDesc: "絶対喜ぶおやつ。", keyword: "猫+ちゅーる" },
             { id: 40, rarity: "R", name: "ツンデレ 黒猫", emoji: "🐈‍⬛", power: "別に「[NAME]」のことが心配なわけじゃないにゃ…。でも、たまには休まないと倒れるにゃん。早く寝なさいにゃ！", itemTitle: "キャットグラス", itemDesc: "部屋の浄化。", keyword: "猫草" },
             { id: 41, rarity: "R", name: "のんびり 茶トラ", emoji: "🐈", power: "あくびが出るにゃ〜。「[NAME]」、焦っても結果は同じにゃ。だったらゴロゴロしながら待つのが賢い生き方にゃん。", itemTitle: "もこもこ靴下", itemDesc: "足元を温める。", keyword: "もこもこ靴下" },
@@ -569,7 +574,6 @@
             { id: 71, rarity: "R", name: "足元 8の字スリスリ", emoji: "♾️", power: "スリスリ…「[NAME]」、あなたは一人じゃないにゃ。足元にちゃんと愛はあるにゃ。見落としている小さな幸せに気づいてにゃん。", itemTitle: "フットマッサージャー", itemDesc: "足元から癒やす。", keyword: "フットマッサージャー" },
             { id: 72, rarity: "R", name: "日向ぼっこ とろけ猫", emoji: "☀️", power: "あったかいにゃ〜。「[NAME]」、太陽の光を浴びてるにゃ？ビタミンDを生成して、心の中に温かいエネルギーをチャージするにゃん。", itemTitle: "日傘", itemDesc: "適度な日差しを楽しむ。", keyword: "日傘+完全遮光" },
             { id: 73, rarity: "R", name: "ただの 可愛い猫", emoji: "🐈", power: "にゃ〜。「[NAME]」、特別な理由なんてなくても、あなたは存在してるだけで可愛くて価値があるにゃん。そのまま生きててにゃ！", itemTitle: "ねこ図鑑", itemDesc: "もっと猫を知る。", keyword: "猫+写真集" },
-            // 新規追加R
             { id: 86, rarity: "R", name: "リモコン隠し猫", emoji: "📺", power: "テレビなんか見なくていいにゃ。「[NAME]」、外からの情報に振り回されすぎにゃん。今日は自分の内側の声だけを聞く日にするにゃ。", itemTitle: "アイマッサージャー", itemDesc: "目を閉じてリラックス。", keyword: "アイマッサージャー" },
             { id: 87, rarity: "R", name: "ティッシュ散らかし猫", emoji: "🧻", power: "シュバババッ！「[NAME]」、綺麗に整った日常もたまには派手に散らかしてみるにゃん。無駄な遊びが新しいアイデアを生むにゃ。", itemTitle: "高級 ティッシュ", itemDesc: "鼻をかんでも痛くない。", keyword: "鼻セレブ" },
             { id: 88, rarity: "R", name: "買い物袋 潜り猫", emoji: "🛍️", power: "カサカサ…ここ狭くて最高にゃ。「[NAME]」、たまには一人で狭い空間に引きこもって、外部のストレスを完全にシャットアウトするにゃん。", itemTitle: "一人用 こたつ", itemDesc: "誰にも邪魔されない空間。", keyword: "一人用こたつ" },
@@ -584,22 +588,58 @@
             { id: 97, rarity: "R", name: "充電ケーブル 遊び猫", emoji: "⚡", power: "チョイチョイ…「[NAME]」、エネルギーが漏れてるにゃ！自分をすり減らすだけの人間関係は、このケーブルみたいに抜いてしまうにゃん。", itemTitle: "モバイルバッテリー", itemDesc: "自分のエネルギーは自分で守る。", keyword: "モバイルバッテリー" },
             { id: 98, rarity: "R", name: "ダンボール 解体猫", emoji: "📦", power: "ビリビリにゃ！「[NAME]」、ストレスが溜まったら、物理的に何かを破壊して発散するのもアリにゃん。我慢は一番の毒だにゃ！", itemTitle: "シュレッダー", itemDesc: "嫌な過去を粉々にする。", keyword: "シュレッダー+家庭用" },
             { id: 99, rarity: "R", name: "座椅子 ぶんどり猫", emoji: "💺", power: "私が先に座ってたにゃ！「[NAME]」、たまには他人の目を気にせず、自分の居場所をガッチリ確保する図太さを見せるにゃん。", itemTitle: "ゲーミング チェア", itemDesc: "誰にも譲りたくない椅子。", keyword: "ゲーミングチェア" },
-            { id: 100, rarity: "R", name: "背中 乗り猫", emoji: "🛌", power: "ドスッ。「[NAME]」、重いにゃ？でも、誰かの重みを感じることで『一人じゃない』って安心できることもあるにゃん。私がずっと乗っててあげるにゃ。", itemTitle: "加重 ブランケット", itemDesc: "適度な重みで安心感を与える。", keyword: "ウェイトブランケット" }
+            { id: 100, rarity: "R", name: "背中 乗り猫", emoji: "🛌", power: "ドスッ。「[NAME]」、重いにゃ？でも、誰かの重みを感じることで『一人じゃない』って安心できることもあるにゃん。私がずっと乗っててあげるにゃ。", itemTitle: "加重 ブランケット", itemDesc: "適度な重みで安心感を与える。", keyword: "ウェイトブランケット" },
+            // 新規追加R(20種)
+            { id: 106, rarity: "R", name: "ダンボール戦士", emoji: "🪖", power: "防具は完璧にゃ！「[NAME]」、外の世界は敵だらけにゃ。今日は心のATフィールドを全開にして、誰の言葉も跳ね返す防御の日にするにゃん。", itemTitle: "着る毛布", itemDesc: "最高の防御力を持つ布。", keyword: "着る毛布+極厚" },
+            { id: 107, rarity: "R", name: "紙袋被り猫", emoji: "🛍️", power: "前が見えないにゃ…。「[NAME]」、先の見えない未来を不安に思っても無駄にゃん。とりあえず目の前のご飯を食べることだけ考えるにゃ。", itemTitle: "高級 お茶漬け", itemDesc: "目の前の幸せを噛みしめる。", keyword: "高級お茶漬け" },
+            { id: 108, rarity: "R", name: "猫じゃらし破壊神", emoji: "🥢", power: "フハハ、粉砕してやったにゃ！「[NAME]」、壊れることを恐れて何もしないより、全力で遊んで壊した方がよっぽど人生楽しいにゃん！", itemTitle: "ストレス解消 グッズ", itemDesc: "全力で握りつぶせる。", keyword: "ストレス解消+スクイーズ" },
+            { id: 109, rarity: "R", name: "靴下泥棒のボス", emoji: "🧦", power: "片方だけ頂くのが美学にゃ。「[NAME]」、全てを完璧に揃えようとするから疲れるにゃん。ちょっと欠けてるくらいが丁度いいアシンメトリーにゃ。", itemTitle: "おしゃれ 靴下", itemDesc: "あえて左右非対称に。", keyword: "靴下+おしゃれ" },
+            { id: 110, rarity: "R", name: "障子クライマー", emoji: "🧗‍♂️", power: "頂上はすぐそこにゃ！「[NAME]」、どんなに脆い壁（障子）でも、登ろうとするそのガッツが尊いにゃん。破れたら後で直せばいいにゃ！", itemTitle: "ウォールステッカー", itemDesc: "壁を可愛くごまかす。", keyword: "ウォールステッカー+猫" },
+            { id: 111, rarity: "R", name: "カーテン引き裂き魔", emoji: "🎐", power: "光を入れ込んでやったにゃ！「[NAME]」、心に閉め切った暗いカーテンは私がビリビリにしてやるにゃん。明るい日差しを浴びるにゃ！", itemTitle: "サンキャッチャー", itemDesc: "引き裂いた隙間から虹を。", keyword: "サンキャッチャー+スワロフスキー" },
+            { id: 112, rarity: "R", name: "観葉植物ハンター", emoji: "🌴", power: "土を掘り返すのが仕事にゃ。「[NAME]」、時には自分のルーツ（土台）を見つめ直して、不要なものを捨てる根回しが必要にゃん。", itemTitle: "多肉植物", itemDesc: "強靭な生命力を身につける。", keyword: "多肉植物+寄せ植え" },
+            { id: 113, rarity: "R", name: "網戸によじ登る猫", emoji: "🦟", power: "外の虫が気になって仕方ないにゃ！「[NAME]」、好奇心は猫をも殺すって言うけど、好奇心がない人生なんて死んでるのと同じにゃん！", itemTitle: "虫除け アロマ", itemDesc: "嫌な虫（人間）を寄せ付けない。", keyword: "ハッカ油+スプレー" },
+            { id: 114, rarity: "R", name: "ドアノブジャンプ猫", emoji: "🚪", power: "閉ざされた扉は自力でこじ開けるにゃ！「[NAME]」、待ってても誰も開けてくれないなら、思い切ってジャンプして自分で開けるにゃん！", itemTitle: "トランポリン", itemDesc: "ジャンプ力を鍛える。", keyword: "家庭用トランポリン" },
+            { id: 115, rarity: "R", name: "水道蛇口飲み猫", emoji: "🚰", power: "流れる水しか飲まない主義にゃ。「[NAME]」、淀んだ水（過去）にとらわれず、常に新しく流れ込んでくる新鮮な情報をキャッチするにゃん！", itemTitle: "浄水器", itemDesc: "常に新鮮な水を。", keyword: "浄水器+ポット" },
+            { id: 116, rarity: "R", name: "冷蔵庫の上監視員", emoji: "🧊", power: "ここから「[NAME]」の食生活を監視してるにゃ。最近ジャンクフードばかり食べてないにゃ？健康は最高の財産にゃん。野菜を食べるにゃ！", itemTitle: "野菜 スープ", itemDesc: "手軽に栄養を摂取。", keyword: "野菜スープ+無添加" },
+            { id: 117, rarity: "R", name: "洗濯機裏探検隊", emoji: "🧺", power: "ホコリだらけの大冒険にゃ！「[NAME]」、誰も見ないような日陰の作業も、私がちゃんと評価してあげるにゃん。あなたは偉大な探検家にゃ！", itemTitle: "入浴剤", itemDesc: "冒険の汚れを落とす。", keyword: "入浴剤+温泉" },
+            { id: 118, rarity: "R", name: "炊飯器あたため猫", emoji: "🍚", power: "お米の炊ける匂いと熱が最高にゃ…。「[NAME]」、心が冷え切った時は、温かいご飯をモリモリ食べるのが一番の特効薬にゃん！", itemTitle: "ブランド米", itemDesc: "最高の温もりを胃袋に。", keyword: "ブランド米+食べ比べ" },
+            { id: 119, rarity: "R", name: "こたつ占領軍", emoji: "🍊", power: "ここは我々が制圧したにゃ。「[NAME]」も抵抗をやめて、我軍（こたつ）に降伏して丸くなるにゃん。冬の平和はここにあるにゃ。", itemTitle: "みかん", itemDesc: "こたつ軍の正式な兵糧。", keyword: "みかん+箱買い" },
+            { id: 120, rarity: "R", name: "お風呂覗き見猫", emoji: "🛀", power: "溺れてないか見回りに来たにゃ！「[NAME]」、裸の付き合い（本音で話すこと）ができる相手を一人でも持っているなら、人生大勝利にゃん！", itemTitle: "バスボム", itemDesc: "裸の付き合いを彩る。", keyword: "バスボム+ギフト" }
         ];
 
-        // メッセージ拡張
-        const moods = ["超絶甘えん坊な", "少し眠そうな", "やたらテンションが高い", "何かを企んでいる", "悟りを開いた", "お腹を空かせた", "なでてほしい", "ツンデレな", "かまってちゃんな", "パトロール中の", "丸くなっている", "獲物を狙う"];
+        // メッセージ無限拡張（気分別に各10種以上）
+        const moods = ["超絶甘えん坊な", "少し眠そうな", "やたらテンションが高い", "何かを企んでいる", "悟りを開いた", "お腹を空かせた", "なでてほしい", "ツンデレな", "かまってちゃんな", "パトロール中の", "丸くなっている", "獲物を狙う", "香箱座りの", "尻尾をパタパタさせる", "耳をすませている", "毛づくろい中の"];
         
         const affirmationsDefault = [
             "今日も息をして生きてるだけで100点満点にゃ！", "何もできなくても、[NAME]の価値は絶対に減らないにゃん。",
             "そのままの[NAME]が一番可愛くて最高だにゃん🐾", "誰が何と言おうと、猫ちゃんたちは[NAME]の味方にゃ！",
-            "よく頑張ったにゃ！えらい！天才！宇宙一！！", "息をしてるだけで大優勝にゃ！", "生きてるだけで国宝級にゃん！"
+            "よく頑張ったにゃ！えらい！天才！宇宙一！！", "息をしてるだけで大優勝にゃ！", "生きてるだけで国宝級にゃん！",
+            "失敗しても猫みたいに「にゃん？」って顔してれば許されるにゃ！", "[NAME]の笑顔が世界を救うと本気で思ってるにゃ！",
+            "今日は自分に激甘な点数をつけていい日にゃん！"
         ];
-        const affirmationsTired = ["[NAME]、今日もお疲れ様にゃ！無理しなくていいんだにゃん。", "頑張った自分に一番のご褒美をあげる日にするにゃ。ゆっくり休んでにゃ。", "これ以上頑張ったら私が怒るにゃ！休むにゃ！"];
-        const affirmationsStress = ["モヤモヤする時は甘いものを食べて全部忘れるにゃ！[NAME]は悪くないにゃん。", "他人の心無い言葉なんて猫砂に埋めてスッキリするにゃ！私が味方にゃ！", "理不尽な世界には猫パンチをお見舞いしてやるにゃ！"];
-        const affirmationsSleepy = ["今日はもうスマホを置いて、温かい布団にダイブするにゃん。おやすみにゃ💤", "眠れない時は私と一緒に深呼吸するにゃ。[NAME]が安心するまでそばにいるにゃん。", "羊を数えるより、私のゴロゴロ音を聞く方がよく眠れるにゃん。"];
+        const affirmationsTired = [
+            "[NAME]、今日もお疲れ様にゃ！無理しなくていいんだにゃん。", "頑張った自分に一番のご褒美をあげる日にするにゃ。ゆっくり休んでにゃ。",
+            "これ以上頑張ったら私が怒るにゃ！休むにゃ！", "電池切れ寸前にゃ！今すぐ布団という名の充電器に接続するにゃ！",
+            "誰かのために頑張りすぎにゃ。今日は自分のためだけに生きるにゃん。", "ため息をつくくらいなら、美味しいお肉を食べるにゃ！",
+            "本当によく耐えたにゃ。私のモフモフを存分に吸って回復するにゃん。", "今日はもう「閉店ガラガラ」でいいにゃ！",
+            "お風呂に入って全部洗い流して、あとは寝るだけにゃん！", "[NAME]の頑張りは、私が宇宙の果てまで語り継ぐにゃ！"
+        ];
+        const affirmationsStress = [
+            "モヤモヤする時は甘いものを食べて全部忘れるにゃ！[NAME]は悪くないにゃん。", "他人の心無い言葉なんて猫砂に埋めてスッキリするにゃ！私が味方にゃ！",
+            "理不尽な世界には猫パンチをお見舞いしてやるにゃ！", "嫌なヤツの靴に私が吐いておいてやるから、[NAME]は笑ってるにゃん！",
+            "ストレスは万病の元にゃ。今すぐ紙をビリビリに破いて発散するにゃ！", "理不尽な要求は「にゃーん」と言って聞こえないフリをするにゃん。",
+            "あなたの心を乱すものは、全て私が爪研ぎの刑にしてやるにゃ！", "大声で叫んでいいにゃ！私がゴロゴロ音でかき消してあげるにゃん。",
+            "イライラしたらとりあえず私の肉球をぷにぷにするにゃ。", "どうにもならない時は、美味しいものを食べて全てを忘れるのが生物の真理にゃ！"
+        ];
+        const affirmationsSleepy = [
+            "今日はもうスマホを置いて、温かい布団にダイブするにゃん。おやすみにゃ💤", "眠れない時は私と一緒に深呼吸するにゃ。[NAME]が安心するまでそばにいるにゃん。",
+            "羊を数えるより、私のゴロゴロ音を聞く方がよく眠れるにゃん。", "目を閉じて、私が添い寝している温かさを想像するにゃ。",
+            "夜のネガティブな思考は睡眠不足のせいにゃ。朝になれば絶対解決してるにゃん！", "夢の中で私と一緒にちゅーるの海を泳ぐにゃん。",
+            "布団は[NAME]を守る最強の結界にゃ。安心して眠りにつくにゃ。", "明日もいい日になる魔法をかけておいたにゃん。おやすみなさいにゃ。",
+            "考え事は明日の自分に丸投げして、今の自分は寝るという任務を全うするにゃ！", "私のしっぽを抱き枕にして寝ていいにゃん💤"
+        ];
 
-        // プチ情報拡張
+        // プチ情報・豆知識の限界拡張（30種以上）
         const catTrivias = [
             "猫のゴロゴロ音（約25〜50Hz）には、骨や細胞の修復を早める癒やし効果があるにゃ！",
             "猫の鼻の模様（鼻紋）は、人間の指紋と同じで世界に一つだけのオリジナルにゃん。",
@@ -612,26 +652,66 @@
             "猫のヒゲは単なる毛ではなく、空気の流れや障害物を察知する超高感度センサーなんだにゃ！",
             "猫は甘い・苦いより「水の味」の違いが分かるグルメな舌を持ってるにゃん。",
             "猫の記憶力は犬の約200倍とも言われ、特に「嬉しかったこと」は長く覚えてるにゃん！",
-            "猫の平熱は38度くらい。だから人間より少し温かくてカイロ代わりになるにゃ。"
+            "猫の平熱は38度くらい。だから人間より少し温かくてカイロ代わりになるにゃ。",
+            "猫が飼い主の顔を舐めるのは、愛情表現であると同時に「自分の匂いをつけて所有権を主張」してるにゃん。",
+            "猫の視野は200度もあるにゃ！人間の120度に比べると、横の動きに超敏感なんだにゃ。",
+            "猫の肉球は唯一汗をかく場所。緊張したり暑かったりするとしっとりするにゃん。",
+            "猫の聴力は人間の約3倍。犬よりも高く、ネズミの超音波すら聞き取れるにゃ！",
+            "猫が前足を香箱のように折りたたむ「香箱座り」は、超リラックスしていてすぐに逃げない証拠にゃ。",
+            "猫の腸は人間の約半分。だから消化が良くて、こまめにご飯を食べるスタイルなんだにゃん。",
+            "三毛猫のほとんど（99.9%）がメス。オスの三毛猫は超絶レアで幸運のシンボルと言われてるにゃ！",
+            "猫がパソコンや新聞の上に乗るのは「私をもっと見て！」という嫉妬と愛情の裏返しにゃん。",
+            "猫の嗅覚は人間の数万倍！だから柑橘系や香水の強い匂いはちょっと苦手なんだにゃ。",
+            "猫が喉をゴロゴロ鳴らすのは嬉しい時だけじゃないにゃ。自分が苦しい時に自分を癒やすためにも鳴らすにゃん。",
+            "猫の睡眠はほとんどが浅い「レム睡眠」。だから物音がするとすぐに起きられるにゃ。",
+            "エジプトでは猫は神様として崇拝されていたにゃ！だから猫が偉そうなのは血筋にゃん。",
+            "猫が獲物（おもちゃなど）を持ってくるのは、あなたを「狩りができない大きな子猫」と思って世話してるつもりにゃ。",
+            "猫の肉球の色は鼻の色や毛色と連動していることが多いにゃ。黒猫は黒、白猫はピンクが多いにゃん。",
+            "猫は暗闇でも人間の1/6の光量で物を見ることができる「タペタム」という反射板を持ってるにゃ。",
+            "猫が足にスリスリするのは「あなたは私のもの！」というマーキング行動にゃん。",
+            "猫は「にゃー」という声を人間に対してしか使わないと言われてるにゃ。猫同士はボディランゲージで会話するにゃん。",
+            "世界で一番長く生きた猫は38歳（人間換算で約170歳）という記録があるにゃ！"
         ];
 
-        const secretWords = ["ちゅーる", "またたび", "にくきゅう", "にゃんこ", "おひるね", "ねこぱんち"];
-        const decoItems = ["👑", "🎀", "🎩", "🌸", "👓", "✨", "🐟", "👔", "🎓"];
+        const secretWords = ["ちゅーる", "またたび", "にくきゅう", "にゃんこ", "おひるね", "ねこぱんち", "ごロゴロ", "もふもふ", "さんくす"];
+        const decoItems = ["👑", "🎀", "🎩", "🌸", "👓", "✨", "🐟", "👔", "🎓", "🧣", "🎸", "🍔"];
 
-        // なでなで反応バリエーション拡張
+        // なでなで反応バリエーション超拡張
         const petReactions = {
-            high: ["[NAME]、大好きにゃあああん💕", "スリスリ…ずっと離れないにゃ！", "ゴロゴロ🎵至福の時にゃ〜", "チュッ🐾（鼻キス）", "（膝の上でとろけている…）"],
-            mid: ["ゴロゴロ…もっと撫でてにゃ💕", "悪くないにゃん", "あごの下もお願いするにゃ", "しっぽがピンと立っちゃうにゃ！", "ふみふみ…🐾"],
-            low: ["まあまあにゃ。続けるにゃ🐾", "ちょっとだけなら許すにゃ", "（じっと手を見ている…）", "ツンツン…", "にゃん？"],
-            bad: ["シャーッ！（触るな）", "スンッ…（そっぽを向く）", "プイッ", "（足早に逃げた…）", "猫パンチ！🐾"]
+            high: [
+                "[NAME]、大好きにゃあああん💕", "スリスリ…ずっと離れないにゃ！", "ゴロゴロ🎵至福の時にゃ〜", 
+                "チュッ🐾（鼻キス）", "（膝の上でとろけている…）", "もっと！もっと撫でるにゃ！💖",
+                "（あなたを見つめてゆっくりまばたきしている）", "ぐるるるる…（大音量のゴロゴロ）", 
+                "お腹も見せてあげるにゃ！撫で放題にゃん！", "（あなたの手に頭をこすりつけている）"
+            ],
+            mid: [
+                "ゴロゴロ…もっと撫でてにゃ💕", "悪くないにゃん", "あごの下もお願いするにゃ", 
+                "しっぽがピンと立っちゃうにゃ！", "ふみふみ…🐾", "そこそこ！そこが気持ちいいにゃ",
+                "（目を細めて気持ちよさそうにしている）", "もうちょっと右にゃ", 
+                "まあ、撫でさせてあげてもいいにゃ", "（耳をピクピクさせて喜んでいる）"
+            ],
+            low: [
+                "まあまあにゃ。続けるにゃ🐾", "ちょっとだけなら許すにゃ", "（じっと手を見ている…）", 
+                "ツンツン…", "にゃん？", "今日はそういう気分じゃないにゃ", 
+                "（しっぽをパタパタさせて少し考え中）", "フンッ（ちょっとだけ顔をそむけた）",
+                "今は毛づくろい中だから後にしてにゃ", "（あくびをして無視された…）"
+            ],
+            bad: [
+                "シャーッ！（触るな）", "スンッ…（そっぽを向く）", "プイッ", "（足早に逃げた…）", 
+                "猫パンチ！🐾", "ガブッ！（軽く噛まれた）", "シャアアァァ！！", 
+                "（ダッシュで机の下に隠れた）", "今は絶対にダメにゃ！", "（冷たい目で見下されている…）"
+            ]
         };
 
-        // おねだりメッセージ拡張
+        // おねだりメッセージ・ストーリー化拡張
         function getOnedariMessage(catName, userName, syncRate) {
             const safeName = userName === "あなた" ? "ご主人" : userName;
-            // 相性が高ければさらに言い訳を追加
             let prefix = "";
-            if (syncRate >= 95) prefix = `「今日の相性${syncRate}%は奇跡にゃ！だから絶対にお願いにゃ！」<br>`;
+            
+            // 相性による前置きフレーミング
+            if (syncRate >= 110) prefix = `「限界突破の相性${syncRate}%にゃ！！これは運命を超えた啓示にゃん！絶対買うしかないにゃ！」<br>`;
+            else if (syncRate >= 100) prefix = `「今日の相性${syncRate}%は奇跡にゃ！だから絶対にお願いにゃ！」<br>`;
+            else if (syncRate >= 95) prefix = `「相性バッチリの私から、${safeName}ちゃんに特別なおねだりにゃ！」<br>`;
 
             const msgs = [
                 `「${safeName}ちゃん、これがあったらもっと一緒にいられるにゃ💕」`,
@@ -643,7 +723,12 @@
                 `「私の第六感が『これを買えば${safeName}ちゃんに幸運が訪れる』と言ってるにゃ🔮」`,
                 `「ねえ${safeName}ちゃん、私のためにこれを用意してくれたら一生恩に着るにゃ💖」`,
                 `「（無言で上目遣いしながら、アイテムを指差している…🐾）」`,
-                `「今日は特別な日にゃ！だからこれをおねだりしても許されるはずだにゃん！」`
+                `「今日は特別な日にゃ！だからこれをおねだりしても許されるはずだにゃん！」`,
+                `「${safeName}ちゃんの頑張りは私が一番知ってるにゃ。だからこれくらい自分へのご褒美にしていいにゃん！」`,
+                `「これを手に入れた${safeName}ちゃんの笑顔が見たいにゃ。嘘じゃないにゃ、本当だにゃ！」`,
+                `「これがないと夜も眠れないにゃ…嘘にゃ、よく寝てるけど欲しいのは本当だにゃん！」`,
+                `「他の猫には内緒にゃ。${safeName}ちゃんだけに特別に教えてあげる、これ最強のアイテムにゃ！」`,
+                `「これを買ってくれたら、今日から私は${safeName}ちゃんの下僕に…いや、対等のパートナーになるにゃ！」`
             ];
             return prefix + msgs[Math.floor(Math.random() * msgs.length)];
         }
@@ -669,8 +754,8 @@
             clickGoals.forEach(g => {
                 trophiesData.push({ id: `c${g}`, title: `大パトロン(Lv.${g})`, desc: `猫に${g}回プレゼントを貢いだ`, icon: "🎁", check: () => stats.clicks >= g });
             });
-            // ④ 図鑑収集度 (10個)
-            const bookGoals = [1, 5, 10, 20, 30, 40, 50, 60, 80, 100];
+            // ④ 図鑑収集度 (10個) -> 全120種に合わせて調整
+            const bookGoals = [1, 10, 20, 30, 50, 70, 90, 100, 110, 120];
             bookGoals.forEach(g => {
                 trophiesData.push({ id: `b${g}`, title: `図鑑コレクター(${g})`, desc: `猫を${g}種類発見した`, icon: "📖", check: () => Object.keys(affectionData).length >= g });
             });
@@ -886,13 +971,11 @@
         function drawCat() {
             if (isFlipped) return;
             
-            // 改善: 気分を選んでいない場合はランダムで自動選択
             if (!currentSelectedMood) {
                 const defaultMoods = ['tired', 'stress', 'sleepy', 'lucky'];
                 currentSelectedMood = defaultMoods[Math.floor(Math.random() * defaultMoods.length)];
             }
             
-            // 記録
             stats.moods[currentSelectedMood]++;
             stats.draws++;
             saveStats();
@@ -941,7 +1024,6 @@
             checkAchievements();
 
             const cardContainer = document.getElementById('cardContainer');
-            // 改善: レア度に応じた3〜6秒の超・溜め演出
             let chargeTime = 3000; 
             
             if (targetRarity === "SEC" || targetRarity === "UR") {
@@ -990,8 +1072,6 @@
 
             document.getElementById('cardMood').innerText = currentResult.mood;
             document.getElementById('cardName').innerText = currentResult.name;
-            
-            // レア度に応じたカラフルな文字背景を適用
             document.getElementById('cardName').className = `card-name name-${rLow}`;
 
             const pText = currentResult.power.replace(/\[NAME\]/g, userName);
@@ -1043,29 +1123,24 @@
             document.getElementById('textTrivia').innerHTML = `📅 <strong>${todayStr} の癒やし記録</strong><br><br>💡 <strong>ねこプチ情報：</strong><br>${trivia}`;
             document.getElementById('productSpeech').innerHTML = getOnedariMessage(currentResult.name, userName, syncRate);
 
-            // 検索キーワードの「+」記号を各サイトが認識しやすいスペースに変換
             const cleanKeyword = searchKeyword.replace(/\+/g, ' ');
             
             document.getElementById('productLinkRakuten').innerHTML = `楽天市場で<br>「${displayTitle}」を贈る🐾`;
             document.getElementById('productLinkAmazon').innerHTML = `Amazonで<br>「${currentResult.itemTitle}」を探す📦`;
             document.getElementById('productLinkYahoo').innerHTML = `Yahoo!ショッピングで<br>お得に揃える🛍️`;
 
-            // 検索結果への安全な直リンク
             let finalLinkRakuten = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(searchKeyword)}/`;
             let finalLinkAmazon = `https://www.amazon.co.jp/s?k=${encodeURIComponent(cleanKeyword)}`;
             let finalLinkYahoo = `https://shopping.yahoo.co.jp/search?p=${encodeURIComponent(cleanKeyword)}`;
 
-            // A8.net IDが存在する場合、楽天のみA8システムを適用
             if (userA8Id && userA8Id.startsWith("s0000")) {
                 finalLinkRakuten = `${a8BaseUrl}${userA8Id}/&rakuten=y&a8url=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F${encodeURIComponent(searchKeyword)}%2F`;
             }
             
-            // リンクの適用
             document.getElementById('productLinkRakuten').href = finalLinkRakuten;
             document.getElementById('productLinkAmazon').href = finalLinkAmazon;
             document.getElementById('productLinkYahoo').href = finalLinkYahoo;
 
-            // 改善: 結果の3.5秒スローフェードイン
             setTimeout(() => {
                 const resContainer = document.getElementById('resultContainer');
                 resContainer.classList.add('show-slow');
