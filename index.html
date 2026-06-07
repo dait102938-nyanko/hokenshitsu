@@ -70,8 +70,7 @@
         .mood-btn:hover { transform: translateY(-2px); }
         .mood-btn.active { background: var(--accent-color); color: white; transform: scale(1.05); box-shadow: 0 4px 10px rgba(255, 111, 145, 0.4); }
 
-        .card-container { perspective: 1000px; width: 160px; height: 260px; margin: 15px 0; cursor: pointer; position: relative; filter: grayscale(100%) opacity(0.5); pointer-events: none; transition: all 0.5s; }
-        .card-container.ready { filter: grayscale(0%) opacity(1); pointer-events: auto; animation: float 3s infinite ease-in-out; }
+        .card-container { perspective: 1000px; width: 160px; height: 260px; margin: 15px 0; cursor: pointer; position: relative; transition: all 0.5s; animation: float 3s infinite ease-in-out; }
         
         .rarity-badge { position: absolute; top: -10px; right: -10px; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.95rem; color: white; z-index: 10; opacity: 0; transform: scale(0); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s; }
         .card-container.flipped .rarity-badge { opacity: 1; transform: scale(1) rotate(15deg); }
@@ -96,18 +95,31 @@
         .card-mood { font-size: 0.75rem; color: var(--text-main); margin-bottom: 2px; background: rgba(255,255,255,0.7); padding: 2px 8px; border-radius: 10px; font-weight: bold; }
         .card-name { font-size: 0.95rem; font-weight: 900; color: var(--accent-color); text-align: center; background: rgba(255,255,255,0.85); padding: 4px 10px; border-radius: 12px; text-shadow: 1px 1px 0px #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 5px; }
 
-        @keyframes shakeLittle { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px) rotate(-1deg); } 75% { transform: translateX(2px) rotate(1deg); } }
-        @keyframes shakeHard { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-4px, 2px) rotate(-3deg); } 40% { transform: translate(4px, -2px) rotate(3deg); } 60% { transform: translate(-4px, -2px) rotate(-3deg); } 80% { transform: translate(4px, 2px) rotate(3deg); } }
-        .charging-r { animation: shakeLittle 0.1s infinite; }
-        .charging-ur { animation: shakeHard 0.05s infinite; filter: brightness(1.5) drop-shadow(0 0 20px #ffd700); }
+        /* ガチャ超・溜め演出用（レア度別） */
+        @keyframes shakeR { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px) rotate(-1deg); filter: brightness(1.2); } 75% { transform: translateX(2px) rotate(1deg); filter: brightness(1.2); } }
+        @keyframes shakeSR { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-3px, 2px) rotate(-2deg); filter: brightness(1.3) drop-shadow(0 0 10px #00bfff); } 60% { transform: translate(3px, -2px) rotate(2deg); filter: brightness(1.3) drop-shadow(0 0 10px #00bfff); } }
+        @keyframes shakeSSR { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-4px, 3px) rotate(-3deg); filter: brightness(1.5) drop-shadow(0 0 20px #ff00ff); } 60% { transform: translate(4px, -3px) rotate(3deg); filter: brightness(1.5) drop-shadow(0 0 20px #ff00ff); } }
+        @keyframes shakeUR { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-6px, 4px) rotate(-4deg); filter: brightness(2) drop-shadow(0 0 40px #ffd700); } 60% { transform: translate(6px, -4px) rotate(4deg); filter: brightness(2) drop-shadow(0 0 40px #ffd700); } }
+        
+        .charging-r-super { animation: shakeR 0.1s infinite; }
+        .charging-sr-super { animation: shakeSR 0.08s infinite; }
+        .charging-ssr-super { animation: shakeSSR 0.05s infinite; }
+        .charging-ur-super { animation: shakeUR 0.04s infinite; }
+        
         #flashOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: white; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
         #flashOverlay.flash { opacity: 1; transition: opacity 0.1s; }
 
         /* =========================================
            4. 結果エリア・なでなで・深呼吸
         ========================================= */
-        .result-container { display: none; width: 100%; opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; margin-top: 10px; }
-        .result-container.show { display: block; opacity: 1; transform: translateY(0); }
+        .result-container { display: none; width: 100%; opacity: 0; transform: translateY(10px); margin-top: 10px; }
+        /* スロー・フェードイン演出 */
+        .result-container.show-slow { display: block; animation: slowFadeIn 3.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        
+        @keyframes slowFadeIn {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
 
         .purrr-effect { text-align: center; font-size: 0.85rem; color: var(--accent-color); font-style: italic; letter-spacing: 0.2em; margin-top: 5px; animation: purrrShake 2s infinite ease-in-out; }
         .section-title { font-size: 0.95rem; color: var(--text-main); border-left: 4px solid var(--accent-color); padding-left: 8px; margin: 20px 0 10px 0; font-weight: bold; }
@@ -258,7 +270,7 @@
 
     <main>
         <div class="mood-selector" id="moodSelector">
-            <div style="font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; color: var(--accent-color);">👇 今の気分を選ぶとカードが引けるにゃ</div>
+            <div style="font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; color: var(--accent-color);">👇 気分を選ぶか、そのままカードを引くにゃ</div>
             <div class="mood-buttons">
                 <button class="mood-btn" onclick="setMood('tired', this)">💻 お疲れ</button>
                 <button class="mood-btn" onclick="setMood('stress', this)">💔 モヤモヤ</button>
@@ -310,6 +322,7 @@
                 <div style="width: 100%; text-align: left;">
                     <div class="affection-meter"><div class="affection-fill" id="affectionFill"></div></div>
                     <div class="affection-label" id="affectionLabel">好感度レベル: 1</div>
+                    <div style="font-size: 0.7rem; color: #ff4757; text-align: center; margin-top: 8px; font-weight: bold; background: #fff0f3; padding: 4px; border-radius: 8px; border: 1px dashed #ffb7c5;">💡 貢ぐと推し猫が可愛いアイテムでドレスアップするにゃ！</div>
                 </div>
                 
                 <div class="product-info">
@@ -411,7 +424,7 @@
         let totalEncounters = parseInt(localStorage.getItem('nyanko_total_encounters')) || 0;
         let totalPets = parseInt(localStorage.getItem('nyanko_total_pets')) || 0;
         let affectionData = JSON.parse(localStorage.getItem('nyanko_affection')) || {};
-        let contributionData = JSON.parse(localStorage.getItem('nyanko_contribution')) || {}; // 追加: 貢献度
+        let contributionData = JSON.parse(localStorage.getItem('nyanko_contribution')) || {};
         let bgStamps = JSON.parse(localStorage.getItem('nyanko_bg_stamps')) || [];
         let roomItems = JSON.parse(localStorage.getItem('nyanko_room_items')) || [];
         
@@ -541,7 +554,11 @@
             "猫が前足でふみふみするのは、子猫時代の安心感を思い出している至福の時にゃ。",
             "猫の耳は片方ずつ別々に動かせるにゃ。180度回転させて音の出所を探ってるにゃん。",
             "猫がしっぽをピンと立てて近づいてくる時は、ご機嫌で甘えたいサインにゃ💕",
-            "猫は甘味を感じないにゃ。だからスイーツよりお肉やお魚に夢中になるにゃん。"
+            "猫は甘味を感じないにゃ。だからスイーツよりお肉やお魚に夢中になるにゃん。",
+            "猫のジャンプ力は体高の約5倍！忍者のような身体能力を秘めているにゃん。",
+            "猫が飼い主にお尻を向けて座るのは、「背後を任せられるほど信頼している」という最大級の愛情表現にゃ！",
+            "猫の鎖骨は退化していて、頭が通る隙間ならどこでも通り抜けられる「液体」のような体を持ってるにゃ。",
+            "猫が獲物を見つけた時に出す「カカカッ」という音（クラッキング）は、興奮が抑えきれない時の声にゃん！"
         ];
 
         const secretWords = ["ちゅーる", "またたび", "にくきゅう", "にゃんこ", "おひるね"];
@@ -720,9 +737,6 @@
             document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
             btnElement.classList.add('active');
             
-            const cardContainer = document.getElementById('cardContainer');
-            cardContainer.classList.add('ready');
-            document.getElementById('moodSelector').style.display = 'none';
             showToast("カードをタップして引くにゃ！");
         }
 
@@ -731,11 +745,15 @@
         // =========================================
         function drawCat() {
             if (isFlipped) return;
+            
+            // 改善: 気分を選んでいない場合はランダムで自動選択
             if (!currentSelectedMood) {
-                showToast("先に「今の気分」を選んでにゃ🐾");
-                return;
+                const defaultMoods = ['tired', 'stress', 'sleepy', 'lucky'];
+                currentSelectedMood = defaultMoods[Math.floor(Math.random() * defaultMoods.length)];
             }
+            
             isFlipped = true;
+            document.getElementById('moodSelector').style.display = 'none';
             
             const rand = Math.random();
             let targetRarity = "R";
@@ -780,24 +798,32 @@
             checkAchievements();
 
             const cardContainer = document.getElementById('cardContainer');
-            let chargeTime = 600;
+            // 改善: レア度に応じた3〜6秒の超・溜め演出
+            let chargeTime = 3000; // 最低3秒
+            
             if (targetRarity === "SEC" || targetRarity === "UR") {
-                chargeTime = 2500;
-                cardContainer.classList.add('charging-ur');
+                chargeTime = 6000;
+                cardContainer.classList.add('charging-ur-super');
             } else if (targetRarity === "SSR") {
-                chargeTime = 1200;
-                cardContainer.classList.add('charging-r');
+                chargeTime = 5000;
+                cardContainer.classList.add('charging-ssr-super');
+            } else if (targetRarity === "SR") {
+                chargeTime = 4000;
+                cardContainer.classList.add('charging-sr-super');
+            } else {
+                chargeTime = 3000;
+                cardContainer.classList.add('charging-r-super');
             }
 
             setTimeout(() => {
-                cardContainer.classList.remove('charging-ur', 'charging-r');
+                cardContainer.classList.remove('charging-ur-super', 'charging-ssr-super', 'charging-sr-super', 'charging-r-super');
                 if (targetRarity === "SEC" || targetRarity === "UR") {
                     const flash = document.getElementById('flashOverlay');
                     flash.classList.add('flash');
                     setTimeout(() => flash.classList.remove('flash'), 150);
-                    startCatShower(40);
+                    startCatShower(50);
                 } else if (targetRarity === "SSR") {
-                    startCatShower(20);
+                    startCatShower(30);
                 }
                 showResultUI();
             }, chargeTime);
@@ -867,14 +893,13 @@
             document.getElementById('textTrivia').innerHTML = `📅 <strong>${todayStr} の記録</strong><br><br>💡 <strong>ねこプチ情報：</strong><br>${trivia}`;
             document.getElementById('productSpeech').innerText = getOnedariMessage(currentResult.name, userName);
 
-            const safeUser = userName === "あなた" ? "猫ちゃん" : userName;
-            document.getElementById('productLinkRakuten').innerText = `楽天市場で「${currentResult.itemTitle}」を贈る🐾`;
-            document.getElementById('productLinkTikTok').innerText = `TikTok Shop（初回19.2%還元）で探す🎬`;
-            document.getElementById('productLinkWatts').innerText = `ワッツ（確定率100%）100均雑貨を見る🛒`;
+            document.getElementById('productLinkRakuten').innerHTML = `楽天市場で<br>「${displayTitle}」を贈る🐾`;
+            document.getElementById('productLinkTikTok').innerHTML = `TikTok Shopで<br>「${searchKeyword.replace(/\+/g, ' ')}」動画を探す🎬`;
+            document.getElementById('productLinkWatts').innerHTML = `ワッツ(100均)で<br>「${currentResult.keyword}」をお得に揃える🛒`;
 
             let finalLinkRakuten = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(searchKeyword)}/`;
             let finalLinkTikTok = `https://www.tiktok.com/search?q=${encodeURIComponent(searchKeyword)}`;
-            let finalLinkWatts = `https://watts-online.jp/products/list?name=${encodeURIComponent(currentResult.itemTitle)}`;
+            let finalLinkWatts = `https://watts-online.jp/products/list?name=${encodeURIComponent(currentResult.keyword)}`;
 
             if (userA8Id && userA8Id.startsWith("s0000")) {
                 finalLinkRakuten = `${a8BaseUrl}${userA8Id}/&rakuten=y&a8url=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F${encodeURIComponent(searchKeyword)}%2F`;
@@ -886,12 +911,13 @@
             document.getElementById('productLinkTikTok').href = finalLinkTikTok;
             document.getElementById('productLinkWatts').href = finalLinkWatts;
 
+            // 改善: 結果の3.5秒スローフェードイン
             setTimeout(() => {
                 const resContainer = document.getElementById('resultContainer');
-                resContainer.classList.add('show');
+                resContainer.classList.add('show-slow');
                 resContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 loadCatRoom();
-            }, 600);
+            }, 800);
         }
 
         function resetGacha() {
@@ -899,7 +925,7 @@
             currentResult = null;
             currentCatId = null;
             currentSelectedMood = null;
-            document.getElementById('resultContainer').classList.remove('show');
+            document.getElementById('resultContainer').classList.remove('show-slow');
             const cardContainer = document.getElementById('cardContainer');
             cardContainer.className = 'card-container';
             cardContainer.classList.remove('ready');
@@ -978,6 +1004,9 @@
             setTimeout(() => paw.remove(), 1200);
         }
 
+        // =========================================
+        // 6. 永続背景スタンプ管理・箱庭ねこ・貢ぎ物
+        // =========================================
         function addStampToBg(emoji, xPercent, yPercent) {
             const stamp = { e: emoji, x: xPercent, y: yPercent };
             bgStamps.push(stamp);
@@ -1124,7 +1153,7 @@
         };
 
         // =========================================
-        // 8. モーダル管理（各種機能統合）
+        // 8. モーダル管理（名前・図鑑・合言葉・トロフィー）
         // =========================================
         window.openNameModal = function() {
             document.getElementById('nameInput').value = userName === 'あなた' ? '' : userName;
@@ -1142,7 +1171,7 @@
             showToast(`これからは「${userName}」って呼ぶにゃん🐾`);
         };
         function updateNameDisplay() {
-            document.querySelector('.head-btn').innerText = userName === 'あなた' ? '⚙️ お名前設定' : `⚙️ 名前: ${userName}`;
+            document.querySelector('.head-btn').innerText = userName === 'あなた' ? '⚙️ 設定' : `⚙️ 名前: ${userName}`;
         }
 
         window.openSecretModal = function() {
@@ -1230,7 +1259,7 @@
             document.getElementById('bookModal').classList.remove('show');
         };
 
-        // 貢献度（推し活ランキング）ライセンスモーダル
+        // ライセンスモーダル
         window.openLicenseModal = function() {
             let sortedCats = Object.keys(contributionData).sort((a, b) => contributionData[b] - contributionData[a]);
             let oshiHtml = `<div style="font-size:0.8rem; color:var(--text-muted); padding: 10px; text-align:center;">まだ猫ちゃんに貢いでいないにゃん🐾<br>占いを引いてプレゼントするにゃ！</div>`;
