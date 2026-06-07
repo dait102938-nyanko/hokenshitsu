@@ -25,13 +25,15 @@
             transition: background 1s ease, color 0.5s ease;
         }
 
-        /* 背景スタンプ（永続化）用コンテナ */
+        /* 背景スタンプ・箱庭 */
         #stampContainer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
         .bg-stamp { position: absolute; font-size: 2rem; opacity: 0.15; transform: rotate(-15deg); user-select: none; }
         body.theme-night .bg-stamp { opacity: 0.1; color: #fff; }
 
-        /* 箱庭ねこ（集めた猫のルーム）用のアニメーション */
         .roaming-cat { position: absolute; user-select: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); z-index: 1; transition: all 5s linear; pointer-events: none; }
+        .roaming-item { position: absolute; user-select: none; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); z-index: 1; animation: dropItem 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
+        @keyframes dropItem { 0% { transform: translateY(-50px) scale(0.5) rotate(-20deg); opacity: 0; } 100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; } }
         @keyframes walkRight { 0% { transform: translateX(-50px) scaleX(-1); } 100% { transform: translateX(100vw) scaleX(-1); } }
         @keyframes walkLeft { 0% { transform: translateX(100vw); } 100% { transform: translateX(-50px); } }
         @keyframes sleeping { 0%, 100% { transform: scale(1) translateY(0); } 50% { transform: scale(1.05) translateY(-3px); } }
@@ -39,24 +41,38 @@
         /* =========================================
            2. ヘッダーとステータス
         ========================================= */
-        header { text-align: center; padding: 25px 20px 10px 20px; z-index: 10; position: relative; width: 100%; box-sizing: border-box; }
+        header { text-align: center; padding: 25px 15px 10px 15px; z-index: 10; position: relative; width: 100%; box-sizing: border-box; }
         h1 { font-size: 1.6rem; color: var(--accent-color); margin: 0 0 5px 0; letter-spacing: 0.1em; text-shadow: 1px 1px 0px rgba(255,255,255,0.5); }
         .subtitle { font-size: 0.8rem; color: var(--text-muted); font-weight: bold; }
         
-        .header-buttons { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-        .head-btn { background: rgba(255,255,255,0.7); border: 1px solid var(--accent-color); color: var(--accent-color); padding: 5px 12px; border-radius: 15px; font-size: 0.75rem; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .header-buttons { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .head-btn { background: rgba(255,255,255,0.7); border: 1px solid var(--accent-color); color: var(--accent-color); padding: 5px 10px; border-radius: 15px; font-size: 0.7rem; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: all 0.2s; }
+        .head-btn:hover { transform: translateY(-2px); }
         body.theme-night .head-btn { background: rgba(0,0,0,0.3); }
 
         .status-board { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 10px; }
         .encounter-badge { background-color: var(--card-bg); color: var(--accent-color); border: 2px solid var(--accent-color); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
         .title-badge { background: var(--accent-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .trophy-badge { background: linear-gradient(135deg, #ffd700, #ffaa00); color: white; padding: 4px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: none; cursor: pointer; }
+        
+        .share-bonus-badge { display: none; background: linear-gradient(135deg, #ffd700, #ff8c00); color: white; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-top: 5px; box-shadow: 0 0 15px rgba(255,215,0,0.6); animation: pulse 1.5s infinite; }
+        .share-bonus-badge.active { display: inline-block; }
 
         /* =========================================
-           3. ガチャ（カード）演出
+           3. ガチャ（気分選択 ＋ カード演出）
         ========================================= */
         main { width: 100%; max-width: 480px; padding: 10px 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; z-index: 10; position: relative; }
 
-        .card-container { perspective: 1000px; width: 160px; height: 260px; margin: 15px 0; cursor: pointer; position: relative; }
+        .mood-selector { margin: 10px 0; text-align: center; background: rgba(255,255,255,0.6); padding: 10px; border-radius: 15px; border: 2px dashed var(--accent-color); width: 100%; box-sizing: border-box; }
+        body.theme-night .mood-selector { background: rgba(0,0,0,0.4); }
+        .mood-buttons { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+        .mood-btn { background: var(--card-bg); border: 2px solid var(--accent-color); color: var(--text-main); border-radius: 20px; padding: 8px 12px; font-size: 0.8rem; font-weight: bold; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .mood-btn:hover { transform: translateY(-2px); }
+        .mood-btn.active { background: var(--accent-color); color: white; transform: scale(1.05); box-shadow: 0 4px 10px rgba(255, 111, 145, 0.4); }
+
+        .card-container { perspective: 1000px; width: 160px; height: 260px; margin: 15px 0; cursor: pointer; position: relative; filter: grayscale(100%) opacity(0.5); pointer-events: none; transition: all 0.5s; }
+        .card-container.ready { filter: grayscale(0%) opacity(1); pointer-events: auto; animation: float 3s infinite ease-in-out; }
+        
         .rarity-badge { position: absolute; top: -10px; right: -10px; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.95rem; color: white; z-index: 10; opacity: 0; transform: scale(0); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s; }
         .card-container.flipped .rarity-badge { opacity: 1; transform: scale(1) rotate(15deg); }
         
@@ -73,12 +89,13 @@
         .card-back::after { content: "🐾\A\A肉球で\A引くにゃ"; white-space: pre; text-align: center; font-size: 1rem; font-weight: bold; color: #fff; letter-spacing: 0.05em; animation: pulse 2s infinite ease-in-out; }
         .card-front { background-color: var(--card-bg); transform: rotateY(180deg); border-color: var(--accent-color); padding: 15px; box-sizing: border-box; }
 
-        .card-emoji { font-size: 4rem; margin-bottom: 8px; animation: float 3s infinite ease-in-out; }
-        /* 改善4: カードの文字を見やすくクッキリ化 */
+        .card-emoji-container { position: relative; }
+        .card-emoji { font-size: 4rem; margin-bottom: 8px; }
+        .card-decoration { position: absolute; top: -15px; right: -15px; font-size: 1.8rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); transform: rotate(15deg); z-index: 2; }
+
         .card-mood { font-size: 0.75rem; color: var(--text-main); margin-bottom: 2px; background: rgba(255,255,255,0.7); padding: 2px 8px; border-radius: 10px; font-weight: bold; }
         .card-name { font-size: 0.95rem; font-weight: 900; color: var(--accent-color); text-align: center; background: rgba(255,255,255,0.85); padding: 4px 10px; border-radius: 12px; text-shadow: 1px 1px 0px #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 5px; }
 
-        /* ガチャ溜め演出用 */
         @keyframes shakeLittle { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px) rotate(-1deg); } 75% { transform: translateX(2px) rotate(1deg); } }
         @keyframes shakeHard { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-4px, 2px) rotate(-3deg); } 40% { transform: translate(4px, -2px) rotate(3deg); } 60% { transform: translate(-4px, -2px) rotate(-3deg); } 80% { transform: translate(4px, 2px) rotate(3deg); } }
         .charging-r { animation: shakeLittle 0.1s infinite; }
@@ -101,23 +118,21 @@
         .pet-btn-wrapper { text-align: center; margin: 25px 0 10px 0; position: relative; }
         .pet-btn { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); border: none; color: #d81b60; font-size: 1.1rem; font-weight: bold; padding: 12px 30px; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,154,158,0.4); transition: transform 0.1s; }
         .pet-btn:active { transform: scale(0.95); }
-        .pet-reaction { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 0.85rem; font-weight: bold; color: #ff4757; background: white; padding: 5px 12px; border-radius: 15px; border: 2px solid #ff4757; opacity: 0; transition: opacity 0.3s; white-space: nowrap; pointer-events: none; }
+        .pet-reaction { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 0.85rem; font-weight: bold; color: #ff4757; background: white; padding: 5px 12px; border-radius: 15px; border: 2px solid #ff4757; opacity: 0; transition: opacity 0.3s; white-space: nowrap; pointer-events: none; z-index: 2; }
         .pet-reaction.show { opacity: 1; top: -45px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
         .breathe-btn-wrapper { text-align: center; margin-top: 25px; }
         .breathe-trigger-btn { background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); font-size: 0.95rem; font-weight: bold; padding: 12px 25px; border-radius: 30px; cursor: pointer; transition: all 0.3s; }
         .breathe-trigger-btn:hover { background: var(--accent-color); color: white; }
 
-        /* アフィリエイト枠（マネタイズ特化） */
+        /* アフィリエイト枠（3ショップ対応版拡張CSS） */
         .affiliate-box { background: rgba(255,255,255,0.8); border: 3px solid var(--accent-color); border-radius: 16px; padding: 15px; margin-top: 10px; display: flex; flex-direction: column; align-items: stretch; gap: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; }
         body.theme-night .affiliate-box { background: rgba(0,0,0,0.5); }
         
-        /* おねだりゲージ（好感度バー） */
         .affection-meter { width: 100%; height: 6px; background: rgba(0,0,0,0.1); border-radius: 3px; overflow: hidden; margin-bottom: 5px; position: relative; }
         .affection-fill { height: 100%; background: linear-gradient(90deg, #ff9a9e, #ff6f91); width: 0%; transition: width 0.5s ease-out; }
         .affection-label { font-size: 0.65rem; color: var(--accent-color); text-align: right; margin-top: 2px; font-weight: bold; }
 
-        /* 改善3: おねだり吹き出しスタイル */
         .product-speech { background: white; border: 2px solid var(--accent-color); border-radius: 15px; padding: 12px; margin-bottom: 8px; font-size: 0.85rem; color: var(--accent-color); font-weight: bold; position: relative; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 2; line-height: 1.4; animation: float 3s infinite ease-in-out; }
         .product-speech::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); border-width: 10px 10px 0; border-style: solid; border-color: var(--accent-color) transparent transparent transparent; display: block; width: 0; }
         .product-speech::before { content: ''; position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%); border-width: 8px 8px 0; border-style: solid; border-color: white transparent transparent transparent; display: block; width: 0; z-index: 1; }
@@ -126,29 +141,24 @@
         .product-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; color: #d81b60; }
         .product-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
         
-        /* アテンション（脈打ち）ボタン */
-        .buy-btn { background: linear-gradient(135deg, #ff6f91 0%, #ff4757 100%); color: #fff; text-decoration: none; font-size: 0.9rem; font-weight: bold; padding: 14px 20px; border-radius: 25px; text-align: center; box-shadow: 0 4px 15px rgba(255, 111, 145, 0.4); transition: transform 0.2s; display: block; animation: attentionPulse 2.5s infinite; }
-        .buy-btn:hover { transform: scale(1.05); animation: none; }
-
-        @keyframes attentionPulse {
-            0% { transform: scale(1); }
-            5% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 111, 145, 0.6); }
-            10% { transform: scale(1); }
-            15% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 111, 145, 0.6); }
-            20% { transform: scale(1); }
-            100% { transform: scale(1); }
-        }
+        .product-links-group { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-top: 5px; }
+        .buy-btn { color: #fff; text-decoration: none; font-size: 0.9rem; font-weight: bold; padding: 14px 20px; border-radius: 25px; text-align: center; transition: transform 0.2s; display: block; }
+        .buy-btn:hover { transform: scale(1.03); animation: none; }
+        
+        .btn-rakuten { background: linear-gradient(135deg, #bf0000 0%, #ff4d4d 100%); box-shadow: 0 4px 12px rgba(191, 0, 0, 0.3); animation: attentionPulse 2.5s infinite; }
+        .btn-tiktok { background: linear-gradient(135deg, #010101 0%, #333333 100%); border: 2px solid #fe2c55; box-shadow: 0 4px 12px rgba(254, 44, 85, 0.3); }
+        .btn-watts { background: linear-gradient(135deg, #00a651 0%, #00713d 100%); box-shadow: 0 4px 12px rgba(0, 166, 81, 0.3); }
 
         /* =========================================
-           5. モーダル（図鑑・名前・深呼吸）
+           5. モーダル類
         ========================================= */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; }
         .modal.show { display: flex; opacity: 1; }
         .modal-content { background: var(--card-bg); padding: 25px; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; position: relative; border: 3px solid var(--accent-color); color: var(--text-main); }
         
-        /* 改善1: 文字数制限を30文字へ変更 */
         .name-input { width: 80%; padding: 10px; border: 2px solid var(--accent-color); border-radius: 10px; font-size: 1rem; margin-top: 15px; text-align: center; }
-        .save-btn { margin-top: 15px; background: var(--accent-color); color: white; border: none; padding: 10px 20px; border-radius: 15px; font-weight: bold; cursor: pointer; }
+        .save-btn { margin-top: 15px; background: var(--accent-color); color: white; border: none; padding: 10px 20px; border-radius: 15px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+        .save-btn:hover { transform: scale(1.05); }
 
         .book-content { width: 95%; max-width: 480px; max-height: 85vh; overflow-y: auto; padding: 20px 10px; }
         .book-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
@@ -156,13 +166,14 @@
         body.theme-night .book-item { border-color: rgba(255,255,255,0.1); }
         .book-item.unknown { filter: grayscale(100%) opacity(0.4); background: #eee; }
         body.theme-night .book-item.unknown { background: #333; }
+        .book-emoji-container { position: relative; display: inline-block; }
         .book-emoji { font-size: 2rem; margin-bottom: 5px; }
+        .book-decoration { position: absolute; top: -10px; right: -10px; font-size: 1.2rem; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); transform: rotate(15deg); z-index: 2; }
         .book-name { font-size: 0.65rem; font-weight: bold; line-height: 1.2; height: 2.4em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         .book-rarity { font-size: 0.6rem; font-weight: bold; margin-bottom: 2px; }
         .book-stats { font-size: 0.85rem; color: var(--text-muted); font-weight: bold; margin-bottom: 10px; }
         .close-modal-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; padding: 0; }
 
-        /* 深呼吸オーバーレイ */
         .breathe-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; color: white; opacity: 0; transition: opacity 0.5s; }
         .breathe-overlay.show { display: flex; opacity: 1; }
         .breathe-circle { width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, #ffb7c5 0%, #a8edea 100%); display: flex; align-items: center; justify-content: center; font-size: 4.5rem; box-shadow: 0 0 40px rgba(255,183,197,0.5); transition: transform 4s ease-in-out; }
@@ -170,11 +181,31 @@
         .breathe-subtext { font-size: 1rem; color: #ffb7c5; margin-top: 10px; height: 20px; font-weight: bold; }
         .close-breathe { margin-top: 50px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.5); color: white; padding: 10px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; }
 
+        /* 実績・ライセンスモーダル */
+        .trophy-item { background: rgba(255,215,0,0.1); border: 1px solid #ffd700; border-radius: 10px; padding: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; text-align: left; }
+        .trophy-icon { font-size: 2rem; }
+        .trophy-text { flex-grow: 1; }
+        .trophy-title { font-weight: bold; font-size: 0.9rem; color: #d4af37; }
+        .trophy-desc { font-size: 0.75rem; color: var(--text-muted); }
+        .trophy-locked { filter: grayscale(100%) opacity(0.5); background: rgba(0,0,0,0.05); border-color: #ccc; }
+
+        .license-card { background: linear-gradient(135deg, #fff 0%, #fff0f5 100%); border: 3px solid var(--accent-color); border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.1); position: relative; }
+        body.theme-night .license-card { background: linear-gradient(135deg, #2b1b3d 0%, #1a1025 100%); }
+        .license-header { font-weight: bold; color: var(--accent-color); font-size: 1.1rem; border-bottom: 2px dashed #ffb7c5; padding-bottom: 5px; margin-bottom: 10px; text-align: center; }
+        .license-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.85rem; color: var(--text-main); font-weight: bold;}
+        .license-oshi { text-align: center; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.8); border-radius: 10px; border: 2px solid #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.3);}
+        body.theme-night .license-oshi { background: rgba(0,0,0,0.4); }
+        .license-oshi-title { font-size: 0.75rem; color: #d4af37; font-weight: bold; margin-bottom: 5px; }
+        .license-oshi-emoji { font-size: 3.5rem; position: relative; display: inline-block; }
+        .license-oshi-name { font-size: 1rem; font-weight: bold; color: var(--text-main); margin-top: 5px; }
+        .license-oshi-points { font-size: 0.8rem; color: #ff4757; font-weight: bold; }
+
         /* =========================================
-           6. SNSシェア・パレード演出・その他
+           6. SNSシェア・演出・その他
         ========================================= */
         .sns-btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
-        .sns-btn { width: 100%; background-color: var(--card-bg); color: var(--text-main); border: 2px solid var(--accent-color); padding: 12px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .sns-btn { width: 100%; background-color: var(--card-bg); color: var(--text-main); border: 2px solid var(--accent-color); padding: 12px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+        .sns-btn:hover { transform: scale(1.02); }
         .sns-btn.x { border-color: #1DA1F2; color: #1DA1F2; }
         .sns-btn.insta { border-color: #E1306C; color: #E1306C; }
         
@@ -187,13 +218,11 @@
         .parade-item { position: fixed; bottom: -50px; font-size: 2rem; pointer-events: none; z-index: 999; animation: floatUpParade 3s ease-out forwards; }
         .interactive-paw { position: fixed; font-size: 1.5rem; color: var(--accent-color); pointer-events: none; z-index: 999; animation: floatUp 1.2s ease-out forwards; }
 
-        /* スクショモード */
-        body.screenshot-mode header, body.screenshot-mode .sns-btn-group, body.screenshot-mode .breathe-btn-wrapper, body.screenshot-mode .reset-btn, body.screenshot-mode footer, body.screenshot-mode .clear-stamp-btn { display: none !important; }
-        
-        /* 改善2: スクショ案内を被らないように画面最下部に固定 */
+        body.screenshot-mode header, body.screenshot-mode .mood-selector, body.screenshot-mode .sns-btn-group, body.screenshot-mode .breathe-btn-wrapper, body.screenshot-mode .reset-btn, body.screenshot-mode footer, body.screenshot-mode .clear-stamp-btn { display: none !important; }
         .screenshot-overlay { display: none; position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 25px; font-size: 0.85rem; font-weight: bold; z-index: 9999; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         body.screenshot-mode .screenshot-overlay { display: block; }
 
+        @keyframes attentionPulse { 0%, 10%, 20%, 100% { transform: scale(1); } 5%, 15% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(191, 0, 0, 0.5); } }
         @keyframes floatUp { 0% { opacity: 0.8; transform: translateY(0) scale(0.8) rotate(-10deg); } 100% { opacity: 0; transform: translateY(-40px) scale(1.5) rotate(20deg); } }
         @keyframes floatUpParade { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
@@ -203,13 +232,9 @@
 </head>
 <body>
 
-    <!-- 背景スタンプコンテナ -->
     <div id="stampContainer"></div>
-    
-    <!-- 改善1: 箱庭ねこ（集めたねこ）用コンテナ -->
     <div id="catRoomContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden;"></div>
 
-    <!-- フラッシュ演出 -->
     <div id="flashOverlay"></div>
     <div class="screenshot-overlay" id="screenshotOverlay">📸 画面をスクショしてね（タップで戻る）</div>
 
@@ -217,22 +242,40 @@
         <h1 id="mainTitle">🐾 ニャンコ占いの館</h1>
         <div class="subtitle" id="subTitle">あなた専用の癒やし空間にゃん</div>
         <div class="header-buttons">
-            <button class="head-btn" onclick="openNameModal()">⚙️ お名前設定</button>
-            <button class="head-btn" onclick="openBookModal()">📖 猫ちゃん図鑑</button>
+            <button class="head-btn" onclick="openNameModal()">⚙️ 設定</button>
+            <button class="head-btn" onclick="openBookModal()">📖 図鑑</button>
+            <button class="head-btn" onclick="openSecretModal()">🔑 合言葉</button>
+            <button class="head-btn" onclick="openLicenseModal()">💳 ライセンス</button>
         </div>
         <div class="status-board" id="statusBoard" style="display:none;">
             <div id="encounterBadge" class="encounter-badge">連続お世話: 0日目</div>
             <div id="titleBadge" class="title-badge">称号</div>
+            <div id="trophyBadge" class="trophy-badge" onclick="openTrophyModal()">🏆 獲得トロフィー: 0</div>
+            <div id="shareBonusBadge" class="share-bonus-badge">🎁 次回ガチャ【SR以上確定】発動中！</div>
+            <div id="secretBonusBadge" class="share-bonus-badge" style="background: linear-gradient(135deg, #ff00ff, #8a2be2);">🗝️ 合言葉ボーナス【UR以上確定】発動中！</div>
         </div>
     </header>
 
     <main>
+        <div class="mood-selector" id="moodSelector">
+            <div style="font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; color: var(--accent-color);">👇 今の気分を選ぶとカードが引けるにゃ</div>
+            <div class="mood-buttons">
+                <button class="mood-btn" onclick="setMood('tired', this)">💻 お疲れ</button>
+                <button class="mood-btn" onclick="setMood('stress', this)">💔 モヤモヤ</button>
+                <button class="mood-btn" onclick="setMood('sleepy', this)">💤 眠れない</button>
+                <button class="mood-btn" onclick="setMood('lucky', this)">✨ 運試し</button>
+            </div>
+        </div>
+
         <div class="card-container" id="cardContainer">
             <div class="rarity-badge" id="rarityBadge">R</div>
             <div class="card" id="tarotCard">
                 <div class="card-back"></div>
                 <div class="card-front">
-                    <div class="card-emoji" id="cardEmoji">🐱</div>
+                    <div class="card-emoji-container">
+                        <div class="card-emoji" id="cardEmoji">🐱</div>
+                        <div class="card-decoration" id="cardDecoration"></div>
+                    </div>
                     <div class="card-mood" id="cardMood"></div>
                     <div class="card-name" id="cardName">猫ちゃん</div>
                 </div>
@@ -257,20 +300,15 @@
                 <button class="breathe-trigger-btn" onclick="startBreathing()">🧘‍♀️ 猫ちゃんと1分間深呼吸する</button>
             </div>
 
-            <!-- 改善2: 記録とねこプチ情報 -->
             <div class="section-title">📝 今日の記録とねこプチ情報</div>
             <div class="result-text" id="textTrivia" style="font-size: 0.85rem; background: rgba(255, 240, 245, 0.8); border: 1px dashed var(--accent-color);"></div>
 
-            <div class="section-title" id="affiliateHeader">🐟 猫ちゃんがあなたにおねだりしてるにゃ</div>
-            <!-- 改善3: 猫からのダイレクトなおねだり吹き出し -->
+            <div class="section-title" id="affiliateHeader">🐟 猫ちゃんにおねだりされてるにゃ</div>
             <div class="product-speech" id="productSpeech">ここに吹き出しが入るにゃん</div>
             
             <div class="affiliate-box">
-                <!-- 改善3: おねだりゲージの追加 -->
                 <div style="width: 100%; text-align: left;">
-                    <div class="affection-meter">
-                        <div class="affection-fill" id="affectionFill"></div>
-                    </div>
+                    <div class="affection-meter"><div class="affection-fill" id="affectionFill"></div></div>
                     <div class="affection-label" id="affectionLabel">好感度レベル: 1</div>
                 </div>
                 
@@ -278,20 +316,25 @@
                     <div class="product-title" id="productTitle"></div>
                     <div class="product-desc" id="productDesc"></div>
                 </div>
-                <a href="" target="_blank" rel="noopener noreferrer" class="buy-btn" id="productLink">貢ぐにゃん</a>
+
+                <div class="product-links-group" id="productLinksGroup">
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-rakuten" id="productLinkRakuten">楽天市場で探す🐾</a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-tiktok" id="productLinkTikTok">TikTok Shopで見つける🎬</a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-watts" id="productLinkWatts">ワッツ100均雑貨を開封🛒</a>
+                </div>
             </div>
 
             <div class="sns-btn-group">
-                <button class="sns-btn x" id="shareXBtn">📱 X / Threads で結果をつぶやく</button>
-                <button class="sns-btn insta" id="shareInstaBtn">📸 インスタ用にスクショモードにする</button>
+                <button class="sns-btn x" id="shareXBtn">📱 X / Threads でシェアする（次回SR以上確定！）</button>
+                <button class="sns-btn insta" id="shareInstaBtn">📸 インスタ用スクショを撮る（次回SR以上確定！）</button>
             </div>
 
             <button class="reset-btn" id="resetBtn">別の猫ちゃんを呼ぶ</button>
-            <button class="clear-stamp-btn" onclick="clearStamps()">🧹 背景の思い出（スタンプ）をリセット</button>
+            <button class="clear-stamp-btn" onclick="clearStamps()">🧹 背景の思い出（スタンプと貢ぎ物）をリセット</button>
         </div>
     </main>
 
-    <!-- 各種モーダル・オーバーレイ -->
+    <!-- モーダル類 -->
     <div class="breathe-overlay" id="breatheOverlay">
         <div class="breathe-circle" id="breatheCircle">🐱</div>
         <div class="breathe-text" id="breatheText">まずは、息を全部吐き出すにゃん...</div>
@@ -305,6 +348,17 @@
             <p style="font-size: 0.85rem; color:var(--text-muted);">猫ちゃんがあなたを名前で呼びます</p>
             <input type="text" id="nameInput" class="name-input" placeholder="例: はなこ" maxlength="30">
             <button class="save-btn" onclick="saveName()">決定にゃん！</button>
+            <button class="close-modal-btn" onclick="closeNameModal()">✖</button>
+        </div>
+    </div>
+
+    <div class="modal" id="secretModal">
+        <div class="modal-content">
+            <h2 style="color:var(--accent-color); margin-top:0;">🔑 秘密の合言葉</h2>
+            <p style="font-size: 0.85rem; color:var(--text-muted);">SNSで発表された今日の合言葉を入力してにゃ</p>
+            <input type="text" id="secretInput" class="name-input" placeholder="ひらがなで入力">
+            <button class="save-btn" onclick="checkSecret()">おまじないを唱える</button>
+            <button class="close-modal-btn" onclick="closeSecretModal()">✖</button>
         </div>
     </div>
 
@@ -317,7 +371,30 @@
         </div>
     </div>
 
-    <div class="toast" id="toast">🐾 コピー完了！好きな場所に貼り付けてね</div>
+    <div class="modal" id="trophyModal">
+        <div class="modal-content book-content">
+            <button class="close-modal-btn" onclick="closeTrophyModal()">✖</button>
+            <h2 style="color:var(--accent-color); margin-top:0;">🏆 獲得トロフィー</h2>
+            <div class="book-stats">実績解除: <span id="trophyProgress">0/5</span></div>
+            <div id="trophyList" style="margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <!-- ライセンスモーダル -->
+    <div class="modal" id="licenseModal">
+        <div class="modal-content book-content">
+            <button class="close-modal-btn" onclick="closeLicenseModal()">✖</button>
+            <h2 style="color:var(--accent-color); margin-top:0;">💳 お世話係ライセンス</h2>
+            <div class="license-card" id="licenseCard">
+                <!-- JSで動的に生成 -->
+            </div>
+            <div class="sns-btn-group" style="margin-top: 10px;">
+                <button class="sns-btn x" onclick="shareLicense()">📱 ライセンスを自慢する（次回SR以上！）</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">🐾 メッセージが入るにゃ</div>
 
     <footer style="margin-top:auto; padding:20px; font-size:0.7rem; color:var(--text-muted); text-align:center;">
         &copy; ニャンコ占いの館. (完全無料 / 著作権フリー)<br>
@@ -332,35 +409,41 @@
         let loginStreak = parseInt(localStorage.getItem('nyanko_login_streak')) || 0;
         let lastLoginDate = localStorage.getItem('nyanko_last_login');
         let totalEncounters = parseInt(localStorage.getItem('nyanko_total_encounters')) || 0;
+        let totalPets = parseInt(localStorage.getItem('nyanko_total_pets')) || 0;
         let affectionData = JSON.parse(localStorage.getItem('nyanko_affection')) || {};
+        let contributionData = JSON.parse(localStorage.getItem('nyanko_contribution')) || {}; // 追加: 貢献度
         let bgStamps = JSON.parse(localStorage.getItem('nyanko_bg_stamps')) || [];
+        let roomItems = JSON.parse(localStorage.getItem('nyanko_room_items')) || [];
         
+        let catDecorations = JSON.parse(localStorage.getItem('nyanko_cat_decorations')) || {};
+        let unlockedTrophies = JSON.parse(localStorage.getItem('nyanko_trophies')) || [];
+
         let isFlipped = false;
         let currentResult = null;
         let currentCatId = null;
         let isBreathing = false;
         let breatheInterval;
+        
+        let currentSelectedMood = null;
+        let shareBonusActive = localStorage.getItem('nyanko_share_bonus') === 'true';
+        let secretBonusActive = localStorage.getItem('nyanko_secret_bonus') === 'true';
 
         const urlParams = new URLSearchParams(window.location.search);
         const userA8Id = urlParams.get('a8') ? urlParams.get('a8').trim() : '';
         const a8BaseUrl = "https://px.a8.net/svt/ejp?a8mat=";
 
         // =========================================
-        // 2. 究極の全73種類 猫ちゃんデータ
+        // 2. データ群 (全73種猫)
         // =========================================
-        // { id, rarity, name, emoji, power, itemTitle, itemDesc, keyword }
         const catData = [
-            // --- SEC (3種) ---
             { id: 1, rarity: "SEC", name: "次元を渡る クァンタム猫", emoji: "🌌", power: "全ての次元で「[NAME]」は愛されているにゃ。焦らなくていい、最適な未来はもう選ばれている。今のノイズはスルーして、ただ存在することを楽しんでにゃん。", itemTitle: "星空プロジェクター", itemDesc: "部屋を宇宙空間にする。", keyword: "プラネタリウム" },
             { id: 2, rarity: "SEC", name: "記憶を紡ぐ アカシック猫", emoji: "🔮", power: "過去の失敗をまだ引きずってるにゃ？それは「[NAME]」の魅力のスパイスになったにゃ。もう自分を許して、美味しいものを食べて眠るが勝ちにゃん。", itemTitle: "水晶クラスター", itemDesc: "空間の浄化アイテム。", keyword: "水晶+クラスター" },
             { id: 3, rarity: "SEC", name: "深海を泳ぐ マーメイドキャット", emoji: "🧜‍♀️", power: "深い海の底のように、心の中の静けさを取り戻す時にゃ。周りの言葉の波に飲まれないで。「[NAME]」のペースでゆっくり息をするだけで完璧にゃ。", itemTitle: "海の恵み バスソルト", itemDesc: "海を感じる極上入浴剤。", keyword: "バスソルト+死海" },
-            // --- UR (5種) ---
             { id: 4, rarity: "UR", name: "幻の黄金 招き猫", emoji: "✨", power: "おめでとう！これまでの「[NAME]」の苦労が全て報われる波動が来てるにゃ！遠慮せずに豊かさを受け取って、自分に一番甘くする日にしてにゃん。", itemTitle: "純金箔入り 入浴剤", itemDesc: "黄金の波動を浴びる。", keyword: "金箔+入浴剤" },
             { id: 5, rarity: "UR", name: "真実を見抜く スフィンクス", emoji: "𓂀", power: "建前ばかりの毎日に疲れてないにゃ？「[NAME]」の心の奥の声は、私がちゃんと聞いてるにゃ。今日はワガママになっても誰も怒らないにゃん。", itemTitle: "極上 シルクパジャマ", itemDesc: "偽りのない最高の肌触り。", keyword: "シルク+パジャマ" },
             { id: 6, rarity: "UR", name: "幸運の鍵しっぽ猫", emoji: "🗝️", power: "曲がったしっぽで幸運を引っ掛けてきたにゃ！「[NAME]」が今抱えている悩みは、明日には笑い話になるように魔法をかけておいたにゃん。", itemTitle: "サンキャッチャー", itemDesc: "虹の光を部屋に呼び込む。", keyword: "サンキャッチャー" },
-            { id: 7, rarity: "UR", name: "最古の狩人 マヌルネコ", emoji: "🏔️", power: "現代のルールに縛られすぎにゃ。「[NAME]」の中の野生を思い出して！嫌なことは「シャーッ！」と威嚇して逃げればいい。生き抜くことが最優先にゃ。", itemTitle: "超極厚 ブランケット", itemDesc: "絶対防寒の毛布。", keyword: "毛布+極厚" },
+            { id: 7, rarity: "UR", name: "最古の狩人 マヌルネコ", emoji: "🏔️", power: "現代のルールに縛られすぎにゃ。「[NAME]」の野生を思い出して！嫌なことは「シャーッ！」と威嚇して逃げればいい。生き抜くことが最優先にゃ。", itemTitle: "超極厚 ブランケット", itemDesc: "絶対防寒の毛布。", keyword: "毛布+極厚" },
             { id: 8, rarity: "UR", name: "福を呼ぶ 奇跡のオス三毛", emoji: "🍀", power: "超絶レアな私が来たからには安心にゃ。「[NAME]」の背負っている荷物を半分持ってあげる。だから今日は、何も考えずにダラダラする権利を行使してにゃ。", itemTitle: "高級 座椅子", itemDesc: "人間をダメにする座椅子。", keyword: "座椅子+ハイバック" },
-            // --- SSR (10種) ---
             { id: 9, rarity: "SSR", name: "神秘のオッドアイ白猫", emoji: "🤍", power: "左右違う瞳で世界を見れば、常識なんて無意味にゃ。「[NAME]」のちょっと変わった所が、実は最大の武器にゃん。自信を持って！", itemTitle: "クリスタル ガラスペン", itemDesc: "美しい文字を綴る魔法のペン。", keyword: "ガラスペン" },
             { id: 10, rarity: "SSR", name: "もふもふ ペルシャ", emoji: "👑", power: "王族の私が許すにゃ。「[NAME]」、今日はすべてのタスクを放棄して優雅に過ごしなさい。頑張りすぎは美しさに響くからダメにゃん。", itemTitle: "高級 ヘアブラシ", itemDesc: "髪も心も解きほぐす。", keyword: "ヘアブラシ+高級" },
             { id: 11, rarity: "SSR", name: "世界最小 シンガプーラ", emoji: "🧚", power: "私は小さいけど、存在感はバツグンにゃ。「[NAME]」も、小さな一歩を褒めてあげて！今日息をしてただけで大優勝なんだからにゃん。", itemTitle: "アロマ ディフューザー", itemDesc: "小さな巨人の香りの癒やし。", keyword: "アロマディフューザー" },
@@ -371,7 +454,6 @@
             { id: 16, rarity: "SSR", name: "もちもち 大福白猫", emoji: "🍡", power: "私が丸いからって笑ったにゃ？でも「[NAME]」も、ピリピリするより丸い方が可愛いにゃん。角を立てずに、もちもち生きていくのが正解にゃ。", itemTitle: "マカロン ベッド", itemDesc: "もちもちの極み。", keyword: "マカロンクッション" },
             { id: 17, rarity: "SSR", name: "眠りの森の 妖精猫", emoji: "💤", power: "1日20時間寝る私が断言するにゃ。「[NAME]」、今の悩みは寝不足のせいにゃ！今すぐスマホを投げて、布団にダイブする魔法をかけるにゃん。", itemTitle: "シルク アイマスク", itemDesc: "光を遮断し妖精の眠りへ。", keyword: "シルク+アイマスク" },
             { id: 18, rarity: "SSR", name: "お風呂出待ち 忠犬猫", emoji: "🛁", power: "「[NAME]」が溺れないか心配でずっと待ってたにゃ！生きててくれて良かった！だから自分をもっと大切にして、体を温めるにゃん。", itemTitle: "炭酸 入浴剤セット", itemDesc: "芯から温まる癒やし。", keyword: "バブ+入浴剤" },
-            // --- SR (20種) ---
             { id: 19, rarity: "SR", name: "キーボード歩き職人", emoji: "⌨️", power: "わざと邪魔しに来たにゃ。「[NAME]」、仕事/勉強しすぎ！画面から目を離して、私のお腹を撫でる時間を強制的にもうけるにゃん！", itemTitle: "ホットアイマスク", itemDesc: "PC疲れの目を癒やす。", keyword: "ホットアイマスク" },
             { id: 20, rarity: "SR", name: "真夜中の大運動会猫", emoji: "💨", power: "深夜に覚醒したにゃ！シャーッ！「[NAME]」も溜まったストレスは、誰も見てない所で大暴れして発散すればいいにゃ。私が伴走するにゃん！", itemTitle: "フォームローラー", itemDesc: "家でゴロゴロ筋膜リリース。", keyword: "フォームローラー" },
             { id: 21, rarity: "SR", name: "安全第一 現場猫", emoji: "👷", power: "ヨシ！「[NAME]」の今日の安全確認はバッチリにゃ！ちょっとくらいのミスは「ヨシ！」で済ませて、生きて帰ってきた自分を褒めるにゃん。", itemTitle: "安全第一 マグカップ", itemDesc: "ヨシ！とお茶を飲む。", keyword: "現場猫+グッズ" },
@@ -392,7 +474,6 @@
             { id: 36, rarity: "SR", name: "水飲み下手くそ猫", emoji: "💧", power: "顔がびしょびしょにゃ。「[NAME]」、不器用でも一生懸命生きてるだけで満点にゃ！完璧じゃない自分を愛してあげる日にしてにゃん。", itemTitle: "高級 今治タオル", itemDesc: "びしょびしょの顔を拭く。", keyword: "今治タオル+フェイスタオル" },
             { id: 37, rarity: "SR", name: "猫集会 議長", emoji: "🗣️", power: "今夜の議題は「[NAME]」の幸せについてにゃ。満場一致で「もっと自分を甘やかすべき」と決議されたにゃ。遠慮は無用にゃん！", itemTitle: "マッサージ クッション", itemDesc: "議長推薦の癒やし。", keyword: "マッサージクッション" },
             { id: 38, rarity: "SR", name: "影の支配者 黒豹気取り", emoji: "🐈‍⬛", power: "私は強いにゃ。「[NAME]」も、心の中に強い黒豹を飼うにゃ！誰にも媚びない強気な姿勢で、明日は胸を張って歩くがよいにゃん。", itemTitle: "姿勢矯正 クッション", itemDesc: "背筋を伸ばして堂々と。", keyword: "姿勢矯正クッション" },
-            // --- R (35種) ---
             { id: 39, rarity: "R", name: "甘えん坊 ハチワレ", emoji: "🐱", power: "スリスリ…「[NAME]」、もっと私を構うにゃ！他人に気を使うより、自分と私を甘やかすのが最優先課題にゃん。", itemTitle: "ねこ用ちゅーる", itemDesc: "絶対喜ぶおやつ。", keyword: "猫+ちゅーる" },
             { id: 40, rarity: "R", name: "ツンデレ 黒猫", emoji: "🐈‍⬛", power: "別に「[NAME]」のことが心配なわけじゃないにゃ…。でも、たまには休まないと倒れるにゃん。早く寝なさいにゃ！", itemTitle: "キャットグラス", itemDesc: "部屋の浄化。", keyword: "猫草" },
             { id: 41, rarity: "R", name: "のんびり 茶トラ", emoji: "🐈", power: "あくびが出るにゃ〜。「[NAME]」、焦っても結果は同じにゃ。だったらゴロゴロしながら待つのが賢い生き方にゃん。", itemTitle: "もこもこ靴下", itemDesc: "足元を温める。", keyword: "もこもこ靴下" },
@@ -430,22 +511,28 @@
             { id: 73, rarity: "R", name: "ただの 可愛い猫", emoji: "🐈", power: "にゃ〜。「[NAME]」、特別な理由なんてなくても、あなたは存在してるだけで可愛くて価値があるにゃん。そのまま生きててにゃ！", itemTitle: "ねこ図鑑", itemDesc: "もっと猫を知る。", keyword: "猫+写真集" }
         ];
 
-        // 各種バリエーション
         const moods = ["超絶甘えん坊な", "少し眠そうな", "やたらテンションが高い", "何かを企んでいる", "悟りを開いた", "お腹を空かせた", "なでてほしい", "ツンデレな", "かまってちゃんな", "パトロール中の", "丸くなっている", "獲物を狙う"];
-        const affirmations = [
+        
+        const affirmationsDefault = [
             "今日も息をして生きてるだけで100点満点にゃ！",
             "何もできなくても、[NAME]の価値は絶対に減らないにゃん。",
-            "頑張りすぎにゃ。今日は「自分を甘やかす日」に指定したにゃ！",
             "そのままの[NAME]が一番可愛くて最高だにゃん🐾",
             "誰が何と言おうと、猫ちゃんたちは[NAME]の味方にゃ！",
-            "疲れたら逃げていいにゃ。猫も嫌な時はすぐ逃げるにゃん。",
-            "美味しいものを食べて、たくさん寝るのが生き物の正解にゃ！",
-            "過去の失敗なんて猫砂と一緒に埋めてしまえばいいにゃん。",
-            "他人の期待になんて応えなくていいにゃ。自分のために生きるにゃ！",
             "よく頑張ったにゃ！えらい！天才！宇宙一！！"
         ];
-        
-        // 改善2: ねこプチ情報（トリビア）
+        const affirmationsTired = [
+            "[NAME]、今日もお仕事・勉強お疲れ様にゃ！無理しなくていいんだにゃん。",
+            "頑張った自分に一番のご褒美をあげる日にするにゃ。ゆっくり休んでにゃ。"
+        ];
+        const affirmationsStress = [
+            "モヤモヤする時は甘いものを食べて全部忘れるにゃ！[NAME]は悪くないにゃん。",
+            "他人の心無い言葉なんて猫砂に埋めてスッキリするにゃ！私が味方にゃ！"
+        ];
+        const affirmationsSleepy = [
+            "今日はもうスマホを置いて、温かい布団にダイブするにゃん。おやすみにゃ💤",
+            "眠れない時は私と一緒に深呼吸するにゃ。[NAME]が安心するまでそばにいるにゃん。"
+        ];
+
         const catTrivias = [
             "猫のゴロゴロ音（約25〜50Hz）には、人間の骨や細胞の修復を早める癒やし効果があると言われてるにゃ！",
             "猫の鼻の模様（鼻紋）は、人間の指紋と同じで世界に一つだけのオリジナルにゃん。",
@@ -457,8 +544,25 @@
             "猫は甘味を感じないにゃ。だからスイーツよりお肉やお魚に夢中になるにゃん。"
         ];
 
-        // 改善3: おねだり吹き出しメッセージの生成
+        const secretWords = ["ちゅーる", "またたび", "にくきゅう", "にゃんこ", "おひるね"];
+        const decoItems = ["👑", "🎀", "🎩", "🌸", "👓", "✨", "🐟"];
+
+        // トロフィーデータ（実績）追加: 石油王
+        const trophiesData = [
+            { id: "t1", title: "夜更かしさん", desc: "深夜（0時〜4時）に占いを引いた", icon: "🌙", check: () => { const h = new Date().getHours(); return h >= 0 && h < 4; } },
+            { id: "t2", title: "愛の伝道師", desc: "なでなでを累計100回達成した", icon: "💖", check: () => totalPets >= 100 },
+            { id: "t3", title: "初めてのパトロン", desc: "猫ちゃんにプレゼント（クリック）した", icon: "🎁", check: () => roomItems.length > 0 },
+            { id: "t4", title: "図鑑コレクター", desc: "猫を20種類以上発見した", icon: "📖", check: () => Object.keys(affectionData).length >= 20 },
+            { id: "t5", title: "猫に愛されし者", desc: "どれか1匹の好感度が20を超えた", icon: "👑", check: () => Object.values(affectionData).some(v => v >= 20) },
+            { id: "t6", title: "石油王", desc: "1匹の猫に10回以上貢いだ", icon: "💎", check: () => Object.values(contributionData).some(v => v >= 10) }
+        ];
+
         function getOnedariMessage(catName, userName) {
+            const todayDate = new Date().getDate();
+            if (todayDate % 5 === 0 || todayDate === 0) {
+                return `「今日は楽天ポイント5倍の日にゃ！${userName === 'あなた' ? 'ご主人' : userName}ちゃん、貢ぐなら今日が絶対お得にゃん！🐾」`;
+            }
+
             const safeName = userName === "あなた" ? "ご主人" : userName;
             const msgs = [
                 `「${safeName}ちゃん、これがあったらもっと一緒にいられるにゃ💕」`,
@@ -473,52 +577,78 @@
         const bgStampEmojis = ["🐾", "💕", "🐱", "✨", "🐟", "🎀", "⭐", "🎵", "💤"];
 
         // =========================================
-        // 3. 初期処理とテーマ管理
+        // 3. 初期処理
         // =========================================
         document.addEventListener('DOMContentLoaded', () => {
             updateTheme();
             updateLoginStreak();
             updateNameDisplay();
             loadStamps();
-            loadCatRoom(); // 改善1: 箱庭ねこの読み込み
+            loadCatRoom(); 
+            checkShareBonusDisplay();
+            updateTrophyDisplay();
 
-            // 肉球クリックエフェクト
             document.body.addEventListener('click', (e) => {
                 if(e.target.closest('button') || e.target.closest('a') || e.target.closest('.card-container') || document.body.classList.contains('screenshot-mode')) return;
                 createInteractivePaw(e.pageX, e.pageY);
             });
 
-            // スクショモード解除
             document.body.addEventListener('click', (e) => {
                 if (document.body.classList.contains('screenshot-mode') && !e.target.closest('.sns-btn')) {
                     document.body.classList.remove('screenshot-mode');
                 }
             });
 
-            // ガチャ実行イベント
             const cardContainer = document.getElementById('cardContainer');
             if (cardContainer) {
                 cardContainer.addEventListener('click', drawCat);
             }
 
-            // なでなでイベント
             document.getElementById('petBtn').addEventListener('click', petCat);
-
-            // リセットイベント
             document.getElementById('resetBtn').addEventListener('click', resetGacha);
+            
+            // アフィリエイトクリック（貢ぎ物・デコ・貢献度）
+            const handleAffiliateClick = () => {
+                if(currentResult) {
+                    addRoomItem('🎁');
+                    if(currentCatId) {
+                        affectionData[currentCatId] += 2;
+                        localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
+                        
+                        // 貢献度ランキング用
+                        if (!contributionData[currentCatId]) contributionData[currentCatId] = 0;
+                        contributionData[currentCatId]++;
+                        localStorage.setItem('nyanko_contribution', JSON.stringify(contributionData));
+                        
+                        if (!catDecorations[currentCatId]) {
+                            const newDeco = decoItems[Math.floor(Math.random() * decoItems.length)];
+                            catDecorations[currentCatId] = newDeco;
+                            localStorage.setItem('nyanko_cat_decorations', JSON.stringify(catDecorations));
+                            document.getElementById('cardDecoration').innerText = newDeco;
+                            showToast(`💕 プレゼント感謝にゃ！推し猫が「${newDeco}」でドレスアップしたにゃん！`);
+                        } else {
+                            showToast("💕 猫ちゃんがプレゼントを受け取ったにゃん！");
+                        }
+                        checkAchievements();
+                    }
+                }
+            };
+
+            document.getElementById('productLinkRakuten').addEventListener('click', handleAffiliateClick);
+            document.getElementById('productLinkTikTok').addEventListener('click', handleAffiliateClick);
+            document.getElementById('productLinkWatts').addEventListener('click', handleAffiliateClick);
         });
 
         function updateTheme() {
             const hour = new Date().getHours();
             const mainTitle = document.getElementById('mainTitle');
             const subTitle = document.getElementById('subTitle');
-            
             if (hour >= 5 && hour < 12) {
                 document.body.className = 'theme-morning';
                 mainTitle.innerText = "🌅 朝のニャンコ占い";
                 subTitle.innerText = "おはよう！今日も1日、無理せずいくにゃん";
             } else if (hour >= 12 && hour < 18) {
-                document.body.className = ''; // default
+                document.body.className = '';
                 mainTitle.innerText = "☀️ 陽だまりニャンコ占い";
                 subTitle.innerText = "お疲れ様にゃ。ちょっと一息入れていくにゃん";
             } else {
@@ -556,20 +686,81 @@
             return "👑 猫に愛されし神";
         }
 
+        function checkShareBonusDisplay() {
+            document.getElementById('shareBonusBadge').classList.toggle('active', shareBonusActive);
+            document.getElementById('secretBonusBadge').classList.toggle('active', secretBonusActive);
+        }
+
+        function checkAchievements() {
+            let newlyUnlocked = false;
+            trophiesData.forEach(t => {
+                if (!unlockedTrophies.includes(t.id) && t.check()) {
+                    unlockedTrophies.push(t.id);
+                    localStorage.setItem('nyanko_trophies', JSON.stringify(unlockedTrophies));
+                    newlyUnlocked = true;
+                    setTimeout(() => {
+                        showToast(`🏆 実績解除！【${t.title}】を獲得したにゃ！`);
+                        startCatShower(30);
+                    }, 1000);
+                }
+            });
+            if (newlyUnlocked) updateTrophyDisplay();
+        }
+
+        function updateTrophyDisplay() {
+            const badge = document.getElementById('trophyBadge');
+            if (unlockedTrophies.length > 0) {
+                badge.style.display = 'inline-block';
+                badge.innerText = `🏆 獲得トロフィー: ${unlockedTrophies.length}`;
+            }
+        }
+
+        window.setMood = function(mood, btnElement) {
+            currentSelectedMood = mood;
+            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+            
+            const cardContainer = document.getElementById('cardContainer');
+            cardContainer.classList.add('ready');
+            document.getElementById('moodSelector').style.display = 'none';
+            showToast("カードをタップして引くにゃ！");
+        }
+
         // =========================================
         // 4. ガチャ（占い）ロジック
         // =========================================
         function drawCat() {
             if (isFlipped) return;
+            if (!currentSelectedMood) {
+                showToast("先に「今の気分」を選んでにゃ🐾");
+                return;
+            }
             isFlipped = true;
             
-            // 確率計算
             const rand = Math.random();
             let targetRarity = "R";
-            if (rand < 0.01) targetRarity = "SEC";
-            else if (rand < 0.05) targetRarity = "UR";
-            else if (rand < 0.15) targetRarity = "SSR";
-            else if (rand < 0.40) targetRarity = "SR";
+
+            if (secretBonusActive) {
+                if (rand < 0.20) targetRarity = "SEC";
+                else targetRarity = "UR";
+                secretBonusActive = false;
+                localStorage.setItem('nyanko_secret_bonus', 'false');
+            } 
+            else if (shareBonusActive) {
+                if (rand < 0.10) targetRarity = "SEC";
+                else if (rand < 0.25) targetRarity = "UR";
+                else if (rand < 0.55) targetRarity = "SSR";
+                else targetRarity = "SR";
+                shareBonusActive = false;
+                localStorage.setItem('nyanko_share_bonus', 'false');
+            } else {
+                if (rand < 0.01) targetRarity = "SEC";
+                else if (rand < 0.05) targetRarity = "UR";
+                else if (rand < 0.15) targetRarity = "SSR";
+                else if (rand < 0.40) targetRarity = "SR";
+            }
+            
+            checkShareBonusDisplay();
 
             const filteredCats = catData.filter(c => c.rarity === targetRarity);
             const baseCat = filteredCats[Math.floor(Math.random() * filteredCats.length)];
@@ -577,18 +768,17 @@
             currentResult = { ...baseCat, mood: mood };
             currentCatId = baseCat.id;
 
-            // 記録更新
             totalEncounters++;
             localStorage.setItem('nyanko_total_encounters', totalEncounters);
             if (!affectionData[currentCatId]) affectionData[currentCatId] = 0;
-            // 引いたことによる好感度+1
             affectionData[currentCatId]++;
             localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
 
             document.getElementById('encounterBadge').innerText = `連続お世話: ${loginStreak}日目🐾 (通算 ${totalEncounters}回)`;
             document.getElementById('titleBadge').innerText = getCatTitle(totalEncounters);
 
-            // 溜め演出の決定
+            checkAchievements();
+
             const cardContainer = document.getElementById('cardContainer');
             let chargeTime = 600;
             if (targetRarity === "SEC" || targetRarity === "UR") {
@@ -600,9 +790,7 @@
             }
 
             setTimeout(() => {
-                // 演出リセットと結果表示
                 cardContainer.classList.remove('charging-ur', 'charging-r');
-                
                 if (targetRarity === "SEC" || targetRarity === "UR") {
                     const flash = document.getElementById('flashOverlay');
                     flash.classList.add('flash');
@@ -611,7 +799,6 @@
                 } else if (targetRarity === "SSR") {
                     startCatShower(20);
                 }
-
                 showResultUI();
             }, chargeTime);
         }
@@ -628,62 +815,81 @@
             badge.innerText = currentResult.rarity;
 
             document.getElementById('cardEmoji').innerText = currentResult.emoji;
+            
+            const deco = catDecorations[currentCatId] || '';
+            document.getElementById('cardDecoration').innerText = deco;
+
             document.getElementById('cardMood').innerText = currentResult.mood;
             document.getElementById('cardName').innerText = currentResult.name;
 
-            // 文章中の [NAME] を置き換える
             const pText = currentResult.power.replace(/\[NAME\]/g, userName);
             document.getElementById('textPower').innerText = pText;
             
-            const aText = affirmations[Math.floor(Math.random() * affirmations.length)].replace(/\[NAME\]/g, userName);
-            document.getElementById('textAffirmation').innerText = aText;
-
-            // --- ✨ マネタイズ極大化ロジック（おねだりゲージとアップセル） ---
-            const aff = affectionData[currentCatId] || 1;
-            let displayTitle = currentResult.itemTitle;
+            let activeAffirmations = affirmationsDefault;
             let searchKeyword = currentResult.keyword;
             
-            // ゲージの計算 (最大レベル5として、20回でMAX)
+            if (currentSelectedMood === 'tired') {
+                activeAffirmations = activeAffirmations.concat(affirmationsTired);
+                searchKeyword += " +癒やし";
+            } else if (currentSelectedMood === 'stress') {
+                activeAffirmations = activeAffirmations.concat(affirmationsStress);
+                searchKeyword += " +スイーツ";
+            } else if (currentSelectedMood === 'sleepy') {
+                activeAffirmations = activeAffirmations.concat(affirmationsSleepy);
+                searchKeyword += " +安眠";
+            } else {
+                searchKeyword += " +開運"; 
+            }
+            
+            const aText = activeAffirmations[Math.floor(Math.random() * activeAffirmations.length)].replace(/\[NAME\]/g, userName);
+            document.getElementById('textAffirmation').innerText = aText;
+
+            const aff = affectionData[currentCatId] || 1;
+            let displayTitle = currentResult.itemTitle;
+            
             const maxAffection = 20;
             const percentage = Math.min((aff / maxAffection) * 100, 100);
-            const level = Math.min(Math.ceil(aff / 4), 5); // 4回ごとにレベルアップ
+            const level = Math.min(Math.ceil(aff / 4), 5);
 
             document.getElementById('affectionFill').style.width = `${percentage}%`;
             document.getElementById('affectionLabel').innerText = `この子の好感度レベル: ${level} / 5`;
 
-            // 好感度が10以上なら「高級」アイテムへ誘導
             if (aff >= 10) {
-                displayTitle = `【推し限定】極上 ${currentResult.itemTitle}`;
-                searchKeyword = `${currentResult.keyword} +高級`;
+                displayTitle = `【限定おねだり】特選 ${currentResult.itemTitle}`;
+                searchKeyword += " +高級";
             }
 
             document.getElementById('productTitle').innerText = displayTitle;
             document.getElementById('productDesc').innerText = currentResult.itemDesc;
 
-            // 改善2 & 3: 日付、プチ情報、おねだり吹き出しのセット
             const todayStr = new Date().toLocaleDateString('ja-JP');
             const trivia = catTrivias[Math.floor(Math.random() * catTrivias.length)];
             document.getElementById('textTrivia').innerHTML = `📅 <strong>${todayStr} の記録</strong><br><br>💡 <strong>ねこプチ情報：</strong><br>${trivia}`;
             document.getElementById('productSpeech').innerText = getOnedariMessage(currentResult.name, userName);
 
-            // パーソナライズド・ボタンテキスト
-            const btnText = userName === "あなた" 
-                ? `${currentResult.name} にプレゼントする🐾`
-                : `${userName}から、${currentResult.name} にプレゼントする🐾`;
-            document.getElementById('productLink').innerText = btnText;
+            const safeUser = userName === "あなた" ? "猫ちゃん" : userName;
+            document.getElementById('productLinkRakuten').innerText = `楽天市場で「${currentResult.itemTitle}」を贈る🐾`;
+            document.getElementById('productLinkTikTok').innerText = `TikTok Shop（初回19.2%還元）で探す🎬`;
+            document.getElementById('productLinkWatts').innerText = `ワッツ（確定率100%）100均雑貨を見る🛒`;
 
-            let finalLink = `https://search.rakuten.co.jp/search/mall/${searchKeyword}/`;
+            let finalLinkRakuten = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(searchKeyword)}/`;
+            let finalLinkTikTok = `https://www.tiktok.com/search?q=${encodeURIComponent(searchKeyword)}`;
+            let finalLinkWatts = `https://watts-online.jp/products/list?name=${encodeURIComponent(currentResult.itemTitle)}`;
+
             if (userA8Id && userA8Id.startsWith("s0000")) {
-                finalLink = `${a8BaseUrl}${userA8Id}/&rakuten=y&a8url=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F${searchKeyword}%2F`;
+                finalLinkRakuten = `${a8BaseUrl}${userA8Id}/&rakuten=y&a8url=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F${encodeURIComponent(searchKeyword)}%2F`;
+                finalLinkTikTok = `${a8BaseUrl}${userA8Id}/&a8url=${encodeURIComponent(finalLinkTikTok)}`;
+                finalLinkWatts = `${a8BaseUrl}${userA8Id}/&a8url=${encodeURIComponent(finalLinkWatts)}`;
             }
-            document.getElementById('productLink').href = finalLink;
+            
+            document.getElementById('productLinkRakuten').href = finalLinkRakuten;
+            document.getElementById('productLinkTikTok').href = finalLinkTikTok;
+            document.getElementById('productLinkWatts').href = finalLinkWatts;
 
             setTimeout(() => {
                 const resContainer = document.getElementById('resultContainer');
                 resContainer.classList.add('show');
                 resContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                
-                // ガチャ後に箱庭を更新して仲間入りを演出
                 loadCatRoom();
             }, 600);
         }
@@ -692,11 +898,18 @@
             isFlipped = false;
             currentResult = null;
             currentCatId = null;
+            currentSelectedMood = null;
             document.getElementById('resultContainer').classList.remove('show');
             const cardContainer = document.getElementById('cardContainer');
             cardContainer.className = 'card-container';
+            cardContainer.classList.remove('ready');
             document.querySelector('.card-front').className = 'card-front';
             document.getElementById('petReaction').classList.remove('show');
+            
+            const moodSelector = document.getElementById('moodSelector');
+            moodSelector.style.display = 'block';
+            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -705,51 +918,43 @@
         // =========================================
         function petCat() {
             if(!currentCatId) return;
-            
-            // 好感度アップ
             affectionData[currentCatId]++;
             localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
             
+            totalPets++;
+            localStorage.setItem('nyanko_total_pets', totalPets);
+            checkAchievements();
+
             const aff = affectionData[currentCatId];
             let msg = "にゃん！";
             if(aff > 20) msg = `${userName}、大好きにゃあああん💕`;
             else if(aff > 10) msg = "ゴロゴロ…もっと撫でてにゃ💕";
             else if(aff > 5) msg = "悪くないにゃ。続けるにゃ🐾";
-            else msg = ["シャーッ！（触るな）", "スンッ…", "にゃん？", "尻尾パタン"][Math.floor(Math.random()*4)];
+            else msg = ["シャーッ！", "スンッ…", "にゃん？", "尻尾パタン"][Math.floor(Math.random()*4)];
 
             const reaction = document.getElementById('petReaction');
             reaction.innerText = msg;
             reaction.classList.remove('show');
-            void reaction.offsetWidth; // reflow
+            void reaction.offsetWidth;
             reaction.classList.add('show');
 
-            // 画面にランダムな足跡/ハート（一時的）
-            createInteractivePaw(
-                Math.random() * window.innerWidth,
-                window.innerHeight / 2 + (Math.random() * 200 - 100)
-            );
+            createInteractivePaw(Math.random() * window.innerWidth, window.innerHeight / 2 + (Math.random() * 200 - 100));
 
-            // 背景スタンプ（永続化）追加
             const emoji = bgStampEmojis[Math.floor(Math.random() * bgStampEmojis.length)];
-            const x = Math.floor(Math.random() * 90) + 5; // 5-95%
-            const y = Math.floor(Math.random() * 90) + 5; // 5-95%
-            addStampToBg(emoji, x, y);
+            addStampToBg(emoji, Math.floor(Math.random() * 90) + 5, Math.floor(Math.random() * 90) + 5);
 
-            // メーターもリアルタイム更新
-            const maxAffection = 20;
-            const percentage = Math.min((aff / maxAffection) * 100, 100);
+            const percentage = Math.min((aff / 20) * 100, 100);
             const level = Math.min(Math.ceil(aff / 4), 5);
             document.getElementById('affectionFill').style.width = `${percentage}%`;
             document.getElementById('affectionLabel').innerText = `この子の好感度レベル: ${level} / 5`;
 
-            // 高好感度でたまにパレード
             if (aff > 15 && Math.random() < 0.3) {
                 startCatShower(20);
             }
         }
 
         function startCatShower(amount) {
-            const emojis = ['🐱', '🐈', '🐾', '💕', '✨', '🐟'];
+            const emojis = ['🐱', '🐈', '🐾', '💕', '✨', '🐟', '🎁'];
             for(let i=0; i<amount; i++) {
                 setTimeout(() => {
                     const el = document.createElement('div');
@@ -773,13 +978,10 @@
             setTimeout(() => paw.remove(), 1200);
         }
 
-        // =========================================
-        // 6. 永続背景スタンプ管理
-        // =========================================
         function addStampToBg(emoji, xPercent, yPercent) {
             const stamp = { e: emoji, x: xPercent, y: yPercent };
             bgStamps.push(stamp);
-            if(bgStamps.length > 100) bgStamps.shift(); // 最大100個
+            if(bgStamps.length > 100) bgStamps.shift();
             localStorage.setItem('nyanko_bg_stamps', JSON.stringify(bgStamps));
             renderStamp(stamp);
         }
@@ -799,14 +1001,30 @@
             bgStamps.forEach(stamp => renderStamp(stamp));
         }
 
-        // 改善1: 集めたねこを背景に放つ（箱庭機能）
+        function addRoomItem(emoji) {
+            roomItems.push(emoji);
+            if(roomItems.length > 20) roomItems.shift();
+            localStorage.setItem('nyanko_room_items', JSON.stringify(roomItems));
+            loadCatRoom();
+        }
+
         function loadCatRoom() {
             const container = document.getElementById('catRoomContainer');
             container.innerHTML = '';
+            
+            roomItems.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'roaming-item';
+                itemEl.innerText = item;
+                itemEl.style.fontSize = (Math.random() * 1 + 1.5) + 'rem';
+                itemEl.style.left = (Math.random() * 80 + 10) + '%';
+                itemEl.style.bottom = (Math.random() * 20 + 2) + '%';
+                container.appendChild(itemEl);
+            });
+
             const collectedIds = Object.keys(affectionData);
             if(collectedIds.length === 0) return;
 
-            // 画面がうるさくならないよう最大8匹まで
             const maxCats = Math.min(collectedIds.length, 8);
             for(let i=0; i<maxCats; i++) {
                 const randomId = collectedIds[Math.floor(Math.random() * collectedIds.length)];
@@ -816,24 +1034,18 @@
                 const catEl = document.createElement('div');
                 catEl.className = 'roaming-cat';
                 catEl.innerText = catInfo.emoji;
-
-                // ランダムな高さ（下から5%〜35%あたりをウロウロさせる）
                 catEl.style.bottom = (Math.random() * 30 + 5) + '%';
                 
-                // 行動パターンの抽選
                 const action = Math.random();
                 if(action < 0.35) {
-                    // 寝てる (画面のどこかで固定)
                     catEl.style.left = (Math.random() * 80 + 10) + '%';
                     catEl.style.animation = 'sleeping 3s infinite ease-in-out';
                     catEl.innerText += '💤';
                     catEl.style.fontSize = '2.5rem';
                 } else if(action < 0.65) {
-                    // 右へ歩く
                     catEl.style.fontSize = '2.5rem';
                     catEl.style.animation = `walkRight ${Math.random() * 15 + 15}s linear infinite`;
                 } else {
-                    // 左へ歩く
                     catEl.style.fontSize = '2.5rem';
                     catEl.style.animation = `walkLeft ${Math.random() * 15 + 15}s linear infinite`;
                 }
@@ -842,10 +1054,13 @@
         }
 
         window.clearStamps = function() {
-            if(confirm("背景のスタンプをすべて消去しますか？")) {
+            if(confirm("背景のスタンプと貢ぎ物をすべて消去しますか？")) {
                 bgStamps = [];
+                roomItems = [];
                 localStorage.removeItem('nyanko_bg_stamps');
+                localStorage.removeItem('nyanko_room_items');
                 loadStamps();
+                loadCatRoom();
             }
         }
 
@@ -866,7 +1081,7 @@
             subtext.innerText = "";
 
             let cycle = 0;
-            const maxCycles = 5; // 1サイクル10秒 × 5回
+            const maxCycles = 5;
             const praises = ["上手だにゃ", "いい感じにゃん", "嫌なものを全部出すにゃ", "肩の力を抜くにゃ", `${userName}、えらいにゃん`];
 
             setTimeout(() => { breatheCycle(); }, 3000);
@@ -909,25 +1124,69 @@
         };
 
         // =========================================
-        // 8. モーダル管理（名前・図鑑）
+        // 8. モーダル管理（各種機能統合）
         // =========================================
         window.openNameModal = function() {
             document.getElementById('nameInput').value = userName === 'あなた' ? '' : userName;
             document.getElementById('nameModal').classList.add('show');
         };
-
+        window.closeNameModal = function() {
+            document.getElementById('nameModal').classList.remove('show');
+        };
         window.saveName = function() {
             const val = document.getElementById('nameInput').value.trim();
             userName = val || 'あなた';
             localStorage.setItem('nyanko_name', userName);
-            document.getElementById('nameModal').classList.remove('show');
+            closeNameModal();
             updateNameDisplay();
             showToast(`これからは「${userName}」って呼ぶにゃん🐾`);
         };
-
         function updateNameDisplay() {
             document.querySelector('.head-btn').innerText = userName === 'あなた' ? '⚙️ お名前設定' : `⚙️ 名前: ${userName}`;
         }
+
+        window.openSecretModal = function() {
+            document.getElementById('secretInput').value = '';
+            document.getElementById('secretModal').classList.add('show');
+        };
+        window.closeSecretModal = function() {
+            document.getElementById('secretModal').classList.remove('show');
+        };
+        window.checkSecret = function() {
+            const input = document.getElementById('secretInput').value.trim();
+            if (secretWords.includes(input)) {
+                secretBonusActive = true;
+                localStorage.setItem('nyanko_secret_bonus', 'true');
+                checkShareBonusDisplay();
+                closeSecretModal();
+                showToast("✨ 魔法の言葉が認証されたにゃ！次回【UR以上確定】にゃん！");
+            } else {
+                showToast("💦 うーん、ちょっと違うみたいにゃ…");
+            }
+        };
+
+        window.openTrophyModal = function() {
+            const list = document.getElementById('trophyList');
+            list.innerHTML = '';
+            trophiesData.forEach(t => {
+                const isUnlocked = unlockedTrophies.includes(t.id);
+                const item = document.createElement('div');
+                item.className = `trophy-item ${isUnlocked ? '' : 'trophy-locked'}`;
+                item.innerHTML = `
+                    <div class="trophy-icon">${isUnlocked ? t.icon : '🔒'}</div>
+                    <div class="trophy-text">
+                        <div class="trophy-title">${isUnlocked ? t.title : '？？？'}</div>
+                        <div class="trophy-desc">${isUnlocked ? t.desc : '条件は秘密にゃ'}</div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+            document.getElementById('trophyProgress').innerText = `${unlockedTrophies.length}/${trophiesData.length}`;
+            document.getElementById('trophyModal').classList.add('show');
+        };
+        window.closeTrophyModal = function() {
+            document.getElementById('trophyModal').classList.remove('show');
+        };
 
         window.openBookModal = function() {
             const grid = document.getElementById('bookGrid');
@@ -942,11 +1201,14 @@
                 item.className = `book-item ${isCollected ? '' : 'unknown'}`;
                 
                 if (isCollected) {
-                    const rClass = `r-${cat.rarity.toLowerCase()}`;
                     const hearts = '💖'.repeat(Math.min(3, Math.ceil(affectionData[cat.id] / 3))) || '💖';
+                    const deco = catDecorations[cat.id] || '';
                     item.innerHTML = `
                         <div class="book-rarity" style="color:var(--accent-color);">${cat.rarity}</div>
-                        <div class="book-emoji">${cat.emoji}</div>
+                        <div class="book-emoji-container">
+                            <div class="book-emoji">${cat.emoji}</div>
+                            <div class="book-decoration">${deco}</div>
+                        </div>
                         <div class="book-name">${cat.name}</div>
                         <div style="font-size:0.6rem; margin-top:4px; letter-spacing:-2px;">${hearts}</div>
                     `;
@@ -968,22 +1230,84 @@
             document.getElementById('bookModal').classList.remove('show');
         };
 
+        // 貢献度（推し活ランキング）ライセンスモーダル
+        window.openLicenseModal = function() {
+            let sortedCats = Object.keys(contributionData).sort((a, b) => contributionData[b] - contributionData[a]);
+            let oshiHtml = `<div style="font-size:0.8rem; color:var(--text-muted); padding: 10px; text-align:center;">まだ猫ちゃんに貢いでいないにゃん🐾<br>占いを引いてプレゼントするにゃ！</div>`;
+            
+            if (sortedCats.length > 0) {
+                let topCatId = sortedCats[0];
+                let topCat = catData.find(c => c.id == topCatId);
+                let pts = contributionData[topCatId];
+                let deco = catDecorations[topCatId] || '';
+                
+                oshiHtml = `
+                    <div class="license-oshi">
+                        <div class="license-oshi-title">👑 最愛の殿堂入り推し猫 👑</div>
+                        <div class="license-oshi-emoji">
+                            ${topCat.emoji}
+                            <div class="card-decoration" style="font-size: 1.5rem;">${deco}</div>
+                        </div>
+                        <div class="license-oshi-name">${topCat.name}</div>
+                        <div class="license-oshi-points">累計貢ぎポイント: ${pts} pt</div>
+                    </div>
+                `;
+            }
+
+            const cardHtml = `
+                <div class="license-header">認定お世話係 証</div>
+                <div class="license-row"><span>氏名:</span> <span>${userName}</span></div>
+                <div class="license-row"><span>称号:</span> <span>${getCatTitle(totalEncounters)}</span></div>
+                <div class="license-row"><span>お世話回数:</span> <span>${totalEncounters} 回</span></div>
+                <div class="license-row"><span>獲得トロフィー:</span> <span>${unlockedTrophies.length} 個</span></div>
+                ${oshiHtml}
+            `;
+            
+            document.getElementById('licenseCard').innerHTML = cardHtml;
+            document.getElementById('licenseModal').classList.add('show');
+        };
+        window.closeLicenseModal = function() {
+            document.getElementById('licenseModal').classList.remove('show');
+        };
+
         // =========================================
-        // 9. SNSシェア関連
+        // 9. SNSシェア関連（バイラルループ）
         // =========================================
+        function activateShareBonus() {
+            shareBonusActive = true;
+            localStorage.setItem('nyanko_share_bonus', 'true');
+            checkShareBonusDisplay();
+            showToast("🎁 シェア感謝！次回ガチャ【SR以上確定】にゃん！");
+        }
+
         document.getElementById('shareXBtn').addEventListener('click', () => {
-            const text = `【ニャンコ占いの館🐾】\nランク: ${getCatTitle(totalEncounters)}\n今のお世話係は「${currentResult.mood} ${currentResult.name}」でした！\n\n💖猫ちゃんからの全肯定:\n「${document.getElementById('textAffirmation').innerText}」\n\n👇あなたも癒やされる\n${window.location.href}\n#ニャンコ占いの館 #癒やし #猫`;
+            let trophyText = unlockedTrophies.length > 0 ? `\n🏆実績: ${unlockedTrophies.length}個解除！` : "";
+            const text = `【ニャンコ占いの館🐾】\nランク: ${getCatTitle(totalEncounters)}${trophyText}\n今のお世話係は「${currentResult.mood} ${currentResult.name}」でした！\n\n💖猫ちゃんからの全肯定:\n「${document.getElementById('textAffirmation').innerText}」\n\n👇あなたも癒やされる\n${window.location.href}\n#ニャンコ占いの館 #癒やし #猫`;
             copyText(text);
+            activateShareBonus();
         });
 
         document.getElementById('shareInstaBtn').addEventListener('click', () => {
             document.body.classList.add('screenshot-mode');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            activateShareBonus();
         });
+        
+        window.shareLicense = function() {
+            let sortedCats = Object.keys(contributionData).sort((a, b) => contributionData[b] - contributionData[a]);
+            let oshiText = "";
+            if(sortedCats.length > 0) {
+                let topCat = catData.find(c => c.id == sortedCats[0]);
+                oshiText = `\n👑最推し: ${topCat.name} (${contributionData[sortedCats[0]]}pt)`;
+            }
+            const text = `【ニャンコ占いの館🐾 認定ライセンス】\n氏名: ${userName}\n称号: ${getCatTitle(totalEncounters)}${oshiText}\n🏆実績: ${unlockedTrophies.length}個解除\n\n👇あなたもライセンスを発行する\n${window.location.href}\n#ニャンコ占いの館 #推し活`;
+            copyText(text);
+            activateShareBonus();
+        };
 
         function copyText(text) {
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(() => showToast("🐾 コピー完了！好きな場所に貼り付けてね")).catch(() => fallbackCopy(text));
+                navigator.clipboard.writeText(text).then(() => {}).catch(() => fallbackCopy(text));
             } else {
                 fallbackCopy(text);
             }
@@ -994,10 +1318,7 @@
             textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
-            try {
-                document.execCommand('copy');
-                showToast("🐾 コピー完了！好きな場所に貼り付けてね");
-            } catch (err) { alert("画面をスクショしてシェアしてにゃん🐾"); }
+            try { document.execCommand('copy'); } catch (err) { alert("画面をスクショしてシェアしてにゃん🐾"); }
             document.body.removeChild(textArea);
         }
 
