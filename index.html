@@ -430,19 +430,27 @@
         let lastLoginDate = localStorage.getItem('nyanko_last_login');
         
         // 100トロフィー判定用の詳細なStats（行動記録）
-        let stats = JSON.parse(localStorage.getItem('nyanko_stats')) || {
-            draws: 0,
-            pets: 0,
-            clicks: 0,
-            shares: 0,
-            breathes: 0,
-            secrets: 0,
-            moods: { tired: 0, stress: 0, sleepy: 0, lucky: 0 },
-            time: { morning: false, noon: false, night: false, midnight: false }
-        };
-        // 互換性維持
-        if (localStorage.getItem('nyanko_total_encounters')) stats.draws = parseInt(localStorage.getItem('nyanko_total_encounters'));
-        if (localStorage.getItem('nyanko_total_pets')) stats.pets = parseInt(localStorage.getItem('nyanko_total_pets'));
+        // 過去の古いデータと衝突しないように安全な初期化とデータ補完を行う
+        let stats = JSON.parse(localStorage.getItem('nyanko_stats')) || {};
+        if (typeof stats !== 'object') stats = {};
+        if (stats.draws === undefined) stats.draws = 0;
+        if (stats.pets === undefined) stats.pets = 0;
+        if (stats.clicks === undefined) stats.clicks = 0;
+        if (stats.shares === undefined) stats.shares = 0;
+        if (stats.breathes === undefined) stats.breathes = 0;
+        if (stats.secrets === undefined) stats.secrets = 0;
+        if (!stats.moods) stats.moods = { tired: 0, stress: 0, sleepy: 0, lucky: 0 };
+        if (!stats.time) stats.time = { morning: false, noon: false, night: false, midnight: false };
+
+        // 互換性維持（古いデータを新しいシステムに移行して統合）
+        if (localStorage.getItem('nyanko_total_encounters')) {
+            stats.draws = parseInt(localStorage.getItem('nyanko_total_encounters'));
+            localStorage.removeItem('nyanko_total_encounters');
+        }
+        if (localStorage.getItem('nyanko_total_pets')) {
+            stats.pets = parseInt(localStorage.getItem('nyanko_total_pets'));
+            localStorage.removeItem('nyanko_total_pets');
+        }
 
         let affectionData = JSON.parse(localStorage.getItem('nyanko_affection')) || {};
         let contributionData = JSON.parse(localStorage.getItem('nyanko_contribution')) || {};
