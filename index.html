@@ -113,7 +113,6 @@
            4. 結果エリア・なでなで・深呼吸
         ========================================= */
         .result-container { display: none; width: 100%; opacity: 0; transform: translateY(10px); margin-top: 10px; }
-        /* スロー・フェードイン演出 */
         .result-container.show-slow { display: block; animation: slowFadeIn 3.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
         
         @keyframes slowFadeIn {
@@ -137,7 +136,7 @@
         .breathe-trigger-btn { background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); font-size: 0.95rem; font-weight: bold; padding: 12px 25px; border-radius: 30px; cursor: pointer; transition: all 0.3s; }
         .breathe-trigger-btn:hover { background: var(--accent-color); color: white; }
 
-        /* アフィリエイト枠（3ショップ対応版拡張CSS） */
+        /* アフィリエイト枠 */
         .affiliate-box { background: rgba(255,255,255,0.8); border: 3px solid var(--accent-color); border-radius: 16px; padding: 15px; margin-top: 10px; display: flex; flex-direction: column; align-items: stretch; gap: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; }
         body.theme-night .affiliate-box { background: rgba(0,0,0,0.5); }
         
@@ -194,12 +193,18 @@
         .close-breathe { margin-top: 50px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.5); color: white; padding: 10px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; }
 
         /* 実績・ライセンスモーダル */
-        .trophy-item { background: rgba(255,215,0,0.1); border: 1px solid #ffd700; border-radius: 10px; padding: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; text-align: left; }
+        .trophy-item { background: rgba(255,215,0,0.1); border: 1px solid #ffd700; border-radius: 10px; padding: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; text-align: left; transition: all 0.3s; }
         .trophy-icon { font-size: 2rem; }
         .trophy-text { flex-grow: 1; }
         .trophy-title { font-weight: bold; font-size: 0.9rem; color: #d4af37; }
         .trophy-desc { font-size: 0.75rem; color: var(--text-muted); }
-        .trophy-locked { filter: grayscale(100%) opacity(0.5); background: rgba(0,0,0,0.05); border-color: #ccc; }
+        .trophy-locked { filter: grayscale(100%) opacity(0.4); background: rgba(0,0,0,0.05); border-color: #ccc; }
+        .trophy-locked .trophy-title { color: #888; }
+        
+        /* 100個のトロフィーリスト用スクロール調整 */
+        #trophyList { max-height: 60vh; overflow-y: auto; padding-right: 5px; }
+        #trophyList::-webkit-scrollbar { width: 6px; }
+        #trophyList::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 3px; }
 
         .license-card { background: linear-gradient(135deg, #fff 0%, #fff0f5 100%); border: 3px solid var(--accent-color); border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.1); position: relative; }
         body.theme-night .license-card { background: linear-gradient(135deg, #2b1b3d 0%, #1a1025 100%); }
@@ -262,7 +267,7 @@
         <div class="status-board" id="statusBoard" style="display:none;">
             <div id="encounterBadge" class="encounter-badge">連続お世話: 0日目</div>
             <div id="titleBadge" class="title-badge">称号</div>
-            <div id="trophyBadge" class="trophy-badge" onclick="openTrophyModal()">🏆 獲得トロフィー: 0</div>
+            <div id="trophyBadge" class="trophy-badge" onclick="openTrophyModal()">🏆 獲得トロフィー: 0/100</div>
             <div id="shareBonusBadge" class="share-bonus-badge">🎁 次回占う時【SR以上確定】！</div>
             <div id="secretBonusBadge" class="share-bonus-badge" style="background: linear-gradient(135deg, #ff00ff, #8a2be2);">🗝️ 合言葉の魔法【UR以上確定】！</div>
         </div>
@@ -387,9 +392,10 @@
     <div class="modal" id="trophyModal">
         <div class="modal-content book-content">
             <button class="close-modal-btn" onclick="closeTrophyModal()">✖</button>
-            <h2 style="color:var(--accent-color); margin-top:0;">🏆 獲得トロフィー</h2>
-            <div class="book-stats">実績解除: <span id="trophyProgress">0/5</span></div>
-            <div id="trophyList" style="margin-top: 15px;"></div>
+            <h2 style="color:var(--accent-color); margin-top:0;">🏆 獲得トロフィー (100の試練)</h2>
+            <div class="book-stats">実績解除: <span id="trophyProgress">0/100</span></div>
+            <!-- トロフィー表示用リスト -->
+            <div id="trophyList" style="margin-top: 15px; text-align: left;"></div>
         </div>
     </div>
 
@@ -416,13 +422,27 @@
 
     <script>
         // =========================================
-        // 1. グローバル変数と初期化
+        // 1. グローバル変数と初期化 (Stats拡張)
         // =========================================
         let userName = localStorage.getItem('nyanko_name') || 'あなた';
         let loginStreak = parseInt(localStorage.getItem('nyanko_login_streak')) || 0;
         let lastLoginDate = localStorage.getItem('nyanko_last_login');
-        let totalEncounters = parseInt(localStorage.getItem('nyanko_total_encounters')) || 0;
-        let totalPets = parseInt(localStorage.getItem('nyanko_total_pets')) || 0;
+        
+        // 100トロフィー判定用の詳細なStats（行動記録）
+        let stats = JSON.parse(localStorage.getItem('nyanko_stats')) || {
+            draws: 0,
+            pets: 0,
+            clicks: 0,
+            shares: 0,
+            breathes: 0,
+            secrets: 0,
+            moods: { tired: 0, stress: 0, sleepy: 0, lucky: 0 },
+            time: { morning: false, noon: false, night: false, midnight: false }
+        };
+        // 互換性維持
+        if (localStorage.getItem('nyanko_total_encounters')) stats.draws = parseInt(localStorage.getItem('nyanko_total_encounters'));
+        if (localStorage.getItem('nyanko_total_pets')) stats.pets = parseInt(localStorage.getItem('nyanko_total_pets'));
+
         let affectionData = JSON.parse(localStorage.getItem('nyanko_affection')) || {};
         let contributionData = JSON.parse(localStorage.getItem('nyanko_contribution')) || {};
         let bgStamps = JSON.parse(localStorage.getItem('nyanko_bg_stamps')) || [];
@@ -525,73 +545,105 @@
         ];
 
         const moods = ["超絶甘えん坊な", "少し眠そうな", "やたらテンションが高い", "何かを企んでいる", "悟りを開いた", "お腹を空かせた", "なでてほしい", "ツンデレな", "かまってちゃんな", "パトロール中の", "丸くなっている", "獲物を狙う"];
-        
         const affirmationsDefault = [
-            "今日も息をして生きてるだけで100点満点にゃ！",
-            "何もできなくても、[NAME]の価値は絶対に減らないにゃん。",
-            "そのままの[NAME]が一番可愛くて最高だにゃん🐾",
-            "誰が何と言おうと、猫ちゃんたちは[NAME]の味方にゃ！",
+            "今日も息をして生きてるだけで100点満点にゃ！", "何もできなくても、[NAME]の価値は絶対に減らないにゃん。",
+            "そのままの[NAME]が一番可愛くて最高だにゃん🐾", "誰が何と言おうと、猫ちゃんたちは[NAME]の味方にゃ！",
             "よく頑張ったにゃ！えらい！天才！宇宙一！！"
         ];
-        const affirmationsTired = [
-            "[NAME]、今日もお仕事・勉強お疲れ様にゃ！無理しなくていいんだにゃん。",
-            "頑張った自分に一番のご褒美をあげる日にするにゃ。ゆっくり休んでにゃ。"
-        ];
-        const affirmationsStress = [
-            "モヤモヤする時は甘いものを食べて全部忘れるにゃ！[NAME]は悪くないにゃん。",
-            "他人の心無い言葉なんて猫砂に埋めてスッキリするにゃ！私が味方にゃ！"
-        ];
-        const affirmationsSleepy = [
-            "今日はもうスマホを置いて、温かい布団にダイブするにゃん。おやすみにゃ💤",
-            "眠れない時は私と一緒に深呼吸するにゃ。[NAME]が安心するまでそばにいるにゃん。"
-        ];
+        const affirmationsTired = ["[NAME]、今日もお疲れ様にゃ！無理しなくていいんだにゃん。", "頑張った自分に一番のご褒美をあげる日にするにゃ。ゆっくり休んでにゃ。"];
+        const affirmationsStress = ["モヤモヤする時は甘いものを食べて全部忘れるにゃ！[NAME]は悪くないにゃん。", "他人の心無い言葉なんて猫砂に埋めてスッキリするにゃ！私が味方にゃ！"];
+        const affirmationsSleepy = ["今日はもうスマホを置いて、温かい布団にダイブするにゃん。おやすみにゃ💤", "眠れない時は私と一緒に深呼吸するにゃ。[NAME]が安心するまでそばにいるにゃん。"];
 
         const catTrivias = [
-            "猫のゴロゴロ音（約25〜50Hz）には、人間の骨や細胞の修復を早める癒やし効果があると言われてるにゃ！",
+            "猫のゴロゴロ音（約25〜50Hz）には、骨や細胞の修復を早める癒やし効果があるにゃ！",
             "猫の鼻の模様（鼻紋）は、人間の指紋と同じで世界に一つだけのオリジナルにゃん。",
-            "猫がゆっくりまばたきするのは「大好き」「信頼してる」という愛情表現のサインにゃ！",
+            "猫がゆっくりまばたきするのは「大好き」「信頼してる」という愛情表現にゃ！",
             "猫は一生の約70%を寝て過ごすにゃ。休むことも立派なお仕事にゃん。",
-            "猫が前足でふみふみするのは、子猫時代の安心感を思い出している至福の時にゃ。",
-            "猫の耳は片方ずつ別々に動かせるにゃ。180度回転させて音の出所を探ってるにゃん。",
-            "猫がしっぽをピンと立てて近づいてくる時は、ご機嫌で甘えたいサインにゃ💕",
-            "猫は甘味を感じないにゃ。だからスイーツよりお肉やお魚に夢中になるにゃん。",
             "猫のジャンプ力は体高の約5倍！忍者のような身体能力を秘めているにゃん。",
-            "猫が飼い主にお尻を向けて座るのは、「背後を任せられるほど信頼している」という最大級の愛情表現にゃ！",
-            "猫の鎖骨は退化していて、頭が通る隙間ならどこでも通り抜けられる「液体」のような体を持ってるにゃ。",
-            "猫が獲物を見つけた時に出す「カカカッ」という音（クラッキング）は、興奮が抑えきれない時の声にゃん！"
+            "猫がお尻を向けるのは「背後を任せられる」という最大級の信頼の証にゃ！",
+            "猫の鎖骨は退化していて、頭が通る隙間ならどこでも通れる「液体」にゃ。",
+            "獲物を見つけた時の「カカカッ」は、興奮が抑えきれない時の声にゃん！"
         ];
 
         const secretWords = ["ちゅーる", "またたび", "にくきゅう", "にゃんこ", "おひるね"];
         const decoItems = ["👑", "🎀", "🎩", "🌸", "👓", "✨", "🐟"];
 
-        // トロフィーデータ（実績）追加: 石油王
-        const trophiesData = [
-            { id: "t1", title: "夜更かしさん", desc: "深夜（0時〜4時）に占いを引いた", icon: "🌙", check: () => { const h = new Date().getHours(); return h >= 0 && h < 4; } },
-            { id: "t2", title: "愛の伝道師", desc: "なでなでを累計100回達成した", icon: "💖", check: () => totalPets >= 100 },
-            { id: "t3", title: "初めてのパトロン", desc: "猫ちゃんにプレゼント（クリック）した", icon: "🎁", check: () => roomItems.length > 0 },
-            { id: "t4", title: "図鑑コレクター", desc: "猫を20種類以上発見した", icon: "📖", check: () => Object.keys(affectionData).length >= 20 },
-            { id: "t5", title: "猫に愛されし者", desc: "どれか1匹の好感度が20を超えた", icon: "👑", check: () => Object.values(affectionData).some(v => v >= 20) },
-            { id: "t6", title: "石油王", desc: "1匹の猫に10回以上貢いだ", icon: "💎", check: () => Object.values(contributionData).some(v => v >= 10) }
-        ];
-
-        function getOnedariMessage(catName, userName) {
-            const todayDate = new Date().getDate();
-            if (todayDate % 5 === 0 || todayDate === 0) {
-                return `「今日は楽天ポイント5倍の日にゃ！${userName === 'あなた' ? 'ご主人' : userName}ちゃん、貢ぐなら今日が絶対お得にゃん！🐾」`;
-            }
-
-            const safeName = userName === "あなた" ? "ご主人" : userName;
-            const msgs = [
-                `「${safeName}ちゃん、これがあったらもっと一緒にいられるにゃ💕」`,
-                `「今の私にはこれが絶対必要にゃ！${safeName}ちゃん、おねがいにゃ〜！」`,
-                `「ねえねえ、これ買ってくれたら特別にお腹モフモフさせてあげるにゃ🐾」`,
-                `「これ、${safeName}ちゃんへのプレゼントに私が選んだにゃ！（※支払いはお願いにゃ）」`,
-                `「これが部屋にあったら、毎日最高にハッピーな気分でお出迎えするにゃん✨」`
-            ];
-            return msgs[Math.floor(Math.random() * msgs.length)];
+        // =========================================
+        // 2.5 【100トロフィー自動生成システム】
+        // =========================================
+        let trophiesData = [];
+        
+        function initTrophies() {
+            // ① 占い回数 (12個)
+            const drawGoals = [1, 5, 10, 30, 50, 100, 200, 300, 500, 777, 1000, 3000];
+            drawGoals.forEach(g => {
+                trophiesData.push({ id: `d${g}`, title: `おみくじマニア(Lv.${g})`, desc: `占いを累計${g}回引いた`, icon: "🔮", check: () => stats.draws >= g });
+            });
+            // ② なでなで回数 (12個)
+            const petGoals = [1, 50, 100, 300, 500, 1000, 2000, 3000, 5000, 7777, 10000, 50000];
+            petGoals.forEach(g => {
+                trophiesData.push({ id: `p${g}`, title: `愛の伝道師(Lv.${g})`, desc: `なでなでを累計${g}回達成`, icon: "💖", check: () => stats.pets >= g });
+            });
+            // ③ アフィクリック貢ぎ回数 (12個)
+            const clickGoals = [1, 5, 10, 30, 50, 100, 200, 300, 500, 777, 1000, 2000];
+            clickGoals.forEach(g => {
+                trophiesData.push({ id: `c${g}`, title: `大パトロン(Lv.${g})`, desc: `猫に${g}回プレゼントを貢いだ`, icon: "🎁", check: () => stats.clicks >= g });
+            });
+            // ④ 図鑑収集度 (10個)
+            const bookGoals = [1, 5, 10, 20, 30, 40, 50, 60, 70, 73];
+            bookGoals.forEach(g => {
+                trophiesData.push({ id: `b${g}`, title: `図鑑コレクター(${g})`, desc: `猫を${g}種類発見した`, icon: "📖", check: () => Object.keys(affectionData).length >= g });
+            });
+            // ⑤ SNSシェア回数 (6個)
+            const shareGoals = [1, 5, 10, 20, 50, 100];
+            shareGoals.forEach(g => {
+                trophiesData.push({ id: `s${g}`, title: `インフルエンサー(Lv.${g})`, desc: `SNSに${g}回シェアした`, icon: "📱", check: () => stats.shares >= g });
+            });
+            // ⑥ 気分選択 (8個: 4種×2)
+            ['tired', 'stress', 'sleepy', 'lucky'].forEach(m => {
+                trophiesData.push({ id: `m1_${m}`, title: `${m}の達人`, desc: `気分[${m}]を10回選択`, icon: "💡", check: () => stats.moods[m] >= 10 });
+                trophiesData.push({ id: `m2_${m}`, title: `${m}の覇者`, desc: `気分[${m}]を50回選択`, icon: "🔥", check: () => stats.moods[m] >= 50 });
+            });
+            // ⑦ 連続ログイン (10個)
+            const loginGoals = [2, 3, 7, 14, 30, 50, 100, 200, 300, 365];
+            loginGoals.forEach(g => {
+                trophiesData.push({ id: `l${g}`, title: `お世話係の鑑(${g}日)`, desc: `連続${g}日お世話した`, icon: "☀️", check: () => loginStreak >= g });
+            });
+            // ⑧ 合言葉成功 (5個)
+            const secretGoals = [1, 5, 10, 20, 50];
+            secretGoals.forEach(g => {
+                trophiesData.push({ id: `sec${g}`, title: `合言葉マスター(${g})`, desc: `合言葉に${g}回成功した`, icon: "🔑", check: () => stats.secrets >= g });
+            });
+            // ⑨ 深呼吸完了 (5個)
+            const breathGoals = [1, 5, 10, 30, 50];
+            breathGoals.forEach(g => {
+                trophiesData.push({ id: `br${g}`, title: `ヨギ・キャット(${g})`, desc: `深呼吸を${g}回完了した`, icon: "🧘", check: () => stats.breathes >= g });
+            });
+            // ⑩ 特定のレアリティ発見 (5個)
+            ["R", "SR", "SSR", "UR", "SEC"].forEach(r => {
+                trophiesData.push({ id: `r_${r}`, title: `奇跡の出会い(${r})`, desc: `レアリティ[${r}]を初めて発見`, icon: "✨", check: () => Object.keys(affectionData).some(id => catData.find(c => c.id == id).rarity === r) });
+            });
+            // ⑪ 時間帯トロフィー (4個)
+            trophiesData.push({ id: "t_night", title: "夜更かしさん", desc: "深夜(0-4時)に占いを引いた", icon: "🌙", check: () => stats.time.midnight });
+            trophiesData.push({ id: "t_morn", title: "早起き鳥", desc: "朝(5-11時)に占いを引いた", icon: "🌅", check: () => stats.time.morning });
+            trophiesData.push({ id: "t_noon", title: "陽だまり散歩", desc: "昼(12-17時)に占いを引いた", icon: "☀️", check: () => stats.time.noon });
+            trophiesData.push({ id: "t_eve", title: "夕暮れ哀愁", desc: "夜(18-23時)に占いを引いた", icon: "🌆", check: () => stats.time.night });
+            
+            // ⑫ 推し特化 (10個)
+            const oshiGoals = [5, 10, 20, 50, 100];
+            oshiGoals.forEach(g => {
+                trophiesData.push({ id: `oshi_${g}`, title: `猫に愛されし者(${g})`, desc: `1匹の猫の好感度が${g}突破`, icon: "👑", check: () => Object.values(affectionData).some(v => v >= g) });
+                trophiesData.push({ id: `pt_${g}`, title: `石油王(${g}回)`, desc: `1匹の猫に${g}回以上貢いだ`, icon: "💎", check: () => Object.values(contributionData).some(v => v >= g) });
+            });
+            
+            // ⑬ 余りの穴埋め（隠しトロフィー） (1個)
+            trophiesData.push({ id: "hidden_1", title: "究極の神", desc: "全てのトロフィーの99%をコンプ", icon: "🏆", check: () => unlockedTrophies.length >= 99 });
+            
+            // ちょうど100個のトロフィーリスト完成！
         }
+        initTrophies();
 
-        const bgStampEmojis = ["🐾", "💕", "🐱", "✨", "🐟", "🎀", "⭐", "🎵", "💤"];
+        function saveStats() { localStorage.setItem('nyanko_stats', JSON.stringify(stats)); }
 
         // =========================================
         // 3. 初期処理
@@ -628,11 +680,13 @@
             const handleAffiliateClick = () => {
                 if(currentResult) {
                     addRoomItem('🎁');
+                    stats.clicks++;
+                    saveStats();
+                    
                     if(currentCatId) {
                         affectionData[currentCatId] += 2;
                         localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
                         
-                        // 貢献度ランキング用
                         if (!contributionData[currentCatId]) contributionData[currentCatId] = 0;
                         contributionData[currentCatId]++;
                         localStorage.setItem('nyanko_contribution', JSON.stringify(contributionData));
@@ -662,17 +716,26 @@
             const subTitle = document.getElementById('subTitle');
             if (hour >= 5 && hour < 12) {
                 document.body.className = 'theme-morning';
+                stats.time.morning = true;
                 mainTitle.innerText = "🌅 朝のニャンコ占い";
                 subTitle.innerText = "おはよう！今日も1日、無理せずいくにゃん";
             } else if (hour >= 12 && hour < 18) {
                 document.body.className = '';
+                stats.time.noon = true;
                 mainTitle.innerText = "☀️ 陽だまりニャンコ占い";
                 subTitle.innerText = "お疲れ様にゃ。ちょっと一息入れていくにゃん";
+            } else if (hour >= 18 && hour < 24) {
+                document.body.className = 'theme-night';
+                stats.time.night = true;
+                mainTitle.innerText = "🌙 夜のニャンコ占い";
+                subTitle.innerText = "今日もよく頑張ったにゃ。ゆっくり休むにゃん";
             } else {
                 document.body.className = 'theme-night';
+                stats.time.midnight = true;
                 mainTitle.innerText = "🌙 深夜のニャンコ保健室";
-                subTitle.innerText = "今日もよく頑張ったにゃ。猫に癒やされて眠るにゃん";
+                subTitle.innerText = "こんな時間まで起きてるにゃ？猫に癒やされて眠るにゃん";
             }
+            saveStats();
         }
 
         function updateLoginStreak() {
@@ -689,17 +752,17 @@
             }
             if (loginStreak > 0) {
                 document.getElementById('statusBoard').style.display = 'flex';
-                document.getElementById('encounterBadge').innerText = `連続お世話: ${loginStreak}日目🐾 (通算 ${totalEncounters}回)`;
+                document.getElementById('encounterBadge').innerText = `連続お世話: ${loginStreak}日目🐾 (通算 ${stats.draws}回)`;
             }
         }
 
         function getCatTitle(count) {
             if (count === 0) return "迷い込んだ旅人";
-            if (count <= 3) return "通りすがりの猫好き";
-            if (count <= 10) return "見習いお世話係";
-            if (count <= 25) return "頼れるキャットシッター";
-            if (count <= 50) return "猫カフェの名誉店長";
-            if (count <= 99) return "猫語を解する者";
+            if (count <= 5) return "通りすがりの猫好き";
+            if (count <= 20) return "見習いお世話係";
+            if (count <= 50) return "頼れるキャットシッター";
+            if (count <= 100) return "猫カフェの名誉店長";
+            if (count <= 300) return "猫語を解する者";
             return "👑 猫に愛されし神";
         }
 
@@ -728,7 +791,7 @@
             const badge = document.getElementById('trophyBadge');
             if (unlockedTrophies.length > 0) {
                 badge.style.display = 'inline-block';
-                badge.innerText = `🏆 獲得トロフィー: ${unlockedTrophies.length}`;
+                badge.innerText = `🏆 獲得トロフィー: ${unlockedTrophies.length}/100`;
             }
         }
 
@@ -736,7 +799,6 @@
             currentSelectedMood = mood;
             document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
             btnElement.classList.add('active');
-            
             showToast("カードをタップして引くにゃ！");
         }
 
@@ -746,11 +808,15 @@
         function drawCat() {
             if (isFlipped) return;
             
-            // 改善: 気分を選んでいない場合はランダムで自動選択
             if (!currentSelectedMood) {
                 const defaultMoods = ['tired', 'stress', 'sleepy', 'lucky'];
                 currentSelectedMood = defaultMoods[Math.floor(Math.random() * defaultMoods.length)];
             }
+            
+            // 記録
+            stats.moods[currentSelectedMood]++;
+            stats.draws++;
+            saveStats();
             
             isFlipped = true;
             document.getElementById('moodSelector').style.display = 'none';
@@ -786,20 +852,17 @@
             currentResult = { ...baseCat, mood: mood };
             currentCatId = baseCat.id;
 
-            totalEncounters++;
-            localStorage.setItem('nyanko_total_encounters', totalEncounters);
             if (!affectionData[currentCatId]) affectionData[currentCatId] = 0;
             affectionData[currentCatId]++;
             localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
 
-            document.getElementById('encounterBadge').innerText = `連続お世話: ${loginStreak}日目🐾 (通算 ${totalEncounters}回)`;
-            document.getElementById('titleBadge').innerText = getCatTitle(totalEncounters);
+            document.getElementById('encounterBadge').innerText = `連続お世話: ${loginStreak}日目🐾 (通算 ${stats.draws}回)`;
+            document.getElementById('titleBadge').innerText = getCatTitle(stats.draws);
 
             checkAchievements();
 
             const cardContainer = document.getElementById('cardContainer');
-            // 改善: レア度に応じた3〜6秒の超・溜め演出
-            let chargeTime = 3000; // 最低3秒
+            let chargeTime = 3000;
             
             if (targetRarity === "SEC" || targetRarity === "UR") {
                 chargeTime = 6000;
@@ -911,7 +974,6 @@
             document.getElementById('productLinkTikTok').href = finalLinkTikTok;
             document.getElementById('productLinkWatts').href = finalLinkWatts;
 
-            // 改善: 結果の3.5秒スローフェードイン
             setTimeout(() => {
                 const resContainer = document.getElementById('resultContainer');
                 resContainer.classList.add('show-slow');
@@ -947,8 +1009,8 @@
             affectionData[currentCatId]++;
             localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
             
-            totalPets++;
-            localStorage.setItem('nyanko_total_pets', totalPets);
+            stats.pets++;
+            saveStats();
             checkAchievements();
 
             const aff = affectionData[currentCatId];
@@ -1004,9 +1066,6 @@
             setTimeout(() => paw.remove(), 1200);
         }
 
-        // =========================================
-        // 6. 永続背景スタンプ管理・箱庭ねこ・貢ぎ物
-        // =========================================
         function addStampToBg(emoji, xPercent, yPercent) {
             const stamp = { e: emoji, x: xPercent, y: yPercent };
             bgStamps.push(stamp);
@@ -1143,6 +1202,10 @@
                 text.innerText = `${userName}、えらいにゃん！\n心がしっかり整ったにゃ🐾`;
                 subtext.innerText = "今日もゆっくり休んでにゃ";
                 isBreathing = false;
+                
+                stats.breathes++;
+                saveStats();
+                checkAchievements();
             }
         };
 
@@ -1153,7 +1216,7 @@
         };
 
         // =========================================
-        // 8. モーダル管理（名前・図鑑・合言葉・トロフィー）
+        // 8. モーダル管理
         // =========================================
         window.openNameModal = function() {
             document.getElementById('nameInput').value = userName === 'あなた' ? '' : userName;
@@ -1189,6 +1252,10 @@
                 checkShareBonusDisplay();
                 closeSecretModal();
                 showToast("✨ 魔法の言葉が認証されたにゃ！次回【UR以上確定】にゃん！");
+                
+                stats.secrets++;
+                saveStats();
+                checkAchievements();
             } else {
                 showToast("💦 うーん、ちょっと違うみたいにゃ…");
             }
@@ -1286,9 +1353,12 @@
             const cardHtml = `
                 <div class="license-header">認定お世話係 証</div>
                 <div class="license-row"><span>氏名:</span> <span>${userName}</span></div>
-                <div class="license-row"><span>称号:</span> <span>${getCatTitle(totalEncounters)}</span></div>
-                <div class="license-row"><span>お世話回数:</span> <span>${totalEncounters} 回</span></div>
-                <div class="license-row"><span>獲得トロフィー:</span> <span>${unlockedTrophies.length} 個</span></div>
+                <div class="license-row"><span>称号:</span> <span>${getCatTitle(stats.draws)}</span></div>
+                <div class="license-row"><span>お世話回数:</span> <span>${stats.draws} 回</span></div>
+                <div class="license-row"><span>実績獲得率:</span> <span>${unlockedTrophies.length} / 100 個</span></div>
+                <div style="width: 100%; height: 8px; background: #eee; border-radius: 4px; margin: 5px 0 15px 0; overflow: hidden;">
+                    <div style="width: ${unlockedTrophies.length}%; height: 100%; background: linear-gradient(90deg, #ffd700, #ff8c00);"></div>
+                </div>
                 ${oshiHtml}
             `;
             
@@ -1300,18 +1370,22 @@
         };
 
         // =========================================
-        // 9. SNSシェア関連（バイラルループ）
+        // 9. SNSシェア関連
         // =========================================
         function activateShareBonus() {
             shareBonusActive = true;
             localStorage.setItem('nyanko_share_bonus', 'true');
             checkShareBonusDisplay();
             showToast("🎁 シェア感謝にゃん！次回占う時【SR以上確定】にゃ！");
+            
+            stats.shares++;
+            saveStats();
+            checkAchievements();
         }
 
         document.getElementById('shareXBtn').addEventListener('click', () => {
             let trophyText = unlockedTrophies.length > 0 ? `\n🏆実績: ${unlockedTrophies.length}個解除！` : "";
-            const text = `【ニャンコ占いの館🐾】\nランク: ${getCatTitle(totalEncounters)}${trophyText}\n今のお世話係は「${currentResult.mood} ${currentResult.name}」でした！\n\n💖猫ちゃんからの全肯定:\n「${document.getElementById('textAffirmation').innerText}」\n\n👇あなたも癒やされる\n${window.location.href}\n#ニャンコ占いの館 #癒やし #猫`;
+            const text = `【ニャンコ占いの館🐾】\nランク: ${getCatTitle(stats.draws)}${trophyText}\n今のお世話係は「${currentResult.mood} ${currentResult.name}」でした！\n\n💖猫ちゃんからの全肯定:\n「${document.getElementById('textAffirmation').innerText}」\n\n👇あなたも癒やされる\n${window.location.href}\n#ニャンコ占いの館 #癒やし #猫`;
             copyText(text);
             activateShareBonus();
         });
@@ -1329,7 +1403,7 @@
                 let topCat = catData.find(c => c.id == sortedCats[0]);
                 oshiText = `\n👑最推し: ${topCat.name} (${contributionData[sortedCats[0]]}pt)`;
             }
-            const text = `【ニャンコ占いの館🐾 認定ライセンス】\n氏名: ${userName}\n称号: ${getCatTitle(totalEncounters)}${oshiText}\n🏆実績: ${unlockedTrophies.length}個解除\n\n👇あなたもライセンスを発行する\n${window.location.href}\n#ニャンコ占いの館 #推し活`;
+            const text = `【ニャンコ占いの館🐾 認定ライセンス】\n氏名: ${userName}\n称号: ${getCatTitle(stats.draws)}${oshiText}\n🏆実績: ${unlockedTrophies.length}/100個解除\n\n👇あなたもライセンスを発行する\n${window.location.href}\n#ニャンコ占いの館 #推し活`;
             copyText(text);
             activateShareBonus();
         };
