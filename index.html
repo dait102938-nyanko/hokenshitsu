@@ -330,14 +330,14 @@
             </div>
             <div class="result-text" id="textTrivia" style="font-size: 0.85rem; background: rgba(255, 240, 245, 0.8); border: 1px dashed var(--accent-color);"></div>
 
-            <div class="section-title" id="affiliateHeader">🐟 猫ちゃんにおねだりされてるにゃ</div>
+            <div class="section-title" id="affiliateHeader">🐟 猫ちゃんからのお願いにゃ</div>
             <div class="product-speech" id="productSpeech">ここに吹き出しが入るにゃん</div>
             
             <div class="affiliate-box">
                 <div style="width: 100%; text-align: left;">
                     <div class="affection-meter"><div class="affection-fill" id="affectionFill"></div></div>
                     <div class="affection-label" id="affectionLabel">好感度レベル: 1</div>
-                    <div style="font-size: 0.7rem; color: #ff4757; text-align: center; margin-top: 8px; font-weight: bold; background: #fff0f3; padding: 4px; border-radius: 8px; border: 1px dashed #ffb7c5;">💡 貢ぐと推し猫が可愛いアイテムでドレスアップするにゃ！</div>
+                    <div style="font-size: 0.7rem; color: #ff4757; text-align: center; margin-top: 8px; font-weight: bold; background: #fff0f3; padding: 4px; border-radius: 8px; border: 1px dashed #ffb7c5;">💡 プレゼントを贈ると推し猫がドレスアップするにゃ！</div>
                 </div>
                 
                 <div class="product-info">
@@ -429,29 +429,41 @@
 
     <script>
         // =========================================
-        // 1. グローバル変数と初期化
+        // 1. グローバル変数と初期化 (安全なデータ移行付き)
         // =========================================
         let userName = localStorage.getItem('nyanko_name') || 'あなた';
         let loginStreak = parseInt(localStorage.getItem('nyanko_login_streak')) || 0;
         let lastLoginDate = localStorage.getItem('nyanko_last_login');
         
-        let stats = JSON.parse(localStorage.getItem('nyanko_stats')) || {};
-        if (typeof stats !== 'object') stats = {};
-        if (stats.draws === undefined) stats.draws = 0;
-        if (stats.pets === undefined) stats.pets = 0;
-        if (stats.clicks === undefined) stats.clicks = 0;
-        if (stats.shares === undefined) stats.shares = 0;
-        if (stats.breathes === undefined) stats.breathes = 0;
-        if (stats.secrets === undefined) stats.secrets = 0;
-        if (!stats.moods) stats.moods = { tired: 0, stress: 0, sleepy: 0, lucky: 0 };
-        if (!stats.time) stats.time = { morning: false, noon: false, night: false, midnight: false };
+        // 既存データの完全なセーフティネット
+        let stats = JSON.parse(localStorage.getItem('nyanko_stats'));
+        if (!stats || typeof stats !== 'object' || Array.isArray(stats)) {
+            stats = {};
+        }
+        stats.draws = stats.draws || 0;
+        stats.pets = stats.pets || 0;
+        stats.clicks = stats.clicks || 0;
+        stats.shares = stats.shares || 0;
+        stats.breathes = stats.breathes || 0;
+        stats.secrets = stats.secrets || 0;
+        stats.moods = stats.moods || { tired: 0, stress: 0, sleepy: 0, lucky: 0 };
+        stats.moods.tired = stats.moods.tired || 0;
+        stats.moods.stress = stats.moods.stress || 0;
+        stats.moods.sleepy = stats.moods.sleepy || 0;
+        stats.moods.lucky = stats.moods.lucky || 0;
+        stats.time = stats.time || { morning: false, noon: false, night: false, midnight: false };
+        stats.time.morning = stats.time.morning || false;
+        stats.time.noon = stats.time.noon || false;
+        stats.time.night = stats.time.night || false;
+        stats.time.midnight = stats.time.midnight || false;
 
+        // 古いバージョンからの回数移行
         if (localStorage.getItem('nyanko_total_encounters')) {
-            stats.draws = parseInt(localStorage.getItem('nyanko_total_encounters'));
+            stats.draws = parseInt(localStorage.getItem('nyanko_total_encounters')) || stats.draws;
             localStorage.removeItem('nyanko_total_encounters');
         }
         if (localStorage.getItem('nyanko_total_pets')) {
-            stats.pets = parseInt(localStorage.getItem('nyanko_total_pets'));
+            stats.pets = parseInt(localStorage.getItem('nyanko_total_pets')) || stats.pets;
             localStorage.removeItem('nyanko_total_pets');
         }
 
@@ -483,25 +495,25 @@
         const catData = [
             // --- SEC (3種) ---
             { id: 1, rarity: "SEC", name: "次元を渡る クァンタム猫", emoji: "🌌", power: "全ての次元で「[NAME]」は愛されているにゃ。焦らなくていい、最適な未来はもう選ばれている。今のノイズはスルーして、ただ存在することを楽しんでにゃん。", itemTitle: "星空プロジェクター", itemDesc: "部屋を宇宙空間にする。", keyword: "プラネタリウム" },
-            { id: 2, rarity: "SEC", name: "記憶を紡ぐ アカシック猫", emoji: "🔮", power: "過去の失敗をまだ引きずってるにゃ？それは「[NAME]」の魅力のスパイスになったにゃ。もう自分を許して、美味しいものを食べて眠るが勝ちにゃん。", itemTitle: "水晶クラスター", itemDesc: "空間の浄化アイテム。", keyword: "水晶+クラスター" },
-            { id: 3, rarity: "SEC", name: "深海を泳ぐ マーメイドキャット", emoji: "🧜‍♀️", power: "深い海の底のように、心の中の静けさを取り戻す時にゃ。周りの言葉の波に飲まれないで。「[NAME]」のペースでゆっくり息をするだけで完璧にゃ。", itemTitle: "海の恵み バスソルト", itemDesc: "海を感じる極上入浴剤。", keyword: "バスソルト+死海" },
+            { id: 2, rarity: "SEC", name: "記憶を紡ぐ アカシック猫", emoji: "🔮", power: "過去の失敗をまだ引きずってるにゃ？それは「[NAME]」の魅力のスパイスになったにゃ。もう自分を許して、美味しいものを食べて眠るが勝ちにゃん。", itemTitle: "水晶クラスター", itemDesc: "空間の浄化アイテム。", keyword: "水晶 クラスター" },
+            { id: 3, rarity: "SEC", name: "深海を泳ぐ マーメイドキャット", emoji: "🧜‍♀️", power: "深い海の底のように、心の中の静けさを取り戻す時にゃ。周りの言葉の波に飲まれないで。「[NAME]」のペースでゆっくり息をするだけで完璧にゃ。", itemTitle: "海の恵み バスソルト", itemDesc: "海を感じる極上入浴剤。", keyword: "バスソルト 死海" },
             // --- UR (5種) ---
-            { id: 4, rarity: "UR", name: "幻の黄金 招き猫", emoji: "✨", power: "おめでとう！これまでの「[NAME]」の苦労が全て報われる波動が来てるにゃ！遠慮せずに豊かさを受け取って、自分に一番甘くする日にしてにゃん。", itemTitle: "純金箔入り 入浴剤", itemDesc: "黄金の波動を浴びる。", keyword: "金箔+入浴剤" },
-            { id: 5, rarity: "UR", name: "真実を見抜く スフィンクス", emoji: "𓂀", power: "建前ばかりの毎日に疲れてないにゃ？「[NAME]」の心の奥の声は、私がちゃんと聞いてるにゃ。今日はワガママになっても誰も怒らないにゃん。", itemTitle: "極上 シルクパジャマ", itemDesc: "偽りのない最高の肌触り。", keyword: "シルク+パジャマ" },
+            { id: 4, rarity: "UR", name: "幻の黄金 招き猫", emoji: "✨", power: "おめでとう！これまでの「[NAME]」の苦労が全て報われる波動が来てるにゃ！遠慮せずに豊かさを受け取って、自分に一番甘くする日にしてにゃん。", itemTitle: "純金箔入り 入浴剤", itemDesc: "黄金の波動を浴びる。", keyword: "金箔 入浴剤" },
+            { id: 5, rarity: "UR", name: "真実を見抜く スフィンクス", emoji: "𓂀", power: "建前ばかりの毎日に疲れてないにゃ？「[NAME]」の心の奥の声は、私がちゃんと聞いてるにゃ。今日はワガママになっても誰も怒らないにゃん。", itemTitle: "極上 シルクパジャマ", itemDesc: "偽りのない最高の肌触り。", keyword: "シルク パジャマ" },
             { id: 6, rarity: "UR", name: "幸運の鍵しっぽ猫", emoji: "🗝️", power: "曲がったしっぽで幸運を引っ掛けてきたにゃ！「[NAME]」が今抱えている悩みは、明日には笑い話になるように魔法をかけておいたにゃん。", itemTitle: "サンキャッチャー", itemDesc: "虹の光を部屋に呼び込む。", keyword: "サンキャッチャー" },
-            { id: 7, rarity: "UR", name: "最古の狩人 マヌルネコ", emoji: "🏔️", power: "現代のルールに縛られすぎにゃ。「[NAME]」の野生を思い出して！嫌なことは「シャーッ！」と威嚇して逃げればいい。生き抜くことが最優先にゃ。", itemTitle: "超極厚 ブランケット", itemDesc: "絶対防寒の毛布。", keyword: "毛布+極厚" },
-            { id: 8, rarity: "UR", name: "福を呼ぶ 奇跡のオス三毛", emoji: "🍀", power: "超絶レアな私が来たからには安心にゃ。「[NAME]」の背負っている荷物を半分持ってあげる。だから今日は、何も考えずにダラダラする権利を行使してにゃ。", itemTitle: "高級 座椅子", itemDesc: "人間をダメにする座椅子。", keyword: "座椅子+ハイバック" },
+            { id: 7, rarity: "UR", name: "最古の狩人 マヌルネコ", emoji: "🏔️", power: "現代のルールに縛られすぎにゃ。「[NAME]」の野生を思い出して！嫌なことは「シャーッ！」と威嚇して逃げればいい。生き抜くことが最優先にゃ。", itemTitle: "超極厚 ブランケット", itemDesc: "絶対防寒の毛布。", keyword: "毛布 極厚" },
+            { id: 8, rarity: "UR", name: "福を呼ぶ 奇跡のオス三毛", emoji: "🍀", power: "超絶レアな私が来たからには安心にゃ。「[NAME]」の背負っている荷物を半分持ってあげる。だから今日は、何も考えずにダラダラする権利を行使してにゃ。", itemTitle: "高級 座椅子", itemDesc: "人間をダメにする座椅子。", keyword: "座椅子 ハイバック" },
             // --- SSR (10種) ---
             { id: 9, rarity: "SSR", name: "神秘のオッドアイ白猫", emoji: "🤍", power: "左右違う瞳で世界を見れば、常識なんて無意味にゃ。「[NAME]」のちょっと変わった所が、実は最大の武器にゃん。自信を持って！", itemTitle: "クリスタル ガラスペン", itemDesc: "美しい文字を綴る魔法のペン。", keyword: "ガラスペン" },
-            { id: 10, rarity: "SSR", name: "もふもふ ペルシャ", emoji: "👑", power: "王族の私が許すにゃ。「[NAME]」、今日はすべてのタスクを放棄して優雅に過ごしなさい。頑張りすぎは美しさに響くからダメにゃん。", itemTitle: "高級 ヘアブラシ", itemDesc: "髪も心も解きほぐす。", keyword: "ヘアブラシ+高級" },
+            { id: 10, rarity: "SSR", name: "もふもふ ペルシャ", emoji: "👑", power: "王族の私が許すにゃ。「[NAME]」、今日はすべてのタスクを放棄して優雅に過ごしなさい。頑張りすぎは美しさに響くからダメにゃん。", itemTitle: "高級 ヘアブラシ", itemDesc: "髪も心も解きほぐす。", keyword: "ヘアブラシ 高級" },
             { id: 11, rarity: "SSR", name: "世界最小 シンガプーラ", emoji: "🧚", power: "私は小さいけど、存在感はバツグンにゃ。「[NAME]」も、小さな一歩を褒めてあげて！今日息をしてただけで大優勝なんだからにゃん。", itemTitle: "アロマ ディフューザー", itemDesc: "小さな巨人の香りの癒やし。", keyword: "アロマディフューザー" },
-            { id: 12, rarity: "SSR", name: "穏やかな巨人 メインクーン", emoji: "🦁", power: "大きな体で「[NAME]」を包み込んであげるにゃ。他人のイライラに巻き込まれないで。私のふかふかのお腹で泣いてもいいにゃん。", itemTitle: "特大 もちもちクッション", itemDesc: "全てを受け止めるサイズ。", keyword: "クッション+特大" },
-            { id: 13, rarity: "SSR", name: "森の妖精 ノルウェージャン", emoji: "🌲", power: "自然のパワーを運んできたにゃ。「[NAME]」、画面ばかり見てないで深呼吸！植物を撫でるように、自分のことも優しく扱ってにゃん。", itemTitle: "観葉植物 セット", itemDesc: "部屋に森の妖精を。", keyword: "観葉植物+セット" },
+            { id: 12, rarity: "SSR", name: "穏やかな巨人 メインクーン", emoji: "🦁", power: "大きな体で「[NAME]」を包み込んであげるにゃ。他人のイライラに巻き込まれないで。私のふかふかのお腹で泣いてもいいにゃん。", itemTitle: "特大 もちもちクッション", itemDesc: "全てを受け止めるサイズ。", keyword: "クッション 特大" },
+            { id: 13, rarity: "SSR", name: "森の妖精 ノルウェージャン", emoji: "🌲", power: "自然のパワーを運んできたにゃ。「[NAME]」、画面ばかり見てないで深呼吸！植物を撫でるように、自分のことも優しく扱ってにゃん。", itemTitle: "観葉植物 セット", itemDesc: "部屋に森の妖精を。", keyword: "観葉植物 セット" },
             { id: 14, rarity: "SSR", name: "野生の血 ベンガル", emoji: "🐆", power: "ワイルドにいこうにゃ！「[NAME]」の中の情熱に火をつけろ！失敗したって私が噛み砕いてあげるから、やりたいようにやるにゃん。", itemTitle: "ヨガマット", itemDesc: "野生の力を目覚めさせる。", keyword: "ヨガマット" },
-            { id: 15, rarity: "SSR", name: "イケメン執事 タキシード猫", emoji: "🤵", power: "お帰りなさいませ。「[NAME]」様、本日はもう何もしなくて結構です。私が全て手配いたしますので、どうぞ温かいお茶をお召し上がりくださいにゃ。", itemTitle: "極上 ルイボスティー", itemDesc: "執事おすすめの癒やし茶。", keyword: "ルイボスティー+オーガニック" },
+            { id: 15, rarity: "SSR", name: "イケメン執事 タキシード猫", emoji: "🤵", power: "お帰りなさいませ。「[NAME]」様、本日はもう何もしなくて結構です。私が全て手配いたしますので、どうぞ温かいお茶をお召し上がりくださいにゃ。", itemTitle: "極上 ルイボスティー", itemDesc: "執事おすすめの癒やし茶。", keyword: "ルイボスティー オーガニック" },
             { id: 16, rarity: "SSR", name: "もちもち 大福白猫", emoji: "🍡", power: "私が丸いからって笑ったにゃ？でも「[NAME]」も、ピリピリするより丸い方が可愛いにゃん。角を立てずに、もちもち生きていくのが正解にゃ。", itemTitle: "マカロン ベッド", itemDesc: "もちもちの極み。", keyword: "マカロンクッション" },
-            { id: 17, rarity: "SSR", name: "眠りの森の 妖精猫", emoji: "💤", power: "1日20時間寝る私が断言するにゃ。「[NAME]」、今の悩みは寝不足のせいにゃ！今すぐスマホを投げて、布団にダイブする魔法をかけるにゃん。", itemTitle: "シルク アイマスク", itemDesc: "光を遮断し妖精の眠りへ。", keyword: "シルク+アイマスク" },
-            { id: 18, rarity: "SSR", name: "お風呂出待ち 忠犬猫", emoji: "🛁", power: "「[NAME]」が溺れないか心配でずっと待ってたにゃ！生きててくれて良かった！だから自分をもっと大切にして、体を温めるにゃん。", itemTitle: "炭酸 入浴剤セット", itemDesc: "芯から温まる癒やし。", keyword: "バブ+入浴剤" },
+            { id: 17, rarity: "SSR", name: "眠りの森の 妖精猫", emoji: "💤", power: "1日20時間寝る私が断言するにゃ。「[NAME]」、今の悩みは寝不足のせいにゃ！今すぐスマホを投げて、布団にダイブする魔法をかけるにゃん。", itemTitle: "シルク アイマスク", itemDesc: "光を遮断し妖精の眠りへ。", keyword: "シルク アイマスク" },
+            { id: 18, rarity: "SSR", name: "お風呂出待ち 忠犬猫", emoji: "🛁", power: "「[NAME]」が溺れないか心配でずっと待ってたにゃ！生きててくれて良かった！だから自分をもっと大切にして、体を温めるにゃん。", itemTitle: "炭酸 入浴剤セット", itemDesc: "芯から温まる癒やし。", keyword: "バブ 入浴剤" },
             // --- SR (32種) ---
             { id: 19, rarity: "SR", name: "キーボード歩き職人", emoji: "⌨️", power: "わざと邪魔しに来たにゃ。「[NAME]」、仕事/勉強しすぎ！画面から目を離して、私のお腹を撫でる時間を強制的にもうけるにゃん！", itemTitle: "ホットアイマスク", itemDesc: "PC疲れの目を癒やす。", keyword: "ホットアイマスク" },
             { id: 20, rarity: "SR", name: "真夜中の大運動会猫", emoji: "💨", power: "深夜に覚醒したにゃ！シャーッ！「[NAME]」も溜まったストレスは、誰も見てない所で大暴れして発散すればいいにゃ。私が伴走するにゃん！", itemTitle: "フォームローラー", itemDesc: "家でゴロゴロ筋膜リリース。", keyword: "フォームローラー" },
@@ -648,14 +660,37 @@
             "考え事は明日の自分に丸投げして、今の自分は寝るという任務を全うするにゃ！", "私のしっぽを抱き枕にして寝ていいにゃん💤"
         ];
 
-        // プチ情報・豆知識の限界拡張（30種以上）
         const catTrivias = [
             "猫のゴロゴロ音（約25〜50Hz）には、人間の骨や細胞の修復を早める癒やし効果があると言われてるにゃ！",
             "猫の鼻の模様（鼻紋）は、人間の指紋と同じで世界に一つだけのオリジナルにゃん。",
             "猫がゆっくりまばたきするのは「大好き」「信頼してる」という愛情表現にゃ！",
             "猫は一生の約70%を寝て過ごすにゃ。休むことも立派なお仕事にゃん。",
             "猫のジャンプ力は体高の約5倍！忍者のような身体能力を秘めているにゃん。",
-            "猫は甘味を感じないにゃ。だからスイーツよりお肉やお魚に夢中になるにゃん。"
+            "猫はおしりを向けるのは「背後を任せられる」という最大級の信頼の証にゃ！",
+            "猫の鎖骨は退化していて、頭が通る隙間ならどこでも通れる「液体」にゃ。",
+            "獲物を見つけた時の「カカカッ」は、興奮が抑えきれない時の声にゃん！",
+            "猫のヒゲは単なる毛ではなく、空気の流れや障害物を察知する超高感度センサーなんだにゃ！",
+            "猫は甘い・苦いより「水の味」の違いが分かるグルメな舌を持ってるにゃん。",
+            "猫の記憶力は犬の約200倍とも言われ、特に「嬉しかったこと」は長く覚えてるにゃん！",
+            "猫の平熱は38度くらい。だから人間より少し温かくてカイロ代わりになるにゃ。",
+            "猫が飼い主の顔を舐めるのは、愛情表現であると同時に「自分の匂いをつけて所有権を主張」してるにゃん。",
+            "猫の視野は200度もあるにゃ！人間の120度に比べると、横の動きに超敏感なんだにゃ。",
+            "猫の肉球は唯一汗をかく場所。緊張したり暑かったりするとしっとりするにゃん。",
+            "猫の聴力は人間の約3倍。犬よりも高く、ネズミの超音波すら聞き取れるにゃ！",
+            "猫が前足を香箱のように折りたたむ「香箱座り」は、超リラックスしていてすぐに逃げない証拠にゃ。",
+            "猫の腸は人間の約半分。だから消化が良くて、こまめにご飯を食べるスタイルなんだにゃん。",
+            "三毛猫のほとんど（99.9%）がメス。オスの三毛猫は超絶レアで幸運のシンボルと言われてるにゃ！",
+            "猫がパソコンや新聞の上に乗るのは「私をもっと見て！」という嫉妬と愛情の裏返しにゃん。",
+            "猫の嗅覚は人間の数万倍！だから柑橘系や香水の強い匂いはちょっと苦手なんだにゃ。",
+            "猫が喉をゴロゴロ鳴らすのは嬉しい時だけじゃないにゃ。自分が苦しい時に自分を癒やすためにも鳴らすにゃん。",
+            "猫の睡眠はほとんどが浅い「レム睡眠」。だから物音がするとすぐに起きられるにゃ。",
+            "エジプトでは猫は神様として崇拝されていたにゃ！だから猫が偉そうなのは血筋にゃん。",
+            "猫が獲物（おもちゃなど）を持ってくるのは、あなたを「狩りができない大きな子猫」と思って世話してるつもりにゃ。",
+            "猫の肉球の色は鼻の色や毛色と連動していることが多いにゃ。黒猫は黒、白猫はピンクが多いにゃん。",
+            "猫は暗闇でも人間の1/6の光量で物を見ることができる「タペタム」という反射板を持ってるにゃ。",
+            "猫が足にスリスリするのは「あなたは私のもの！」というマーキング行動にゃん。",
+            "猫は「にゃー」という声を人間に対してしか使わないと言われてるにゃ。猫同士はボディランゲージで会話するにゃん。",
+            "世界で一番長く生きた猫は38歳（人間換算で約170歳）という記録があるにゃ！"
         ];
 
         // 改善1: 合言葉のランダム日替わりロジック
@@ -664,26 +699,18 @@
             "ごロゴロ", "もふもふ", "さんくす", "まねきねこ", "ねこぱんち"
         ];
         
-        // 日付から今日の合言葉を1つ決める関数
         function getTodaySecret() {
             const today = new Date();
-            // 年、月、日でシード値を作る
             const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-            // 配列の長さで割った余りをインデックスとする
             const index = seed % allSecretWords.length;
             return allSecretWords[index];
         }
 
         const todaySecretWord = getTodaySecret();
 
-        // 改善2: 管理者用コマンドの実装
-        // （画面上で特定の隠しコマンドを入力するか、URLパラメータで発動）
         if (urlParams.get('admin') === 'true') {
-             console.log("🐾 【管理者モード】本日の合言葉は: " + todaySecretWord);
-             // 画面にもこっそり表示させる場合
              setTimeout(() => showToast("🔧 本日の合言葉: " + todaySecretWord), 2000);
         }
-
 
         const decoItems = ["👑", "🎀", "🎩", "🌸", "👓", "✨", "🐟", "👔", "🎓", "🧣", "🎸", "🍔", "💎", "⭐"];
 
@@ -724,10 +751,9 @@
                 return prefix;
             }
             
-            // 相性による前置きフレーミング
-            if (syncRate >= 110) prefix = `「限界突破の相性${syncRate}%にゃ！！これは運命を超えた啓示にゃん！絶対買うしかないにゃ！」<br>`;
+            if (syncRate >= 110) prefix = `「限界突破の相性${syncRate}%にゃ！！これは運命を超えた啓示にゃん！絶対プレゼントしてほしいにゃ！」<br>`;
             else if (syncRate >= 100) prefix = `「今日の相性${syncRate}%は奇跡にゃ！だから絶対にお願いにゃ！」<br>`;
-            else if (syncRate >= 95) prefix = `「相性バッチリの私から、${safeName}ちゃんに特別なおねだりにゃ！」<br>`;
+            else if (syncRate >= 95) prefix = `「相性バッチリの私から、${safeName}ちゃんに特別なお願いにゃ！」<br>`;
 
             const msgs = [
                 `「${safeName}ちゃん、これがあったらもっと一緒にいられるにゃ💕」`,
@@ -736,7 +762,7 @@
                 `「これ、${safeName}ちゃんへのプレゼントに私が選んだにゃ！（※支払いはお願いにゃ）」`,
                 `「これが部屋にあったら、毎日最高にハッピーな気分でお出迎えするにゃん✨」`,
                 `「これを見つけた瞬間、${safeName}ちゃんの顔が浮かんだにゃ！ポチるしか無いにゃん！」`,
-                `「私の第六感が『これを買えば${safeName}ちゃんに幸運が訪れる』と言ってるにゃ🔮」`,
+                `「私の第六感が『これを用意すれば${safeName}ちゃんに幸運が訪れる』と言ってるにゃ🔮」`,
                 `「ねえ${safeName}ちゃん、私のためにこれを用意してくれたら一生恩に着るにゃ💖」`,
                 `「（無言で上目遣いしながら、アイテムを指差している…🐾）」`,
                 `「今日は特別な日にゃ！だからこれをおねだりしても許されるはずだにゃん！」`,
@@ -744,7 +770,7 @@
                 `「これを手に入れた${safeName}ちゃんの笑顔が見たいにゃ。嘘じゃないにゃ、本当だにゃ！」`,
                 `「これがないと夜も眠れないにゃ…嘘にゃ、よく寝てるけど欲しいのは本当だにゃん！」`,
                 `「他の猫には内緒にゃ。${safeName}ちゃんだけに特別に教えてあげる、これ最強のアイテムにゃ！」`,
-                `「これを買ってくれたら、今日から私は${safeName}ちゃんの下僕に…いや、対等のパートナーになるにゃ！」`
+                `「これを用意してくれたら、今日から私は${safeName}ちゃんの下僕に…いや、対等のパートナーになるにゃ！」`
             ];
             return prefix + msgs[Math.floor(Math.random() * msgs.length)];
         }
@@ -765,12 +791,12 @@
             petGoals.forEach(g => {
                 trophiesData.push({ id: `p${g}`, title: `愛の伝道師(Lv.${g})`, desc: `なでなでを累計${g}回達成`, icon: "💖", check: () => stats.pets >= g });
             });
-            // ③ アフィクリック貢ぎ回数 (12個)
+            // ③ プレゼント贈る回数 (12個)
             const clickGoals = [1, 5, 10, 30, 50, 100, 200, 300, 500, 777, 1000, 2000];
             clickGoals.forEach(g => {
-                trophiesData.push({ id: `c${g}`, title: `大パトロン(Lv.${g})`, desc: `猫に${g}回プレゼントを貢いだ`, icon: "🎁", check: () => stats.clicks >= g });
+                trophiesData.push({ id: `c${g}`, title: `最高のパートナー(Lv.${g})`, desc: `猫に${g}回プレゼントを贈った`, icon: "🎁", check: () => stats.clicks >= g });
             });
-            // ④ 図鑑収集度 (10個) -> 全150種に合わせて調整
+            // ④ 図鑑収集度 (10個)
             const bookGoals = [1, 10, 30, 50, 70, 90, 110, 130, 140, 150];
             bookGoals.forEach(g => {
                 trophiesData.push({ id: `b${g}`, title: `図鑑コレクター(${g})`, desc: `猫を${g}種類発見した`, icon: "📖", check: () => Object.keys(affectionData).length >= g });
@@ -802,7 +828,10 @@
             });
             // ⑩ 特定のレアリティ発見 (6個: LR追加)
             ["R", "SR", "SSR", "UR", "SEC", "LR"].forEach(r => {
-                trophiesData.push({ id: `r_${r}`, title: `奇跡の出会い(${r})`, desc: `レアリティ[${r}]を初めて発見`, icon: "✨", check: () => Object.keys(affectionData).some(id => catData.find(c => c.id == id).rarity === r) });
+                trophiesData.push({ id: `r_${r}`, title: `奇跡の出会い(${r})`, desc: `レアリティ[${r}]を初めて発見`, icon: "✨", check: () => Object.keys(affectionData).some(id => {
+                    const c = catData.find(cat => cat.id == id);
+                    return c ? c.rarity === r : false;
+                }) });
             });
             // ⑪ 時間帯トロフィー (4個)
             trophiesData.push({ id: "t_night", title: "夜更かしさん", desc: "深夜(0-4時)に占いを引いた", icon: "🌙", check: () => stats.time.midnight });
@@ -814,11 +843,10 @@
             const oshiGoals = [5, 10, 20, 50, 100];
             oshiGoals.forEach(g => {
                 trophiesData.push({ id: `oshi_${g}`, title: `猫に愛されし者(${g})`, desc: `1匹の猫の好感度が${g}突破`, icon: "👑", check: () => Object.values(affectionData).some(v => v >= g) });
-                trophiesData.push({ id: `pt_${g}`, title: `石油王(${g}回)`, desc: `1匹の猫に${g}回以上貢いだ`, icon: "💎", check: () => Object.values(contributionData).some(v => v >= g) });
+                trophiesData.push({ id: `pt_${g}`, title: `愛の億万長者(${g}回)`, desc: `1匹の猫に${g}回以上プレゼントを贈った`, icon: "💎", check: () => Object.values(contributionData).some(v => v >= g) });
             });
             
-            // ⑬ コンプリート（隠しトロフィー）
-            // 上記でちょうど100個になるように調整されている想定ですが、超えた分もリスト化されます
+            // ⑬ 余りの穴埋め
             trophiesData.push({ id: "hidden_1", title: "究極の神", desc: "全てのトロフィーの99%をコンプ", icon: "🏆", check: () => unlockedTrophies.length >= (trophiesData.length - 1) });
         }
         initTrophies();
@@ -856,7 +884,6 @@
             document.getElementById('petBtn').addEventListener('click', petCat);
             document.getElementById('resetBtn').addEventListener('click', resetGacha);
             
-            // アフィリエイトクリック（貢ぎ物・デコ・貢献度）
             const handleAffiliateClick = () => {
                 if(currentResult) {
                     addRoomItem('🎁');
@@ -988,13 +1015,11 @@
         function drawCat() {
             if (isFlipped) return;
             
-            // 改善: 気分を選んでいない場合はランダムで自動選択
             if (!currentSelectedMood) {
                 const defaultMoods = ['tired', 'stress', 'sleepy', 'lucky'];
                 currentSelectedMood = defaultMoods[Math.floor(Math.random() * defaultMoods.length)];
             }
             
-            // 記録
             stats.moods[currentSelectedMood]++;
             stats.draws++;
             saveStats();
@@ -1005,7 +1030,6 @@
             const rand = Math.random();
             let targetRarity = "R";
 
-            // ★合言葉（秘密）ボーナス時は「LR」が確定！
             if (secretBonusActive) {
                 targetRarity = "LR";
                 secretBonusActive = false;
@@ -1043,7 +1067,6 @@
             checkAchievements();
 
             const cardContainer = document.getElementById('cardContainer');
-            // 改善: レア度に応じた3〜6秒の超・溜め演出
             let chargeTime = 3000; 
             
             if (targetRarity === "LR") {
@@ -1095,7 +1118,6 @@
 
             document.getElementById('cardMood').innerText = currentResult.mood;
             document.getElementById('cardName').innerText = currentResult.name;
-            // レア度に応じたカラフルな文字背景を適用
             document.getElementById('cardName').className = `card-name name-${rLow}`;
 
             const pText = currentResult.power.replace(/\[NAME\]/g, userName);
@@ -1125,13 +1147,12 @@
             document.getElementById('affectionLabel').innerText = `この子の好感度レベル: ${level} / 5`;
 
             if (aff >= 10 && currentResult.rarity !== "LR") {
-                displayTitle = `【限定おねだり】特選 ${currentResult.itemTitle}`;
+                displayTitle = `【限定】特選 ${currentResult.itemTitle}`;
             }
 
             document.getElementById('productTitle').innerText = displayTitle;
             document.getElementById('productDesc').innerText = currentResult.itemDesc;
 
-            // 相性度ランダム生成 (85%〜120%)
             const syncRate = Math.floor(Math.random() * 36) + 85;
             document.getElementById('syncRateDisplay').innerText = `相性度: ${syncRate}%`;
 
@@ -1141,29 +1162,29 @@
             
             document.getElementById('productSpeech').innerHTML = getOnedariMessage(currentResult.name, userName, syncRate, currentResult.rarity === "LR");
 
-            // ★YahooとAmazonのエラー対策：検索クエリは「商品名」のみでダイレクト検索★
-            // 楽天はA8.netのシステムを通すため、関連キーワードが混ざっていても幅広い関連商品がヒットする
-            
-            const cleanTitle = currentResult.itemTitle.replace(/\+/g, ' '); // 安全のため商品名の+も消す
+            const cleanTitle = currentResult.itemTitle.replace(/\+/g, ' '); 
+            let searchKeyword = currentResult.keyword;
+            if (aff >= 10 && currentResult.rarity !== "LR") {
+                searchKeyword += " +高級";
+            }
+            const cleanKeyword = searchKeyword.replace(/\+/g, ' ');
             
             document.getElementById('productLinkRakuten').innerHTML = `楽天市場で<br>「${displayTitle}」を贈る🐾`;
             document.getElementById('productLinkAmazon').innerHTML = `Amazonで<br>「${cleanTitle}」を探す📦`;
             document.getElementById('productLinkYahoo').innerHTML = `Yahoo!ショッピングで<br>お得に揃える🛍️`;
 
-            // 直リンクの生成（AmazonとYahooは確実にヒットさせるため cleanTitle を使用）
-            let finalLinkRakuten = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(currentResult.keyword)}/`;
+            let finalLinkRakuten = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(searchKeyword)}/`;
             let finalLinkAmazon = `https://www.amazon.co.jp/s?k=${encodeURIComponent(cleanTitle)}`;
             let finalLinkYahoo = `https://shopping.yahoo.co.jp/search?p=${encodeURIComponent(cleanTitle)}`;
 
             if (userA8Id && userA8Id.startsWith("s0000")) {
-                finalLinkRakuten = `${a8BaseUrl}${userA8Id}/&rakuten=y&a8url=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F${encodeURIComponent(currentResult.keyword)}%2F`;
+                finalLinkRakuten = `${a8BaseUrl}${userA8Id}/&rakuten=y&a8url=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F${encodeURIComponent(searchKeyword)}%2F`;
             }
             
             document.getElementById('productLinkRakuten').href = finalLinkRakuten;
             document.getElementById('productLinkAmazon').href = finalLinkAmazon;
             document.getElementById('productLinkYahoo').href = finalLinkYahoo;
 
-            // 改善: 結果の3.5秒スローフェードイン
             setTimeout(() => {
                 const resContainer = document.getElementById('resultContainer');
                 resContainer.classList.add('show-slow');
@@ -1206,14 +1227,13 @@
             const aff = affectionData[currentCatId];
             let msg = "にゃん！";
             
-            // 揺らぎ（ツンデレ）の確率を実装: 15%の確率で好感度が高くても塩対応
             const isTsundere = Math.random() < 0.15;
 
             if(aff > 20 && !isTsundere) {
                 msg = petReactions.high[Math.floor(Math.random() * petReactions.high.length)].replace(/\[NAME\]/g, userName);
             } else if(aff > 10 && !isTsundere) {
                 msg = petReactions.mid[Math.floor(Math.random() * petReactions.mid.length)].replace(/\[NAME\]/g, userName);
-            } else if((aff > 5 && !isTsundere) || (aff > 20 && isTsundere)) { // ツンデレ時はここ
+            } else if((aff > 5 && !isTsundere) || (aff > 20 && isTsundere)) {
                 msg = petReactions.low[Math.floor(Math.random() * petReactions.low.length)].replace(/\[NAME\]/g, userName);
             } else {
                 msg = petReactions.bad[Math.floor(Math.random() * petReactions.bad.length)].replace(/\[NAME\]/g, userName);
@@ -1445,7 +1465,6 @@
         };
         window.checkSecret = function() {
             const input = document.getElementById('secretInput').value.trim();
-            // 改善1: 日替わりの合言葉と照合する
             if (input === todaySecretWord) {
                 secretBonusActive = true;
                 localStorage.setItem('nyanko_secret_bonus', 'true');
@@ -1526,28 +1545,29 @@
             document.getElementById('bookModal').classList.remove('show');
         };
 
-        // ライセンスモーダル
         window.openLicenseModal = function() {
             let sortedCats = Object.keys(contributionData).sort((a, b) => contributionData[b] - contributionData[a]);
-            let oshiHtml = `<div style="font-size:0.8rem; color:var(--text-muted); padding: 10px; text-align:center;">まだ猫ちゃんに貢いでいないにゃん🐾<br>占いを引いてプレゼントするにゃ！</div>`;
+            let oshiHtml = `<div style="font-size:0.8rem; color:var(--text-muted); padding: 10px; text-align:center;">まだ猫ちゃんにプレゼントを贈っていないにゃん🐾<br>占いを引いてプレゼントするにゃ！</div>`;
             
             if (sortedCats.length > 0) {
                 let topCatId = sortedCats[0];
                 let topCat = catData.find(c => c.id == topCatId);
-                let pts = contributionData[topCatId];
-                let deco = catDecorations[topCatId] || '';
-                
-                oshiHtml = `
-                    <div class="license-oshi">
-                        <div class="license-oshi-title">👑 最愛の殿堂入り推し猫 👑</div>
-                        <div class="license-oshi-emoji">
-                            ${topCat.emoji}
-                            <div class="card-decoration" style="font-size: 1.5rem;">${deco}</div>
+                if (topCat) {
+                    let pts = contributionData[topCatId];
+                    let deco = catDecorations[topCatId] || '';
+                    
+                    oshiHtml = `
+                        <div class="license-oshi">
+                            <div class="license-oshi-title">👑 最愛の殿堂入り推し猫 👑</div>
+                            <div class="license-oshi-emoji">
+                                ${topCat.emoji}
+                                <div class="card-decoration" style="font-size: 1.5rem;">${deco}</div>
+                            </div>
+                            <div class="license-oshi-name">${topCat.name}</div>
+                            <div class="license-oshi-points">愛情ポイント: ${pts} pt</div>
                         </div>
-                        <div class="license-oshi-name">${topCat.name}</div>
-                        <div class="license-oshi-points">累計貢ぎポイント: ${pts} pt</div>
-                    </div>
-                `;
+                    `;
+                }
             }
 
             const cardHtml = `
@@ -1601,7 +1621,9 @@
             let oshiText = "";
             if(sortedCats.length > 0) {
                 let topCat = catData.find(c => c.id == sortedCats[0]);
-                oshiText = `\n👑最推し: ${topCat.name} (${contributionData[sortedCats[0]]}pt)`;
+                if (topCat) {
+                    oshiText = `\n👑最推し: ${topCat.name} (${contributionData[sortedCats[0]]}pt)`;
+                }
             }
             const text = `【ニャンコ占いの館🐾 認定ライセンス】\n氏名: ${userName}\n称号: ${getCatTitle(stats.draws)}${oshiText}\n🏆実績: ${unlockedTrophies.length}/100個解除\n\n👇あなたもライセンスを発行する\n${window.location.href}\n#ニャンコ占いの館 #推し活`;
             copyText(text);
