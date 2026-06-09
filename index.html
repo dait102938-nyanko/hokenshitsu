@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ニャンコ占いの館 | あなた専用の癒やし空間</title>
+    <title>推し猫リトリート | あなた専用の癒やし空間</title>
     <style>
         /* =========================================
            1. テーマ変数と基本設定
@@ -72,7 +72,7 @@
 
         .card-container { perspective: 1000px; width: 160px; height: 260px; margin: 15px 0; cursor: pointer; position: relative; transition: all 0.5s; animation: float 3s infinite ease-in-out; }
         
-        .rarity-badge { position: absolute; top: -10px; right: -10px; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.95rem; color: white; z-index: 10; opacity: 0; transform: scale(0); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s; }
+        .rarity-badge { position: absolute; top: -10px; right: -10px; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.95rem; color: white; z-index: 10; opacity: 0; transform: scale(0); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s; }
         .card-container.flipped .rarity-badge { opacity: 1; transform: scale(1) rotate(15deg); }
         
         /* 新レアリティ LR (Legend Rare) */
@@ -263,7 +263,7 @@
     <div class="screenshot-overlay" id="screenshotOverlay">📸 画面をスクショしてね（タップで戻る）</div>
 
     <header>
-        <h1 id="mainTitle">🐾 ニャンコ占いの館</h1>
+        <h1 id="mainTitle">🐾 推し猫リトリート</h1>
         <div class="subtitle" id="subTitle">あなた専用の癒やし空間にゃん</div>
         <div class="header-buttons">
             <button class="head-btn" onclick="openNameModal()">⚙️ 設定</button>
@@ -330,7 +330,7 @@
             </div>
             <div class="result-text" id="textTrivia" style="font-size: 0.85rem; background: rgba(255, 240, 245, 0.8); border: 1px dashed var(--accent-color);"></div>
 
-            <div class="section-title" id="affiliateHeader">🐟 猫ちゃんからのお願いにゃ</div>
+            <div class="section-title" id="affiliateHeader">🐟 推し猫からのお願いにゃ</div>
             <div class="product-speech" id="productSpeech">ここに吹き出しが入るにゃん</div>
             
             <div class="affiliate-box">
@@ -357,7 +357,7 @@
                 <button class="sns-btn insta" id="shareInstaBtn">📸 インスタ用スクショを撮る（次回SR以上確定！）</button>
             </div>
 
-            <button class="reset-btn" id="resetBtn">別の猫ちゃんを呼ぶ</button>
+            <button class="reset-btn" id="resetBtn">別の推し猫を呼ぶ</button>
             <button class="clear-stamp-btn" onclick="clearStamps()">🧹 背景の思い出（スタンプとプレゼント）をリセット</button>
         </div>
     </main>
@@ -373,7 +373,7 @@
     <div class="modal" id="nameModal">
         <div class="modal-content">
             <h2 style="color:var(--accent-color); margin-top:0;">🐾 お名前を教えてにゃ</h2>
-            <p style="font-size: 0.85rem; color:var(--text-muted);">猫ちゃんがあなたを名前で呼びます</p>
+            <p style="font-size: 0.85rem; color:var(--text-muted);">推し猫があなたを名前で呼びます</p>
             <input type="text" id="nameInput" class="name-input" placeholder="例: はなこ" maxlength="30">
             <button class="save-btn" onclick="saveName()">決定にゃん！</button>
             <button class="close-modal-btn" onclick="closeNameModal()">✖</button>
@@ -423,7 +423,7 @@
     <div class="toast" id="toast">🐾 メッセージが入るにゃ</div>
 
     <footer style="margin-top:auto; padding:20px; font-size:0.7rem; color:var(--text-muted); text-align:center;">
-        &copy; ニャンコ占いの館. (完全無料 / 著作権フリー)<br>
+        &copy; 推し猫リトリート. (完全無料 / 著作権フリー)<br>
         <span style="font-size: 0.65rem;">※メニューから「ホーム画面に追加」して毎日の癒やしにしてにゃ🐾</span>
     </footer>
 
@@ -660,13 +660,14 @@
             "考え事は明日の自分に丸投げして、今の自分は寝るという任務を全うするにゃ！", "私のしっぽを抱き枕にして寝ていいにゃん💤"
         ];
 
+        // プチ情報・豆知識の限界拡張（30種以上）
         const catTrivias = [
-            "猫のゴロゴロ音（約25〜50Hz）には、人間の骨や細胞の修復を早める癒やし効果があると言われてるにゃ！",
+            "猫のゴロゴロ音（約25〜50Hz）には、骨や細胞の修復を早める癒やし効果があるにゃ！",
             "猫の鼻の模様（鼻紋）は、人間の指紋と同じで世界に一つだけのオリジナルにゃん。",
             "猫がゆっくりまばたきするのは「大好き」「信頼してる」という愛情表現にゃ！",
             "猫は一生の約70%を寝て過ごすにゃ。休むことも立派なお仕事にゃん。",
             "猫のジャンプ力は体高の約5倍！忍者のような身体能力を秘めているにゃん。",
-            "猫はおしりを向けるのは「背後を任せられる」という最大級の信頼の証にゃ！",
+            "猫がお尻を向けるのは「背後を任せられる」という最大級の信頼の証にゃ！",
             "猫の鎖骨は退化していて、頭が通る隙間ならどこでも通れる「液体」にゃ。",
             "獲物を見つけた時の「カカカッ」は、興奮が抑えきれない時の声にゃん！",
             "猫のヒゲは単なる毛ではなく、空気の流れや障害物を察知する超高感度センサーなんだにゃ！",
@@ -751,6 +752,7 @@
                 return prefix;
             }
             
+            // 相性による前置きフレーミング
             if (syncRate >= 110) prefix = `「限界突破の相性${syncRate}%にゃ！！これは運命を超えた啓示にゃん！絶対プレゼントしてほしいにゃ！」<br>`;
             else if (syncRate >= 100) prefix = `「今日の相性${syncRate}%は奇跡にゃ！だから絶対にお願いにゃ！」<br>`;
             else if (syncRate >= 95) prefix = `「相性バッチリの私から、${safeName}ちゃんに特別なお願いにゃ！」<br>`;
@@ -1006,6 +1008,10 @@
             currentSelectedMood = mood;
             document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
             btnElement.classList.add('active');
+            
+            const cardContainer = document.getElementById('cardContainer');
+            cardContainer.classList.add('ready');
+            document.getElementById('moodSelector').style.display = 'none';
             showToast("カードをタップして引くにゃ！");
         }
 
@@ -1124,13 +1130,19 @@
             document.getElementById('textPower').innerText = pText;
             
             let activeAffirmations = affirmationsDefault;
+            let searchKeyword = currentResult.keyword;
             
             if (currentSelectedMood === 'tired') {
                 activeAffirmations = activeAffirmations.concat(affirmationsTired);
+                searchKeyword += " +癒やし +マッサージ";
             } else if (currentSelectedMood === 'stress') {
                 activeAffirmations = activeAffirmations.concat(affirmationsStress);
+                searchKeyword += " +スイーツ +癒やし";
             } else if (currentSelectedMood === 'sleepy') {
                 activeAffirmations = activeAffirmations.concat(affirmationsSleepy);
+                searchKeyword += " +安眠 +リラックス";
+            } else {
+                searchKeyword += " +人気"; 
             }
             
             const aText = activeAffirmations[Math.floor(Math.random() * activeAffirmations.length)].replace(/\[NAME\]/g, userName);
@@ -1147,7 +1159,7 @@
             document.getElementById('affectionLabel').innerText = `この子の好感度レベル: ${level} / 5`;
 
             if (aff >= 10 && currentResult.rarity !== "LR") {
-                displayTitle = `【限定】特選 ${currentResult.itemTitle}`;
+                displayTitle = `【限定おねだり】特選 ${currentResult.itemTitle}`;
             }
 
             document.getElementById('productTitle').innerText = displayTitle;
@@ -1163,10 +1175,6 @@
             document.getElementById('productSpeech').innerHTML = getOnedariMessage(currentResult.name, userName, syncRate, currentResult.rarity === "LR");
 
             const cleanTitle = currentResult.itemTitle.replace(/\+/g, ' '); 
-            let searchKeyword = currentResult.keyword;
-            if (aff >= 10 && currentResult.rarity !== "LR") {
-                searchKeyword += " +高級";
-            }
             const cleanKeyword = searchKeyword.replace(/\+/g, ' ');
             
             document.getElementById('productLinkRakuten').innerHTML = `楽天市場で<br>「${displayTitle}」を贈る🐾`;
@@ -1605,7 +1613,7 @@
 
         document.getElementById('shareXBtn').addEventListener('click', () => {
             let trophyText = unlockedTrophies.length > 0 ? `\n🏆実績: ${unlockedTrophies.length}個解除！` : "";
-            const text = `【ニャンコ占いの館🐾】\nランク: ${getCatTitle(stats.draws)}${trophyText}\n今のお世話係は「${currentResult.mood} ${currentResult.name}」でした！\n\n💖猫ちゃんからの全肯定:\n「${document.getElementById('textAffirmation').innerText}」\n\n👇あなたも癒やされる\n${window.location.href}\n#ニャンコ占いの館 #癒やし #猫`;
+            const text = `【推し猫リトリート🐾】\nランク: ${getCatTitle(stats.draws)}${trophyText}\n今のお世話係は「${currentResult.mood} ${currentResult.name}」でした！\n\n💖猫ちゃんからの全肯定:\n「${document.getElementById('textAffirmation').innerText}」\n\n👇あなたも癒やされる\n${window.location.href}\n#推し猫リトリート #癒やし #猫`;
             copyText(text);
             activateShareBonus();
         });
@@ -1625,7 +1633,7 @@
                     oshiText = `\n👑最推し: ${topCat.name} (${contributionData[sortedCats[0]]}pt)`;
                 }
             }
-            const text = `【ニャンコ占いの館🐾 認定ライセンス】\n氏名: ${userName}\n称号: ${getCatTitle(stats.draws)}${oshiText}\n🏆実績: ${unlockedTrophies.length}/100個解除\n\n👇あなたもライセンスを発行する\n${window.location.href}\n#ニャンコ占いの館 #推し活`;
+            const text = `【推し猫リトリート🐾 認定ライセンス】\n氏名: ${userName}\n称号: ${getCatTitle(stats.draws)}${oshiText}\n🏆実績: ${unlockedTrophies.length}/100個解除\n\n👇あなたもライセンスを発行する\n${window.location.href}\n#推し猫リトリート #推し活`;
             copyText(text);
             activateShareBonus();
         };
