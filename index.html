@@ -27,8 +27,16 @@
 
         /* 背景スタンプ・箱庭 */
         #stampContainer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
-        .bg-stamp { position: absolute; font-size: 2rem; opacity: 0.15; transform: rotate(-15deg); user-select: none; }
-        body.theme-night .bg-stamp { opacity: 0.1; color: #fff; }
+        
+        /* 改善: スタンプのポップインアニメーションと表現力強化 */
+        .bg-stamp { position: absolute; opacity: 0.3; user-select: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        body.theme-night .bg-stamp { opacity: 0.2; color: #fff; }
+        
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+            80% { transform: scale(1.1) rotate(10deg); opacity: 0.4; }
+            100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+        }
 
         .roaming-cat { position: absolute; user-select: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); z-index: 1; transition: all 5s linear; pointer-events: none; }
         .roaming-item { position: absolute; user-select: none; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); z-index: 1; animation: dropItem 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
@@ -330,7 +338,7 @@
             </div>
             <div class="result-text" id="textTrivia" style="font-size: 0.85rem; background: rgba(255, 240, 245, 0.8); border: 1px dashed var(--accent-color);"></div>
 
-            <div class="section-title" id="affiliateHeader">🐟 推し猫からのお願いにゃ</div>
+            <div class="section-title" id="affiliateHeader">🐟 猫ちゃんからのお願いにゃ</div>
             <div class="product-speech" id="productSpeech">ここに吹き出しが入るにゃん</div>
             
             <div class="affiliate-box">
@@ -357,7 +365,7 @@
                 <button class="sns-btn insta" id="shareInstaBtn">📸 インスタ用スクショを撮る（次回SR以上確定！）</button>
             </div>
 
-            <button class="reset-btn" id="resetBtn">別の推し猫を呼ぶ</button>
+            <button class="reset-btn" id="resetBtn">別の猫ちゃんを呼ぶ</button>
             <button class="clear-stamp-btn" onclick="clearStamps()">🧹 背景の思い出（スタンプとプレゼント）をリセット</button>
         </div>
     </main>
@@ -373,7 +381,7 @@
     <div class="modal" id="nameModal">
         <div class="modal-content">
             <h2 style="color:var(--accent-color); margin-top:0;">🐾 お名前を教えてにゃ</h2>
-            <p style="font-size: 0.85rem; color:var(--text-muted);">推し猫があなたを名前で呼びます</p>
+            <p style="font-size: 0.85rem; color:var(--text-muted);">猫ちゃんがあなたを名前で呼びます</p>
             <input type="text" id="nameInput" class="name-input" placeholder="例: はなこ" maxlength="30">
             <button class="save-btn" onclick="saveName()">決定にゃん！</button>
             <button class="close-modal-btn" onclick="closeNameModal()">✖</button>
@@ -435,7 +443,6 @@
         let loginStreak = parseInt(localStorage.getItem('nyanko_login_streak')) || 0;
         let lastLoginDate = localStorage.getItem('nyanko_last_login');
         
-        // 既存データの完全なセーフティネット
         let stats = JSON.parse(localStorage.getItem('nyanko_stats'));
         if (!stats || typeof stats !== 'object' || Array.isArray(stats)) {
             stats = {};
@@ -457,7 +464,6 @@
         stats.time.night = stats.time.night || false;
         stats.time.midnight = stats.time.midnight || false;
 
-        // 古いバージョンからの回数移行
         if (localStorage.getItem('nyanko_total_encounters')) {
             stats.draws = parseInt(localStorage.getItem('nyanko_total_encounters')) || stats.draws;
             localStorage.removeItem('nyanko_total_encounters');
@@ -1037,7 +1043,8 @@
             let targetRarity = "R";
 
             if (secretBonusActive) {
-                targetRarity = "LR";
+                if (rand < 0.20) targetRarity = "SEC";
+                else targetRarity = "LR";
                 secretBonusActive = false;
                 localStorage.setItem('nyanko_secret_bonus', 'false');
             } 
@@ -1160,6 +1167,7 @@
 
             if (aff >= 10 && currentResult.rarity !== "LR") {
                 displayTitle = `【限定おねだり】特選 ${currentResult.itemTitle}`;
+                searchKeyword += " +高級";
             }
 
             document.getElementById('productTitle').innerText = displayTitle;
@@ -1296,7 +1304,7 @@
         function addStampToBg(emoji, xPercent, yPercent) {
             const stamp = { e: emoji, x: xPercent, y: yPercent };
             bgStamps.push(stamp);
-            if(bgStamps.length > 100) bgStamps.shift();
+            if(bgStamps.length > 150) bgStamps.shift();
             localStorage.setItem('nyanko_bg_stamps', JSON.stringify(bgStamps));
             renderStamp(stamp);
         }
@@ -1307,6 +1315,17 @@
             el.innerText = stamp.e;
             el.style.left = stamp.x + '%';
             el.style.top = stamp.y + '%';
+            
+            // 猫の絵文字なら特別に大きく
+            if (["🐱", "😸", "😻", "😽", "🐈", "🐈‍⬛"].includes(stamp.e)) {
+                el.style.fontSize = (Math.random() * 2 + 3) + 'rem';
+                el.style.zIndex = "0";
+                el.style.opacity = "0.4";
+            } else {
+                el.style.fontSize = (Math.random() * 1.5 + 1.5) + 'rem';
+            }
+            
+            el.style.transform = `rotate(${Math.floor(Math.random() * 60) - 30}deg)`;
             document.getElementById('stampContainer').appendChild(el);
         }
 
