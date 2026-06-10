@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>推し猫リトリート | あなた専用の癒やし空間</title>
     <style>
-        /* =========================================
-           1. テーマ変数と基本設定
-        ========================================= */
         :root {
             --bg-grad-start: #fff0f5; --bg-grad-end: #ffe4e1;
             --text-main: #5d4037; --accent-color: #ff8da1;
@@ -25,7 +22,6 @@
             transition: background 1s ease, color 0.5s ease;
         }
 
-        /* 背景スタンプ・箱庭 */
         #stampContainer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
         
         /* 改善: スタンプのポップインアニメーションと表現力強化 */
@@ -46,9 +42,6 @@
         @keyframes walkLeft { 0% { transform: translateX(100vw); } 100% { transform: translateX(-50px); } }
         @keyframes sleeping { 0%, 100% { transform: scale(1) translateY(0); } 50% { transform: scale(1.05) translateY(-3px); } }
 
-        /* =========================================
-           2. ヘッダーとステータス
-        ========================================= */
         header { text-align: center; padding: 25px 15px 10px 15px; z-index: 10; position: relative; width: 100%; box-sizing: border-box; }
         h1 { font-size: 1.6rem; color: var(--accent-color); margin: 0 0 5px 0; letter-spacing: 0.1em; text-shadow: 1px 1px 0px rgba(255,255,255,0.5); }
         .subtitle { font-size: 0.8rem; color: var(--text-muted); font-weight: bold; }
@@ -66,9 +59,6 @@
         .share-bonus-badge { display: none; background: linear-gradient(135deg, #ffd700, #ff8c00); color: white; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-top: 5px; box-shadow: 0 0 15px rgba(255,215,0,0.6); animation: pulse 1.5s infinite; }
         .share-bonus-badge.active { display: inline-block; }
 
-        /* =========================================
-           3. ガチャ（気分選択 ＋ カード演出）
-        ========================================= */
         main { width: 100%; max-width: 480px; padding: 10px 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; z-index: 10; position: relative; }
 
         .mood-selector { margin: 10px 0; text-align: center; background: rgba(255,255,255,0.6); padding: 10px; border-radius: 15px; border: 2px dashed var(--accent-color); width: 100%; box-sizing: border-box; }
@@ -107,7 +97,6 @@
         .card-mood { font-size: 0.75rem; color: var(--text-main); margin-bottom: 2px; background: rgba(255,255,255,0.7); padding: 2px 8px; border-radius: 10px; font-weight: bold; }
         .card-name { font-size: 0.95rem; font-weight: 900; color: var(--accent-color); text-align: center; background: rgba(255,255,255,0.85); padding: 4px 10px; border-radius: 12px; text-shadow: 1px 1px 0px #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 5px; }
 
-        /* ガチャ超・溜め演出用（レア度別） */
         @keyframes shakeR { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px) rotate(-1deg); filter: brightness(1.2); } 75% { transform: translateX(2px) rotate(1deg); filter: brightness(1.2); } }
         @keyframes shakeSR { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-3px, 2px) rotate(-2deg); filter: brightness(1.3) drop-shadow(0 0 10px #00bfff); } 60% { transform: translate(3px, -2px) rotate(2deg); filter: brightness(1.3) drop-shadow(0 0 10px #00bfff); } }
         @keyframes shakeSSR { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-4px, 3px) rotate(-3deg); filter: brightness(1.5) drop-shadow(0 0 20px #ff00ff); } 60% { transform: translate(4px, -3px) rotate(3deg); filter: brightness(1.5) drop-shadow(0 0 20px #ff00ff); } }
@@ -123,9 +112,6 @@
         #flashOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: white; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
         #flashOverlay.flash { opacity: 1; transition: opacity 0.1s; }
 
-        /* =========================================
-           4. 結果エリア・なでなで・深呼吸
-        ========================================= */
         .result-container { display: none; width: 100%; opacity: 0; transform: translateY(10px); margin-top: 10px; }
         .result-container.show-slow { display: block; animation: slowFadeIn 3.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
         
@@ -135,12 +121,26 @@
         }
 
         .purrr-effect { text-align: center; font-size: 0.85rem; color: var(--accent-color); font-style: italic; letter-spacing: 0.2em; margin-top: 5px; animation: purrrShake 2s infinite ease-in-out; }
-        .section-title { font-size: 0.95rem; color: var(--text-main); border-left: 4px solid var(--accent-color); padding-left: 8px; margin: 20px 0 10px 0; font-weight: bold; display: flex; align-items: center; justify-content: space-between; }
-        .sync-rate { font-size: 0.8rem; background: var(--accent-color); color: white; padding: 2px 8px; border-radius: 10px; }
         
-        .result-text { font-size: 0.9rem; line-height: 1.6; color: var(--text-main); background: rgba(255, 255, 255, 0.6); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.4); backdrop-filter: blur(5px); }
-        body.theme-night .result-text { background: rgba(0, 0, 0, 0.4); border-color: rgba(255,255,255,0.1); }
-        .affirmation-text { font-size: 1.05rem; font-weight: bold; color: var(--accent-color); text-align: center; border: 2px dashed var(--accent-color); }
+        /* 改善: セクションタイトルの視認性とデザインを劇的に向上 */
+        .section-title { 
+            font-size: 1rem; color: var(--text-main); 
+            background: linear-gradient(90deg, rgba(255, 141, 161, 0.15) 0%, transparent 100%);
+            border-left: 5px solid var(--accent-color); 
+            padding: 10px 12px; margin: 25px 0 15px 0; 
+            font-weight: bold; border-radius: 4px;
+            display: flex; align-items: center; justify-content: space-between; 
+        }
+        body.theme-night .section-title { background: linear-gradient(90deg, rgba(221, 160, 221, 0.2) 0%, transparent 100%); color: #fff; }
+        
+        .sync-rate { font-size: 0.85rem; background: var(--accent-color); color: white; padding: 4px 12px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
+        /* 改善: プチ情報やテキストの背景をくっきりさせ文字を読みやすく */
+        .result-text { font-size: 0.95rem; line-height: 1.7; color: var(--text-main); background: rgba(255, 255, 255, 0.95); padding: 18px; border-radius: 16px; border: 2px solid rgba(255, 141, 161, 0.3); backdrop-filter: blur(5px); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        body.theme-night .result-text { background: rgba(43, 27, 61, 0.85); border-color: rgba(221, 160, 221, 0.3); color: #f0f8ff; }
+        
+        .affirmation-text { font-size: 1.05rem; font-weight: bold; color: var(--accent-color); text-align: center; border: 2px dashed var(--accent-color); background: #fff0f5; }
+        body.theme-night .affirmation-text { background: #3a2b4d; color: #dda0dd; border-color: #dda0dd; }
 
         .pet-btn-wrapper { text-align: center; margin: 25px 0 10px 0; position: relative; }
         .pet-btn { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); border: none; color: #d81b60; font-size: 1.1rem; font-weight: bold; padding: 12px 30px; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,154,158,0.4); transition: transform 0.1s; }
@@ -152,8 +152,7 @@
         .breathe-trigger-btn { background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); font-size: 0.95rem; font-weight: bold; padding: 12px 25px; border-radius: 30px; cursor: pointer; transition: all 0.3s; }
         .breathe-trigger-btn:hover { background: var(--accent-color); color: white; }
 
-        /* アフィリエイト枠 */
-        .affiliate-box { background: rgba(255,255,255,0.8); border: 3px solid var(--accent-color); border-radius: 16px; padding: 15px; margin-top: 10px; display: flex; flex-direction: column; align-items: stretch; gap: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; }
+        .affiliate-box { background: rgba(255,255,255,0.85); border: 3px solid var(--accent-color); border-radius: 16px; padding: 15px; margin-top: 10px; display: flex; flex-direction: column; align-items: stretch; gap: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; }
         body.theme-night .affiliate-box { background: rgba(0,0,0,0.5); }
         
         .affection-meter { width: 100%; height: 6px; background: rgba(0,0,0,0.1); border-radius: 3px; overflow: hidden; margin-bottom: 5px; position: relative; }
@@ -176,9 +175,6 @@
         .btn-amazon { background: linear-gradient(135deg, #232f3e 0%, #37475a 100%); border: 2px solid #ff9900; box-shadow: 0 4px 12px rgba(35, 47, 62, 0.3); }
         .btn-yahoo { background: linear-gradient(135deg, #ff0033 0%, #ff3366 100%); box-shadow: 0 4px 12px rgba(255, 0, 51, 0.3); }
 
-        /* =========================================
-           5. モーダル類
-        ========================================= */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; }
         .modal.show { display: flex; opacity: 1; }
         .modal-content { background: var(--card-bg); padding: 25px; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; position: relative; border: 3px solid var(--accent-color); color: var(--text-main); }
@@ -232,9 +228,6 @@
         .license-oshi-name { font-size: 1rem; font-weight: bold; color: var(--text-main); margin-top: 5px; }
         .license-oshi-points { font-size: 0.8rem; color: #ff4757; font-weight: bold; }
 
-        /* =========================================
-           6. SNSシェア・演出・その他
-        ========================================= */
         .sns-btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
         .sns-btn { width: 100%; background-color: var(--card-bg); color: var(--text-main); border: 2px solid var(--accent-color); padding: 12px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
         .sns-btn:hover { transform: scale(1.02); }
@@ -332,11 +325,12 @@
                 <button class="breathe-trigger-btn" onclick="startBreathing()">🧘‍♀️ 猫ちゃんと1分間深呼吸する</button>
             </div>
 
+            <!-- 改善: セクションタイトルの視認性とデザインを劇的に向上 -->
             <div class="section-title">
                 <span>📝 今日の記録とねこプチ情報</span>
                 <span class="sync-rate" id="syncRateDisplay"></span>
             </div>
-            <div class="result-text" id="textTrivia" style="font-size: 0.85rem; background: rgba(255, 240, 245, 0.8); border: 1px dashed var(--accent-color);"></div>
+            <div class="result-text" id="textTrivia"></div>
 
             <div class="section-title" id="affiliateHeader">🐟 猫ちゃんからのお願いにゃ</div>
             <div class="product-speech" id="productSpeech">ここに吹き出しが入るにゃん</div>
@@ -512,7 +506,7 @@
             // --- SSR (10種) ---
             { id: 9, rarity: "SSR", name: "神秘のオッドアイ白猫", emoji: "🤍", power: "左右違う瞳で世界を見れば、常識なんて無意味にゃ。「[NAME]」のちょっと変わった所が、実は最大の武器にゃん。自信を持って！", itemTitle: "クリスタル ガラスペン", itemDesc: "美しい文字を綴る魔法のペン。", keyword: "ガラスペン" },
             { id: 10, rarity: "SSR", name: "もふもふ ペルシャ", emoji: "👑", power: "王族の私が許すにゃ。「[NAME]」、今日はすべてのタスクを放棄して優雅に過ごしなさい。頑張りすぎは美しさに響くからダメにゃん。", itemTitle: "高級 ヘアブラシ", itemDesc: "髪も心も解きほぐす。", keyword: "ヘアブラシ 高級" },
-            { id: 11, rarity: "SSR", name: "世界最小 シンガプーラ", emoji: "🧚", power: "私は小さいけど、存在感はバツグンにゃ。「[NAME]」も、小さな一歩を褒めてあげて！今日息をしてただけで大優勝なんだからにゃん。", itemTitle: "アロマ ディフューザー", itemDesc: "小さな巨人の香りの癒やし。", keyword: "アロマディフューザー" },
+            { id: 11, rarity: "SSR", name: "世界最小 シンガプーラ", emoji: "🧚", power: "私は小さいけど、存在感はバツグンにゃ。「[NAME]」も、小さな一歩を褒めてあげて！今日息をしてただけで大優勝んだからにゃん。", itemTitle: "アロマ ディフューザー", itemDesc: "小さな巨人の香りの癒やし。", keyword: "アロマディフューザー" },
             { id: 12, rarity: "SSR", name: "穏やかな巨人 メインクーン", emoji: "🦁", power: "大きな体で「[NAME]」を包み込んであげるにゃ。他人のイライラに巻き込まれないで。私のふかふかのお腹で泣いてもいいにゃん。", itemTitle: "特大 もちもちクッション", itemDesc: "全てを受け止めるサイズ。", keyword: "クッション 特大" },
             { id: 13, rarity: "SSR", name: "森の妖精 ノルウェージャン", emoji: "🌲", power: "自然のパワーを運んできたにゃ。「[NAME]」、画面ばかり見てないで深呼吸！植物を撫でるように、自分のことも優しく扱ってにゃん。", itemTitle: "観葉植物 セット", itemDesc: "部屋に森の妖精を。", keyword: "観葉植物 セット" },
             { id: 14, rarity: "SSR", name: "野生の血 ベンガル", emoji: "🐆", power: "ワイルドにいこうにゃ！「[NAME]」の中の情熱に火をつけろ！失敗したって私が噛み砕いてあげるから、やりたいようにやるにゃん。", itemTitle: "ヨガマット", itemDesc: "野生の力を目覚めさせる。", keyword: "ヨガマット" },
@@ -527,7 +521,7 @@
             { id: 22, rarity: "SR", name: "何も考えてない 虚無猫", emoji: "😑", power: "……。「[NAME]」も、たまには頭の中を空っぽにするにゃ。意味のあることばかりしてたらパンクするにゃん。無の境地を教えるにゃ。", itemTitle: "枯山水 キット", itemDesc: "砂に模様を描いて心を無に。", keyword: "枯山水 キット" },
             { id: 23, rarity: "SR", name: "こたつむり猫", emoji: "🍊", power: "もうここから一歩も動かないにゃ。「[NAME]」も早くこっちに入って、人間としての活動を停止するにゃん。堕落は最高の贅沢にゃ。", itemTitle: "着る毛布", itemDesc: "動けるこたつ状態。", keyword: "着る毛布" },
             { id: 24, rarity: "SR", name: "賢い ロシアンブルー", emoji: "🩶", power: "冷静になるにゃ。「[NAME]」、他人の機嫌を取るために自分の心をすり減らすのは非効率にゃ。気高い孤高の美しさを取り戻すにゃん。", itemTitle: "ノイズキャンセリング イヤホン", itemDesc: "他人の声を遮断する。", keyword: "ノイズキャンセリング イヤホン" },
-            { id: 25, rarity: "SR", name: "癒やしの ラグドール", emoji: "🧸", power: "抱っこされると脱力しちゃうにゃ〜。「[NAME]」も、肩の力を抜いてだらーんとしてみて。頑張らなくても、あなたは愛されてるにゃん。", itemTitle: "抱き枕", itemDesc: "安心感で包み込む。", keyword: "抱き枕" },
+            { id: 25, rarity: "SR", name: "癒やしの ラグドール", emoji: "🧸", power: "抱っこされると脱力しちゃうにゃ〜。「[NAME]」も, 肩の力を抜いてだらーんとしてみて。頑張らなくても、あなたは愛されてるにゃん。", itemTitle: "抱き枕", itemDesc: "安心感で包み込む。", keyword: "抱き枕" },
             { id: 26, rarity: "SR", name: "アスリート アビシニアン", emoji: "🐅", power: "筋肉は裏切らないにゃ！「[NAME]」、悩んだ時はとりあえず体を動かすにゃ！血流が良くなれば、大抵のメンタル不調は吹っ飛ぶにゃん！", itemTitle: "ストレッチ バンド", itemDesc: "手軽に体をほぐす。", keyword: "ストレッチ バンド" },
             { id: 27, rarity: "SR", name: "段ボール愛好家", emoji: "📦", power: "高級なベッドより、ただの箱が最高にゃ。「[NAME]」、幸せのハードルは極限まで下げていいにゃ。今日美味しい水を飲めただけで大成功にゃん。", itemTitle: "ビーズクッション", itemDesc: "人間用の極上段ボール。", keyword: "ビーズクッション" },
             { id: 28, rarity: "SR", name: "またたび 酔っ払い猫", emoji: "🍶", power: "デロデロ〜にゃ。「[NAME]」も、たまには理性を手放してハメを外すにゃ！真面目すぎるのは毒にゃん。甘いものをドカ食いしていいにゃ！", itemTitle: "高級チョコレート", itemDesc: "人間用のまたたび。", keyword: "ゴディバ チョコレート" },
@@ -535,11 +529,11 @@
             { id: 30, rarity: "SR", name: "おとぼけ マンチカン", emoji: "🦦", power: "足が短くても気にしないにゃ！「[NAME]」のコンプレックスも、見方を変えれば愛嬌にゃん。自分に激甘な評価を下していい日にゃ。", itemTitle: "スイーツ アソート", itemDesc: "自分への激甘ご褒美。", keyword: "スイーツ 詰め合わせ" },
             { id: 31, rarity: "SR", name: "ゴミ箱ダイバー", emoji: "🗑️", power: "ガサガサ…お宝発見にゃ！「[NAME]」、視点を変えれば不要な経験なんてないにゃ。失敗も笑い話（お宝）に変換してしまえにゃん。", itemTitle: "アロマキャンドル", itemDesc: "ゴミ箱の匂いを消す癒やし。", keyword: "アロマキャンドル" },
             { id: 32, rarity: "SR", name: "コード噛みちぎり職人", emoji: "⚡", power: "ネットとの繋がりを物理的に断ってやったにゃ！「[NAME]」、SNS疲れしてるにゃ。今日はデジタルデトックスしてアナログに生きるにゃん。", itemTitle: "大人の塗り絵", itemDesc: "無心になれるアナログ作業。", keyword: "大人の塗り絵" },
-            { id: 33, rarity: "SR", name: "窓際 パトロール隊長", emoji: "👮", power: "異常なしにゃ！「[NAME]」の平和は私が守っているから安心するにゃ。外の敵（嫌な人）のことは忘れて、家の中の安全地帯を楽しむにゃん。", itemTitle: "ルームフレグランス", itemDesc: "安全地帯を良い香りに。", keyword: "ルームフレグランス" },
+            { id: 33, rarity: "SR", name: "窓際 パトロール隊長", emoji: "👮", power: "異常なしにゃ！「[NAME]」の平和は私が守しているから安心するにゃ。外の敵（嫌な人）のことは忘れて、家の中の安全地帯を楽しむにゃん。", itemTitle: "ルームフレグランス", itemDesc: "安全地帯を良い香りに。", keyword: "ルームフレグランス" },
             { id: 34, rarity: "SR", name: "お腹見せ トラップ猫", emoji: "🪤", power: "撫でたら噛むにゃ！「[NAME]」も、いつも良い顔ばかりしなくていいにゃ。嫌な時は噛み付く（断る）勇気を持って、自分を守るにゃん。", itemTitle: "ストレス発散 パンチバッグ", itemDesc: "合法的に殴れる。", keyword: "パンチバッグ 卓上" },
             { id: 35, rarity: "SR", name: "隙間 挟まり猫", emoji: "🥪", power: "ここが一番落ち着くにゃ…。「[NAME]」も、広い世界で戦うのに疲れたら、狭くて暗いパーソナルスペースに引きこもって回復するにゃん。", itemTitle: "遮光カーテン", itemDesc: "外界をシャットアウト。", keyword: "遮光カーテン" },
             { id: 36, rarity: "SR", name: "水飲み下手くそ猫", emoji: "💧", power: "顔がびしょびしょにゃ。「[NAME]」、不器用でも一生懸命生きてるだけで満点にゃ！完璧じゃない自分を愛してあげる日にしてにゃん。", itemTitle: "今治タオル", itemDesc: "びしょびしょの顔を拭く。", keyword: "今治タオル フェイスタオル" },
-            { id: 37, rarity: "SR", name: "猫集会 議長", emoji: "🗣️", power: "今夜の議題は「[NAME]」の幸せについてにゃ。満場一致で「もっと自分を甘やかすべき」と決議されたにゃ。遠慮は無用にゃん！", itemTitle: "マッサージ クッション", itemDesc: "議長推薦の癒やし。", keyword: "マッサージクッション" },
+            { id: 37, rarity: "SR", name: "猫集会 議長", emoji: "🗣️", power: "今夜の議題は「[NAME]」の幸せについてにゃ。満場一致で「もっと自分を甘やかすべき」と決議されたにゃ。遠慮は無用にゃん！", itemTitle: "マッサージ クッション", itemDesc: "議長推薦 of 癒やし。", keyword: "マッサージクッション" },
             { id: 38, rarity: "SR", name: "影の支配者 黒豹気取り", emoji: "🐈‍⬛", power: "私は強いにゃ。「[NAME]」も、心の中に強い黒豹を飼うにゃ！誰にも媚びない強気な姿勢で、明日は胸を張って歩くがよいにゃん。", itemTitle: "姿勢矯正 クッション", itemDesc: "背筋を伸ばして堂々と。", keyword: "姿勢矯正クッション" },
             { id: 74, rarity: "SR", name: "サウナ愛好猫", emoji: "♨️", power: "整ったにゃ〜。「[NAME]」、頭の中がごちゃごちゃなら、一度たっぷり汗をかいて強制リセットするにゃん。サウナは命の洗濯にゃ！", itemTitle: "サウナハット", itemDesc: "熱から頭を守る必須アイテム。", keyword: "サウナハット" },
             { id: 75, rarity: "SR", name: "ヨガマスター猫", emoji: "🧘", power: "呼吸を整えるにゃ。「[NAME]」、焦りは浅い呼吸から来るにゃん。目を閉じて、宇宙と繋がるイメージで深く息を吸い込むにゃ。", itemTitle: "お香 セット", itemDesc: "心を落ち着かせる香り。", keyword: "お香 セット" },
@@ -602,7 +596,7 @@
             { id: 95, rarity: "R", name: "テレビの裏 隠れ猫", emoji: "🔌", power: "暗くてホコリっぽいけど落ち着くにゃ。「[NAME]」、表舞台のキラキラに疲れたら、裏側で泥臭く休んでいいにゃん。誰も見てないにゃ。", itemTitle: "クイックルワイパー", itemDesc: "裏側のホコリもスッキリ。", keyword: "クイックルワイパー" },
             { id: 96, rarity: "R", name: "スマホの角 噛み猫", emoji: "📱", power: "ガジガジ…硬いにゃ。「[NAME]」、四角い画面ばかり見てると心も四角くなるにゃん！丸いものを撫でて、心を丸く保つにゃ。", itemTitle: "丸い クッション", itemDesc: "心を丸くする魔法。", keyword: "クッション 丸" },
             { id: 97, rarity: "R", name: "充電ケーブル 遊び猫", emoji: "⚡", power: "チョイチョイ…「[NAME]」、エネルギーが漏れてるにゃ！自分をすり減らすだけの人間関係は、このケーブルみたいに抜いてしまうにゃん。", itemTitle: "モバイルバッテリー", itemDesc: "自分のエネルギーは自分で守る。", keyword: "モバイルバッテリー" },
-            { id: 98, rarity: "R", name: "ダンボール 解体猫", emoji: "📦", power: "ビリビリにゃ！「[NAME]」、ストレスが溜まったら、物理的に何かを破壊して発散するのもアリにゃん。我慢は一番の毒だにゃ！", itemTitle: "シュレッダー", itemDesc: "嫌な過去を粉々にする。", keyword: "シュレッダー 家庭用" },
+            { id: 98, rarity: "R", name: "ダンボール 解体猫", emoji: "📦", power: "ビリビリにゃ！「[NAME]」、ストレスが溜まったら、物理的に何かを破壊して発算するのもアリにゃん。我慢は一番の毒だにゃ！", itemTitle: "シュレッダー", itemDesc: "嫌な過去を粉々にする。", keyword: "シュレッダー 家庭用" },
             { id: 99, rarity: "R", name: "座椅子 ぶんどり猫", emoji: "💺", power: "私が先に座ってたにゃ！「[NAME]」、たまには他人の目を気にせず、自分の居場所をガッチリ確保する図太さを見せるにゃん。", itemTitle: "ゲーミング チェア", itemDesc: "誰にも譲りたくない椅子。", keyword: "ゲーミングチェア" },
             { id: 100, rarity: "R", name: "背中 乗り猫", emoji: "🛌", power: "ドスッ。「[NAME]」、重いにゃ？でも、誰かの重みを感じることで『一人じゃない』って安心できることもあるにゃん。私がずっと乗っててあげるにゃ。", itemTitle: "加重 ブランケット", itemDesc: "適度な重みで安心感を与える。", keyword: "ウェイトブランケット" },
             { id: 106, rarity: "R", name: "ダンボール戦士", emoji: "🪖", power: "防具は完璧にゃ！「[NAME]」、外の世界は敵だらけにゃ。今日は心のATフィールドを全開にして、誰の言葉も跳ね返す防御の日にするにゃん。", itemTitle: "着る毛布", itemDesc: "最高の防御力を持つ布。", keyword: "着る毛布 極厚" },
@@ -615,7 +609,7 @@
             { id: 113, rarity: "R", name: "網戸によじ登る猫", emoji: "🦟", power: "外の虫が気になって仕方ないにゃ！「[NAME]」、好奇心は猫をも殺すって言うけど、好奇心がない人生なんて死んでるのと同じにゃん！", itemTitle: "虫除け アロマ", itemDesc: "嫌な虫（人間）を寄せ付けない。", keyword: "ハッカ油 スプレー" },
             { id: 114, rarity: "R", name: "ドアノブジャンプ猫", emoji: "🚪", power: "閉ざされた扉は自力でこじ開けるにゃ！「[NAME]」、待ってても誰も開けてくれないなら、思い切ってジャンプして自分で開けるにゃん！", itemTitle: "トランポリン", itemDesc: "ジャンプ力を鍛える。", keyword: "家庭用トランポリン" },
             { id: 115, rarity: "R", name: "水道蛇口飲み猫", emoji: "🚰", power: "流れる水しか飲まない主義にゃ。「[NAME]」、淀んだ水（過去）にとらわれず、常に新しく流れ込んでくる新鮮な情報をキャッチするにゃん！", itemTitle: "浄水器", itemDesc: "常に新鮮な水を。", keyword: "浄水器 ポット" },
-            { id: 116, rarity: "R", name: "冷蔵庫の上監視員", emoji: "🧊", power: "ここから「[NAME]」の食生活を監視してるにゃ。最近ジャンクフードばかり食べてないにゃ？健康は最高の財産にゃん。野菜を食べるにゃ！", itemTitle: "野菜 スープ", itemDesc: "手軽に栄養を摂取。", keyword: "野菜スープ 無添加" },
+            { id: 116, rarity: "R", name: "冷蔵庫の上監視員", emoji: "🧊", power: "ここから「[NAME]」の食生活を監視してるにゃ. 最近ジャンクフードばかり食べてないにゃ？健康は最高の財産にゃん. 野菜を食べるにゃ！", itemTitle: "野菜 スープ", itemDesc: "手軽に栄養を摂取。", keyword: "野菜スープ 無添加" },
             { id: 117, rarity: "R", name: "洗濯機裏探検隊", emoji: "🧺", power: "ホコリだらけの大冒険にゃ！「[NAME]」、誰も見ないような日陰の作業も、私がちゃんと評価してあげるにゃん。あなたは偉大な探検家にゃ！", itemTitle: "入浴剤", itemDesc: "冒険の汚れを落とす。", keyword: "入浴剤 温泉" },
             { id: 118, rarity: "R", name: "炊飯器あたため猫", emoji: "🍚", power: "お米の炊ける匂いと熱が最高にゃ…。「[NAME]」、心が冷え切った時は、温かいご飯をモリモリ食べるのが一番の特効薬にゃん！", itemTitle: "ブランド米", itemDesc: "最高の温もりを胃袋に。", keyword: "ブランド米 食べ比べ" },
             { id: 119, rarity: "R", name: "こたつ占領軍", emoji: "🍊", power: "ここは我々が制圧したにゃ。「[NAME]」も抵抗をやめて、我軍（こたつ）に降伏して丸くなるにゃん。冬の平和はここにあるにゃ。", itemTitle: "みかん", itemDesc: "こたつ軍の正式な兵糧。", keyword: "みかん 箱買い" },
@@ -630,11 +624,10 @@
             { id: 146, rarity: "LR", name: "七福神 猫大黒天", emoji: "💰", power: "打ち出の小槌にゃ！「[NAME]」の元に金運・仕事運・恋愛運、全てをドカンと叩き出してやるにゃん！笑う門には福来るにゃ！", itemTitle: "高級 ワインセット", itemDesc: "祝杯をあげる極上の一滴。", keyword: "高級 ワイン ギフト" },
             { id: 147, rarity: "LR", name: "幻のユニコーン猫", emoji: "🦄", power: "夢と希望の化身にゃ。「[NAME]」が心の底で願っている夢、合言葉の魔法で現実にしてあげるにゃん。信じる心が力にゃ！", itemTitle: "高級 ホテル宿泊券", itemDesc: "夢のようなひとときを。", keyword: "ホテル 宿泊 カタログギフト" },
             { id: 148, rarity: "LR", name: "深海の主 クラーケン猫", emoji: "🦑", power: "海の底から来たにゃ。「[NAME]」の深い悲しみは、私が全部飲み込んで海の泡に変えてやるにゃん。もう泣かなくていいにゃ。", itemTitle: "極上 キャビア", itemDesc: "黒い海の宝石。", keyword: "キャビア 高級" },
-            { id: 149, rarity: "LR", name: "精霊王 エルフ猫", emoji: "🍃", power: "森の精霊の長にゃ。「[NAME]」、大自然の癒やしの力を全てあなたに注ぐにゃん。これでどんな疲れも一瞬で吹き飛ぶにゃ。", itemTitle: "高級 フルーツ盛り合わせ", itemDesc: "大自然の甘い恵み。", keyword: "高級 フルーツ 詰め合わせ" },
+            { id: 149, rarity: "LR", name: "精霊王 エルフ猫", emoji: "🍃", power: "森の精霊の長にゃ。「[NAME]」、大自然 of 癒やしの力を全てあなたに注ぐにゃん。これでどんな疲れも一瞬で吹き飛ぶにゃ。", itemTitle: "高級 フルーツ盛り合わせ", itemDesc: "大自然の甘い恵み。", keyword: "高級 フルーツ 詰め合わせ" },
             { id: 150, rarity: "LR", name: "創造神 にゃんこ", emoji: "🌍", power: "この世界を作ったのは私にゃ。「[NAME]」、あなたは私の最高傑作にゃん。自信を持って、好きなようにこの世界を楽しんでにゃ！", itemTitle: "一生モノの 高級時計", itemDesc: "神の時間を刻む。", keyword: "高級 腕時計" }
         ];
 
-        // メッセージ無限拡張（気分別に各10種以上）
         const moods = ["超絶甘えん坊な", "少し眠そうな", "やたらテンションが高い", "何かを企んでいる", "悟りを開いた", "お腹を空かせた", "なでてほしい", "ツンデレな", "かまってちゃんな", "パトロール中の", "丸くなっている", "獲物を狙う", "香箱座りの", "尻尾をパタパタさせる", "耳をすませている", "毛づくろい中の"];
         
         const affirmationsDefault = [
@@ -693,10 +686,10 @@
             "猫の睡眠はほとんどが浅い「レム睡眠」。だから物音がするとすぐに起きられるにゃ。",
             "エジプトでは猫は神様として崇拝されていたにゃ！だから猫が偉そうなのは血筋にゃん。",
             "猫が獲物（おもちゃなど）を持ってくるのは、あなたを「狩りができない大きな子猫」と思って世話してるつもりにゃ。",
-            "猫の肉球の色は鼻の色や毛色と連動していることが多いにゃ。黒猫は黒、白猫はピンクが多いにゃん。",
+            "猫の肉球の色は鼻の色や毛色と連動していることが多いにゃ. 黒猫は黒、白猫はピンクが多いにゃん。",
             "猫は暗闇でも人間の1/6の光量で物を見ることができる「タペタム」という反射板を持ってるにゃ。",
             "猫が足にスリスリするのは「あなたは私のもの！」というマーキング行動にゃん。",
-            "猫は「にゃー」という声を人間に対してしか使わないと言われてるにゃ。猫同士はボディランゲージで会話するにゃん。",
+            "猫は「にゃー」という声を人間に対してしか使わないと言われてるにゃ. 猫同士はボディランゲージで会話するにゃん。",
             "世界で一番長く生きた猫は38歳（人間換算で約170歳）という記録があるにゃ！"
         ];
 
@@ -758,27 +751,26 @@
                 return prefix;
             }
             
-            // 相性による前置きフレーミング
-            if (syncRate >= 110) prefix = `「限界突破の相性${syncRate}%にゃ！！これは運命を超えた啓示にゃん！絶対プレゼントしてほしいにゃ！」<br>`;
-            else if (syncRate >= 100) prefix = `「今日の相性${syncRate}%は奇跡にゃ！だから絶対にお願いにゃ！」<br>`;
+            if (syncRate >= 110) prefix = `「限界突破の相性${syncRate}%にゃ！！これは運命を超えた啓示にゃん！絶対一緒にお揃いにしたいにゃ！」<br>`;
+            else if (syncRate >= 100) prefix = `「今日の相性${syncRate}%は奇跡にゃ！だから特別な提案があるにゃ！」<br>`;
             else if (syncRate >= 95) prefix = `「相性バッチリの私から、${safeName}ちゃんに特別なお願いにゃ！」<br>`;
 
             const msgs = [
                 `「${safeName}ちゃん、これがあったらもっと一緒にいられるにゃ💕」`,
-                `「今の私にはこれが絶対必要にゃ！${safeName}ちゃん、おねがいにゃ〜！」`,
-                `「ねえねえ、これ買ってくれたら特別にお腹モフモフさせてあげるにゃ🐾」`,
-                `「これ、${safeName}ちゃんへのプレゼントに私が選んだにゃ！（※支払いはお願いにゃ）」`,
+                `「今の私にはこれが絶対必要にゃ！${safeName}ちゃんと一緒に使いたいにゃ〜！」`,
+                `「ねえねえ、これを用意してくれたら特別にお腹モフモフさせてあげるにゃ🐾」`,
+                `「これ、${safeName}ちゃんのお守りに私が一生懸命選んだにゃ！」`,
                 `「これが部屋にあったら、毎日最高にハッピーな気分でお出迎えするにゃん✨」`,
-                `「これを見つけた瞬間、${safeName}ちゃんの顔が浮かんだにゃ！ポチるしか無いにゃん！」`,
-                `「私の第六感が『これを用意すれば${safeName}ちゃんに幸運が訪れる』と言ってるにゃ🔮」`,
-                `「ねえ${safeName}ちゃん、私のためにこれを用意してくれたら一生恩に着るにゃ💖」`,
+                `「これを見つけた瞬間、${safeName}ちゃんの顔が浮かんだにゃ！絶対似合うにゃん！」`,
+                `「私の第六感が『これをそばに置けば${safeName}ちゃんに幸運が訪れる』と言ってるにゃ🔮」`,
+                `「ねえ${safeName}ちゃん、私たちの絆の証としてこれをお揃いにしたいにゃ💖」`,
                 `「（無言で上目遣いしながら、アイテムを指差している…🐾）」`,
-                `「今日は特別な日にゃ！だからこれをおねだりしても許されるはずだにゃん！」`,
+                `「今日は特別な日にゃ！だから少し贅沢して自分を癒やしてほしいにゃん！」`,
                 `「${safeName}ちゃんの頑張りは私が一番知ってるにゃ。だからこれくらい自分へのご褒美にしていいにゃん！」`,
                 `「これを手に入れた${safeName}ちゃんの笑顔が見たいにゃ。嘘じゃないにゃ、本当だにゃ！」`,
-                `「これがないと夜も眠れないにゃ…嘘にゃ、よく寝てるけど欲しいのは本当だにゃん！」`,
-                `「他の猫には内緒にゃ。${safeName}ちゃんだけに特別に教えてあげる、これ最強のアイテムにゃ！」`,
-                `「これを用意してくれたら、今日から私は${safeName}ちゃんの下僕に…いや、対等のパートナーになるにゃ！」`
+                `「これがないと夜も眠れないにゃ…嘘にゃ、よく寝てるけどお揃いにしたいのは本当だにゃん！」`,
+                `「他の猫には内緒にゃ。${safeName}ちゃんだけに特別に教えてあげる、これ最強の癒やしアイテムにゃ！」`,
+                `「これを用意してくれたら、今日から私は${safeName}ちゃんの最高のパートナーになるにゃ！」`
             ];
             return prefix + msgs[Math.floor(Math.random() * msgs.length)];
         }
@@ -1178,7 +1170,9 @@
 
             const todayStr = new Date().toLocaleDateString('ja-JP');
             const trivia = catTrivias[Math.floor(Math.random() * catTrivias.length)];
-            document.getElementById('textTrivia').innerHTML = `📅 <strong>${todayStr} の癒やし記録</strong><br><br>💡 <strong>ねこプチ情報：</strong><br>${trivia}`;
+            
+            // 改善: 今日の記録とプチ情報エリアの文字・背景色コントラスト強化
+            document.getElementById('textTrivia').innerHTML = `📅 <strong>${todayStr} の癒やし記録</strong><br><br>💡 <strong>ねこプチ情報：</strong><br><span style="display:block; margin-top:8px; padding:12px; background:rgba(255, 141, 161, 0.1); border-radius:8px; font-weight:bold; border-left: 3px solid var(--accent-color);">${trivia}</span>`;
             
             document.getElementById('productSpeech').innerHTML = getOnedariMessage(currentResult.name, userName, syncRate, currentResult.rarity === "LR");
 
@@ -1317,7 +1311,7 @@
             el.style.top = stamp.y + '%';
             
             // 猫の絵文字なら特別に大きく
-            if (["🐱", "😸", "😻", "😽", "🐈", "🐈‍⬛"].includes(stamp.e)) {
+            if (["🐱", "🐈", "🐈‍⬛"].includes(stamp.e)) {
                 el.style.fontSize = (Math.random() * 2 + 3) + 'rem';
                 el.style.zIndex = "0";
                 el.style.opacity = "0.4";
