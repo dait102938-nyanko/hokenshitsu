@@ -510,6 +510,52 @@
         </div>
     </div>
 
+    <!-- 汎用確認モーダル -->
+    <div class="modal" id="customConfirmModal">
+        <div class="modal-content">
+            <h2 style="color:var(--accent-color); margin-top:0;">🐾 確認だにゃ</h2>
+            <p id="customConfirmText" style="font-size: 0.95rem; color:var(--text-main); margin-bottom: 20px; font-weight:bold;"></p>
+            <div style="display: flex; justify-content: center; gap: 15px;">
+                <button class="save-btn" id="customConfirmYesBtn" style="background: #ff4757; margin-top:0;">はい</button>
+                <button class="head-btn" style="padding: 10px 20px; border-radius: 15px; font-size: 1rem; margin-top:0;" onclick="window.closeCustomConfirm()">いいえ</button>
+            </div>
+            <button class="close-modal-btn" onclick="window.closeCustomConfirm()">✖</button>
+        </div>
+    </div>
+
+    <!-- お守り保存専用モーダル -->
+    <div class="modal" id="saveMemoModal">
+        <div class="modal-content">
+            <h2 style="color:var(--accent-color); margin-top:0;">🔖 お守りを残すにゃ</h2>
+            <div id="saveMemoQuestion" style="font-size: 0.85rem; color:var(--text-main); font-weight:bold; margin-bottom:10px; text-align:left; background: rgba(255,141,161,0.1); padding: 10px; border-radius: 10px; border-left: 4px solid var(--accent-color);"></div>
+            <textarea id="saveMemoInput" class="name-input" style="height: 70px; resize: none; text-align: left; width: 90%; box-sizing: border-box;" placeholder="今の気持ちをここに残せるにゃ（空欄でもOK）"></textarea>
+            
+            <div style="margin-top: 15px; text-align: left; background: #fff0f5; padding: 10px; border-radius: 10px; border: 1px dashed var(--accent-color);">
+                <div style="font-size: 0.85rem; font-weight: bold; color: var(--text-main);">⏳ 未来の自分への手紙にする？</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 3px;">※指定した日数が経つまで中身が見られなくなるにゃ！不要なら空欄のままにしてにゃ。</div>
+                <div style="display:flex; align-items:center; gap: 5px; margin-top: 8px;">
+                    <input type="number" id="timecapsuleInput" class="name-input" style="width: 70px; padding: 5px; margin-top: 0; text-align: right;" placeholder="例: 30" min="1">
+                    <span style="font-size: 0.85rem; font-weight: bold; color: var(--text-main);">日後の自分へ</span>
+                </div>
+            </div>
+
+            <button class="save-btn" onclick="window.confirmSaveMessage()" style="width: 100%; margin-top: 20px;">大切に保存するにゃ</button>
+            <button class="close-modal-btn" onclick="window.closeSaveMemoModal()">✖</button>
+        </div>
+    </div>
+
+    <!-- 名前変更モーダル -->
+    <div class="modal" id="renameCatModal">
+        <div class="modal-content">
+            <h2 style="color:var(--accent-color); margin-top:0;">🐾 愛称をつけるにゃ</h2>
+            <p id="renameCatTarget" style="font-size: 0.85rem; color:var(--text-muted); font-weight:bold;"></p>
+            <input type="text" id="renameCatInput" class="name-input" placeholder="好きな名前を入力してにゃ">
+            <p style="font-size: 0.7rem; color:#aaa; margin-top: 5px;">空欄にすると元の名前に戻るにゃん</p>
+            <button class="save-btn" onclick="window.confirmRenameCat()">決定にゃん！</button>
+            <button class="close-modal-btn" onclick="window.closeRenameCatModal()">✖</button>
+        </div>
+    </div>
+
     <div class="toast" id="toast">🐾 メッセージが入るにゃ</div>
 
     <footer style="margin-top:auto; padding:20px; font-size:0.7rem; color:var(--text-muted); text-align:center;">
@@ -1593,19 +1639,36 @@
             }
         }
 
+        // 汎用確認ダイアログのロジック
+        let confirmAction = null;
+        window.showCustomConfirm = function(message, action) {
+            document.getElementById('customConfirmText').innerText = message;
+            confirmAction = action;
+            document.getElementById('customConfirmModal').classList.add('show');
+        };
+        window.closeCustomConfirm = function() {
+            document.getElementById('customConfirmModal').classList.remove('show');
+            confirmAction = null;
+        };
+        document.getElementById('customConfirmYesBtn').addEventListener('click', () => {
+            if(confirmAction) confirmAction();
+            window.closeCustomConfirm();
+        });
+
         window.clearStamps = function() {
-            if(confirm("背景の思い出（スタンプとプレゼント）をすべて消去しますか？")) {
+            window.showCustomConfirm("背景の思い出（スタンプとプレゼント）をすべて消去するにゃ？", () => {
                 bgStamps = [];
                 roomItems = [];
                 localStorage.removeItem('nyanko_bg_stamps');
                 localStorage.removeItem('nyanko_room_items');
                 loadStamps();
                 loadCatRoom();
-            }
+                showToast("綺麗にお掃除したにゃん🧹");
+            });
         }
 
         // =========================================
-        // 深呼吸ロジック
+        // 7. マインドフルネス（深呼吸）ロジック
         // =========================================
         window.startBreathing = function() {
             if(isBreathing) return;
@@ -1776,25 +1839,46 @@
             document.getElementById('bookModal').classList.remove('show');
         };
         
+        let pendingRenameCatId = null;
+
         window.renameCat = function(catId) {
             const baseCat = catData.find(c => c.id == catId);
             if(!baseCat) return;
-            const currentName = catNames[catId] || baseCat.name;
-            const newName = prompt(`「${baseCat.name}」にあなただけの愛称（名前）をつけるにゃん🐾\n（空欄にすると元の名前に戻るにゃ）`, currentName);
             
-            if (newName !== null) {
-                if (newName.trim() === "") {
-                    delete catNames[catId];
-                } else {
-                    catNames[catId] = newName.trim();
-                }
-                localStorage.setItem('nyanko_cat_names', JSON.stringify(catNames));
-                window.openBookModal(); 
-                if (currentCatId == catId) {
-                    document.getElementById('cardName').innerText = getCatDisplayName(currentCatId);
-                }
-                showToast("猫ちゃんの名前を変更したにゃん！");
+            pendingRenameCatId = catId;
+            const currentName = catNames[catId] || baseCat.name;
+            
+            document.getElementById('renameCatTarget').innerText = `「${baseCat.name}」の新しい名前`;
+            document.getElementById('renameCatInput').value = currentName === baseCat.name ? '' : currentName;
+            
+            document.getElementById('renameCatModal').classList.add('show');
+        };
+
+        window.closeRenameCatModal = function() {
+            document.getElementById('renameCatModal').classList.remove('show');
+            pendingRenameCatId = null;
+        };
+
+        window.confirmRenameCat = function() {
+            if (!pendingRenameCatId) return;
+            
+            const newName = document.getElementById('renameCatInput').value.trim();
+            const baseCat = catData.find(c => c.id == pendingRenameCatId);
+            
+            if (newName === "") {
+                delete catNames[pendingRenameCatId];
+            } else {
+                catNames[pendingRenameCatId] = newName;
             }
+            localStorage.setItem('nyanko_cat_names', JSON.stringify(catNames));
+            
+            window.closeRenameCatModal();
+            window.openBookModal(); 
+            
+            if (currentCatId == pendingRenameCatId) {
+                document.getElementById('cardName').innerText = getCatDisplayName(currentCatId);
+            }
+            showToast("猫ちゃんの愛称を変更したにゃん🐾");
         };
 
         window.openLicenseModal = function() {
@@ -1845,16 +1929,19 @@
             document.getElementById('licenseModal').classList.remove('show');
         };
 
-        // タイムカプセル機能対応
+        let pendingSaveText = "";
+
         window.saveCurrentMessage = function(type) {
             let textToSave = "";
             if (type === 'affirmation') {
                 const el = document.getElementById('textAffirmation').cloneNode(true);
-                el.querySelector('button').remove(); 
+                const btn = el.querySelector('button');
+                if(btn) btn.remove(); 
                 textToSave = el.innerText.trim();
             } else {
                 const el = document.getElementById('textPower').cloneNode(true);
-                el.querySelector('button').remove();
+                const btn = el.querySelector('button');
+                if(btn) btn.remove();
                 textToSave = el.innerText.trim();
             }
 
@@ -1863,29 +1950,36 @@
                 return;
             }
 
+            pendingSaveText = textToSave;
             const randomQ = secretQuestions[Math.floor(Math.random() * secretQuestions.length)];
-            const memo = prompt(`🔖 今の気持ちやメモ書きを残せるにゃん🐾\n\n💬 猫ちゃんからの質問：\n「${randomQ}」\n（空欄でもOKにゃ）`, "");
-            if (memo === null) return; 
-
-            // タイムカプセルの選択
-            const isTimeCapsule = confirm("⏳ このお守りを『未来の自分への手紙（タイムカプセル）』にするにゃ？\n※OKを押すと、指定した日まで中身が見られなくなるにゃ！");
-            let unlockTimestamp = 0;
+            document.getElementById('saveMemoQuestion').innerText = `💬 猫ちゃんからの質問：\n「${randomQ}」`;
+            document.getElementById('saveMemoInput').value = "";
+            document.getElementById('timecapsuleInput').value = "";
             
-            if (isTimeCapsule) {
-                const days = prompt("何日後の自分に届けるにゃ？（例: 7, 30, 365）", "30");
-                const parsedDays = parseInt(days);
-                if (!isNaN(parsedDays) && parsedDays > 0) {
-                    unlockTimestamp = Date.now() + (parsedDays * 24 * 60 * 60 * 1000);
-                    showToast(`⏳ ${parsedDays}日後のあなたへ、この想いを届けるにゃん！`);
-                } else {
-                    showToast("日数が正しくないから、普通のお守りとして保存したにゃん。");
-                }
+            document.getElementById('saveMemoModal').classList.add('show');
+        };
+
+        window.closeSaveMemoModal = function() {
+            document.getElementById('saveMemoModal').classList.remove('show');
+            pendingSaveText = "";
+        };
+
+        window.confirmSaveMessage = function() {
+            if(!pendingSaveText) return;
+            
+            const memo = document.getElementById('saveMemoInput').value.trim();
+            const daysInput = document.getElementById('timecapsuleInput').value.trim();
+            
+            let unlockTimestamp = 0;
+            if (daysInput && !isNaN(parseInt(daysInput)) && parseInt(daysInput) > 0) {
+                const parsedDays = parseInt(daysInput);
+                unlockTimestamp = Date.now() + (parsedDays * 24 * 60 * 60 * 1000);
             }
 
             const newMessage = {
                 id: Date.now(),
-                text: textToSave,
-                memo: memo.trim(),
+                text: pendingSaveText,
+                memo: memo,
                 catName: getCatDisplayName(currentCatId),
                 emoji: currentResult.emoji,
                 date: new Date().toLocaleDateString('ja-JP'),
@@ -1896,7 +1990,11 @@
             if (savedMessages.length > 100) savedMessages.pop(); 
             localStorage.setItem('nyanko_saved_messages', JSON.stringify(savedMessages));
             
-            if (!isTimeCapsule || unlockTimestamp === 0) {
+            window.closeSaveMemoModal();
+            
+            if (unlockTimestamp > 0) {
+                showToast(`⏳ ${daysInput}日後のあなたへ、この想いを届けるにゃん！`);
+            } else {
                 showToast("🔖 お守り帳に言葉と記憶を保存したにゃん！");
             }
         };
@@ -1913,7 +2011,6 @@
                     const item = document.createElement('div');
                     
                     if (msg.unlockDate && msg.unlockDate > now) {
-                        // タイムカプセル（ロック中）
                         const daysLeft = Math.ceil((msg.unlockDate - now) / (1000 * 60 * 60 * 24));
                         item.className = 'saved-msg-item locked';
                         item.innerHTML = `
@@ -1922,7 +2019,6 @@
                             <div style="font-size: 0.8rem; margin-top: 5px;">開封まであと ${daysLeft} 日にゃん🐾</div>
                         `;
                     } else {
-                        // 通常表示
                         item.className = 'saved-msg-item';
                         let memoHtml = "";
                         if (msg.memo) {
@@ -1947,11 +2043,12 @@
         };
 
         window.deleteSavedMessage = function(id) {
-            if(confirm("このお守りを手放すにゃ？")) {
+            window.showCustomConfirm("このお守りを手放すにゃ？", () => {
                 savedMessages = savedMessages.filter(m => m.id !== id);
                 localStorage.setItem('nyanko_saved_messages', JSON.stringify(savedMessages));
                 window.openSavedMessagesModal(); 
-            }
+                showToast("お守りを空に還したにゃん🌌");
+            });
         };
 
         // =========================================
