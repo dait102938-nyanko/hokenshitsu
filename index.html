@@ -59,14 +59,20 @@
 
         .status-board { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 10px; }
         .encounter-badge { background-color: var(--card-bg); color: var(--accent-color); border: 2px solid var(--accent-color); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
-        .title-badge { background: var(--accent-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .trophy-badge { background: linear-gradient(135deg, #ffd700, #ffaa00); color: white; padding: 4px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: none; cursor: pointer; }
+        .title-badge { background: var(--accent-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-top: 5px; }
+        .next-milestone { font-size: 0.7rem; color: var(--text-muted); font-weight: bold; margin-top: 2px; }
+        
+        .login-calendar { display: flex; gap: 4px; justify-content: center; margin-top: 4px; }
+        .cal-paw { font-size: 0.8rem; opacity: 0.2; transition: all 0.3s; }
+        .cal-paw.active { opacity: 1; filter: drop-shadow(0 0 2px var(--accent-color)); transform: scale(1.1); }
         
         .share-bonus-badge { display: none; background: linear-gradient(135deg, #ffd700, #ff8c00); color: white; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-top: 5px; box-shadow: 0 0 15px rgba(255,215,0,0.6); animation: pulse 1.5s infinite; }
         .share-bonus-badge.active { display: inline-block; }
         
         .fever-badge { display: none; background: linear-gradient(135deg, #ff416c, #ff4b2b); color: white; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-top: 5px; box-shadow: 0 0 15px rgba(255,65,108,0.6); animation: pulse 1s infinite; }
         .fever-badge.active { display: inline-block; }
+
+        .nyannyan-badge { display: none; background: linear-gradient(135deg, #ffd700, #ff00ff); color: white; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-top: 5px; box-shadow: 0 0 15px rgba(255,0,255,0.6); animation: pulse 1.5s infinite; }
 
         /* =========================================
            3. ガチャ（気分選択 ＋ カード演出）
@@ -82,13 +88,11 @@
 
         .card-container { perspective: 1000px; width: 160px; height: 260px; margin: 15px 0; cursor: pointer; position: relative; transition: all 0.5s; animation: float 3s infinite ease-in-out; }
         
-        .rarity-badge { position: absolute; top: -10px; right: -10px; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.95rem; color: white; z-index: 10; opacity: 0; transform: scale(0); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s; }
+        .rarity-badge { position: absolute; top: -10px; right: -10px; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; color: white; z-index: 10; opacity: 0; transform: scale(0); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s; text-align: center; line-height: 1.1; }
         .card-container.flipped .rarity-badge { opacity: 1; transform: scale(1) rotate(15deg); }
         
-        /* 新レアリティ LR (Legend Rare) */
         .r-lr { background: linear-gradient(135deg, #ff0000, #ff00ff, #00ffff); box-shadow: 0 0 30px #ff00ff; border: 3px solid #fff; color: #fff; animation: rainbow 2s infinite linear; }
         @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-
         .r-sec { background: linear-gradient(135deg, #000000, #4b0082); box-shadow: 0 0 20px #8a2be2; border: 2px solid #ffd700; color: #ffd700; }
         .r-ur { background: linear-gradient(135deg, #ffd700, #ff8c00); box-shadow: 0 0 15px #ffd700; border: 2px solid #fff; }
         .r-ssr { background: linear-gradient(135deg, #ff00ff, #8a2be2); box-shadow: 0 0 15px #ff00ff; border: 2px solid #fff; }
@@ -99,7 +103,7 @@
         .card-container.flipped .card { transform: rotateY(180deg); }
         .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 24px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 4px solid rgba(255,255,255,0.5); }
         .card-back { background: var(--accent-color); }
-        .card-back::after { content: "🐾\A\A肉球で\A引くにゃ"; white-space: pre; text-align: center; font-size: 1rem; font-weight: bold; color: #fff; letter-spacing: 0.05em; animation: pulse 2s infinite ease-in-out; }
+        .card-back::after { content: "🐾\A\A肉球で\A出会うにゃ"; white-space: pre; text-align: center; font-size: 1rem; font-weight: bold; color: #fff; letter-spacing: 0.05em; animation: pulse 2s infinite ease-in-out; }
         .card-front { background-color: var(--card-bg); transform: rotateY(180deg); border-color: var(--accent-color); padding: 15px; box-sizing: border-box; }
 
         .card-emoji-container { position: relative; }
@@ -108,8 +112,9 @@
 
         .card-mood { font-size: 0.75rem; color: var(--text-main); margin-bottom: 2px; background: rgba(255,255,255,0.7); padding: 2px 8px; border-radius: 10px; font-weight: bold; }
         .card-name { font-size: 0.95rem; font-weight: 900; color: var(--accent-color); text-align: center; background: rgba(255,255,255,0.85); padding: 4px 10px; border-radius: 12px; text-shadow: 1px 1px 0px #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 5px; }
+        
+        .prestige-stars { font-size: 0.8rem; color: #ffd700; margin-top: 2px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
-        /* ガチャ超・溜め演出用（レア度別） */
         @keyframes shakeR { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px) rotate(-1deg); filter: brightness(1.2); } 75% { transform: translateX(2px) rotate(1deg); filter: brightness(1.2); } }
         @keyframes shakeSR { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-3px, 2px) rotate(-2deg); filter: brightness(1.3) drop-shadow(0 0 10px #00bfff); } 60% { transform: translate(3px, -2px) rotate(2deg); filter: brightness(1.3) drop-shadow(0 0 10px #00bfff); } }
         @keyframes shakeSSR { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-4px, 3px) rotate(-3deg); filter: brightness(1.5) drop-shadow(0 0 20px #ff00ff); } 60% { transform: translate(4px, -3px) rotate(3deg); filter: brightness(1.5) drop-shadow(0 0 20px #ff00ff); } }
@@ -138,7 +143,6 @@
 
         .purrr-effect { text-align: center; font-size: 0.85rem; color: var(--accent-color); font-style: italic; letter-spacing: 0.2em; margin-top: 5px; animation: purrrShake 2s infinite ease-in-out; }
         
-        /* 視認性極大化のUIアップデート */
         .section-title { 
             font-size: 1rem; color: var(--text-main); 
             background: linear-gradient(90deg, rgba(255, 141, 161, 0.15) 0%, transparent 100%);
@@ -151,13 +155,13 @@
         
         .sync-rate { font-size: 0.85rem; background: var(--accent-color); color: white; padding: 4px 12px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
-        .result-text { font-size: 0.95rem; line-height: 1.7; color: var(--text-main); background: rgba(255, 255, 255, 0.95); padding: 18px; border-radius: 16px; border: 2px solid rgba(255, 141, 161, 0.3); backdrop-filter: blur(5px); box-shadow: 0 4px 10px rgba(0,0,0,0.03); position: relative; }
+        .result-text { font-size: 0.95rem; line-height: 1.7; color: var(--text-main); background: rgba(255, 255, 255, 0.95); padding: 18px 18px 30px 18px; border-radius: 16px; border: 2px solid rgba(255, 141, 161, 0.3); backdrop-filter: blur(5px); box-shadow: 0 4px 10px rgba(0,0,0,0.03); position: relative; }
         body.theme-night .result-text { background: rgba(43, 27, 61, 0.85); border-color: rgba(221, 160, 221, 0.3); color: #f0f8ff; }
         
         .affirmation-text { font-size: 1.05rem; font-weight: bold; color: var(--accent-color); text-align: center; border: 2px dashed var(--accent-color); background: #fff0f5; }
         body.theme-night .affirmation-text { background: #3a2b4d; color: #dda0dd; border-color: #dda0dd; }
 
-        .save-msg-btn { position: absolute; bottom: 5px; right: 10px; background: none; border: none; color: var(--accent-color); font-size: 0.75rem; font-weight: bold; cursor: pointer; text-decoration: underline; }
+        .save-msg-btn { position: absolute; bottom: 5px; right: 15px; background: none; border: none; color: var(--accent-color); font-size: 0.75rem; font-weight: bold; cursor: pointer; text-decoration: underline; padding: 5px; }
         body.theme-night .save-msg-btn { color: #dda0dd; }
 
         .pet-btn-wrapper { text-align: center; margin: 25px 0 10px 0; position: relative; }
@@ -177,7 +181,8 @@
         .affection-meter { width: 100%; height: 6px; background: rgba(0,0,0,0.1); border-radius: 3px; overflow: hidden; margin-bottom: 5px; position: relative; }
         .affection-fill { height: 100%; background: linear-gradient(90deg, #ff9a9e, #ff6f91); width: 0%; transition: width 0.5s ease-out; }
         .affection-label { font-size: 0.65rem; color: var(--accent-color); text-align: right; margin-top: 2px; font-weight: bold; }
-        .affection-title { font-size: 0.8rem; color: #ff4757; text-align: center; font-weight: bold; margin-bottom: 5px; }
+        .affection-title { font-size: 0.8rem; color: #ff4757; text-align: center; font-weight: bold; margin-bottom: 2px; }
+        .affection-stars { font-size: 0.7rem; color: #ffd700; text-align: center; margin-bottom: 5px; text-shadow: 0 1px 1px rgba(0,0,0,0.2); }
 
         .product-speech { background: white; border: 2px solid var(--accent-color); border-radius: 15px; padding: 12px; margin-bottom: 8px; font-size: 0.85rem; color: var(--accent-color); font-weight: bold; position: relative; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 2; line-height: 1.4; animation: float 3s infinite ease-in-out; }
         .product-speech::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); border-width: 10px 10px 0; border-style: solid; border-color: var(--accent-color) transparent transparent transparent; display: block; width: 0; }
@@ -208,9 +213,9 @@
 
         .book-content { width: 95%; max-width: 480px; max-height: 85vh; overflow-y: auto; padding: 20px 10px; }
         .book-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
-        .book-item { background: var(--bg-grad-start); border-radius: 12px; padding: 10px 5px; text-align: center; border: 1px solid rgba(0,0,0,0.05); position: relative; }
+        .book-item { background: var(--bg-grad-start); border-radius: 12px; padding: 10px 5px; text-align: center; border: 1px solid rgba(0,0,0,0.05); position: relative; cursor: pointer; }
         body.theme-night .book-item { border-color: rgba(255,255,255,0.1); }
-        .book-item.unknown { filter: grayscale(100%) opacity(0.4); background: #eee; }
+        .book-item.unknown { filter: grayscale(100%) opacity(0.4); background: #eee; cursor: default; }
         body.theme-night .book-item.unknown { background: #333; }
         .book-emoji-container { position: relative; display: inline-block; }
         .book-emoji { font-size: 2rem; margin-bottom: 5px; }
@@ -250,13 +255,18 @@
         .license-oshi-emoji { font-size: 3.5rem; position: relative; display: inline-block; }
         .license-oshi-name { font-size: 1rem; font-weight: bold; color: var(--text-main); margin-top: 5px; }
         .license-oshi-points { font-size: 0.8rem; color: #ff4757; font-weight: bold; }
+        .license-stars { font-size: 0.9rem; color: #ffd700; margin-top: 5px; }
 
-        /* お守り帳モーダル */
+        /* お守り帳モーダル（タイムカプセル対応） */
         .saved-msg-item { background: rgba(255,255,255,0.8); border: 2px dashed var(--accent-color); border-radius: 12px; padding: 15px; margin-bottom: 10px; font-size: 0.85rem; text-align: left; color: var(--text-main); position: relative; }
-        body.theme-night .saved-msg-item { background: rgba(0,0,0,0.4); color: #fff; }
+        body.theme-night .saved-msg-item { background: rgba(0,0,0,0.4); color: #fff; border-color: rgba(221,160,221,0.5); }
+        .saved-msg-item.locked { background: #eee; border-color: #aaa; color: #888; text-align: center; padding: 30px 15px; }
+        body.theme-night .saved-msg-item.locked { background: #222; border-color: #555; color: #777; }
         .saved-msg-date { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 5px; }
         .saved-msg-cat { font-weight: bold; color: var(--accent-color); margin-top: 5px; text-align: right; }
         .delete-msg-btn { position: absolute; top: 5px; right: 10px; color: #ccc; cursor: pointer; font-size: 1rem; border: none; background: none; }
+        .saved-msg-memo { background: rgba(255,141,161,0.1); padding: 8px; border-radius: 8px; margin-top: 8px; font-size: 0.8rem; border-left: 3px solid var(--accent-color); }
+        body.theme-night .saved-msg-memo { background: rgba(221,160,221,0.15); border-color: #dda0dd; }
 
         /* =========================================
            6. SNSシェア・演出・その他
@@ -300,30 +310,35 @@
         <h1 id="mainTitle">🐾 推し猫リトリート</h1>
         <div class="subtitle" id="subTitle">あなた専用の癒やし空間にゃん</div>
         <div class="header-buttons">
-            <button class="head-btn" onclick="openNameModal()">⚙️ 設定</button>
-            <button class="head-btn" onclick="openBookModal()">📖 図鑑</button>
-            <button class="head-btn" onclick="openSavedMessagesModal()">🔖 お守り</button>
-            <button class="head-btn" onclick="openSecretModal()">🔑 合言葉</button>
-            <button class="head-btn" onclick="openLicenseModal()">💳 ライセンス</button>
+            <button class="head-btn" onclick="window.openNameModal()">⚙️ 設定</button>
+            <button class="head-btn" onclick="window.openBookModal()">📖 図鑑</button>
+            <button class="head-btn" onclick="window.openSavedMessagesModal()">🔖 お守り帳</button>
+            <button class="head-btn" onclick="window.openSecretModal()">🔑 合言葉</button>
+            <button class="head-btn" onclick="window.openLicenseModal()">💳 ライセンス</button>
         </div>
         <div class="status-board" id="statusBoard" style="display:none;">
             <div id="encounterBadge" class="encounter-badge">連続お世話: 0日目 / 通算: 0日</div>
-            <div id="titleBadge" class="title-badge">称号</div>
-            <div id="trophyBadge" class="trophy-badge" onclick="openTrophyModal()">🏆 獲得トロフィー: 0/100</div>
-            <div id="shareBonusBadge" class="share-bonus-badge">🎁 次回占う時【SR以上確定】！</div>
-            <div id="secretBonusBadge" class="share-bonus-badge" style="background: linear-gradient(135deg, #ff00ff, #8a2be2);">🗝️ 合言葉の魔法【LR出現中】！</div>
+            <!-- 直近7日間のログインカレンダー -->
+            <div class="login-calendar" id="loginCalendar"></div>
+            
+            <div id="titleBadge" class="title-badge" style="margin-top: 5px;">称号</div>
+            <div class="next-milestone" id="nextMilestoneDisplay"></div>
+            <div id="trophyBadge" class="trophy-badge" onclick="window.openTrophyModal()">🏆 獲得実績: 0/100</div>
+            <div id="shareBonusBadge" class="share-bonus-badge">🎁 次回、特別な出会いの予感！</div>
+            <div id="secretBonusBadge" class="share-bonus-badge" style="background: linear-gradient(135deg, #ff00ff, #8a2be2);">🗝️ 星の導き【幻の猫ちゃん】出現中！</div>
             <div id="feverBadge" class="fever-badge">🔥 フィーバータイム発動中！</div>
+            <div id="nyanNyanBadge" class="nyannyan-badge">🎉 本日は22日「にゃんにゃん感謝祭」！特別確率UP！</div>
         </div>
     </header>
 
     <main>
         <div class="mood-selector" id="moodSelector">
-            <div style="font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; color: var(--accent-color);">👇 気分を選ぶか、そのままカードを引くにゃ</div>
+            <div style="font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; color: var(--accent-color);">👇 気分を選ぶか、そのままカードに触れるにゃ</div>
             <div class="mood-buttons">
-                <button class="mood-btn" onclick="setMood('tired', this)">💻 お疲れ</button>
-                <button class="mood-btn" onclick="setMood('stress', this)">💔 モヤモヤ</button>
-                <button class="mood-btn" onclick="setMood('sleepy', this)">💤 眠れない</button>
-                <button class="mood-btn" onclick="setMood('lucky', this)">✨ 運試し</button>
+                <button class="mood-btn" onclick="window.setMood('tired', this)">💻 お疲れ</button>
+                <button class="mood-btn" onclick="window.setMood('stress', this)">💔 モヤモヤ</button>
+                <button class="mood-btn" onclick="window.setMood('sleepy', this)">💤 眠れない</button>
+                <button class="mood-btn" onclick="window.setMood('lucky', this)">✨ 運試し</button>
             </div>
         </div>
 
@@ -338,6 +353,7 @@
                     </div>
                     <div class="card-mood" id="cardMood"></div>
                     <div class="card-name" id="cardName">猫ちゃん</div>
+                    <div class="prestige-stars" id="cardPrestigeStars"></div>
                 </div>
             </div>
         </div>
@@ -348,13 +364,11 @@
             <div class="section-title">💖 <span class="userNameDisplay">あなた</span>への全肯定</div>
             <div class="result-text affirmation-text" id="textAffirmation">
                 <!-- ここにテキスト -->
-                <button class="save-msg-btn" onclick="saveCurrentMessage('affirmation')">🔖 この言葉をお守りにする</button>
             </div>
 
-            <div class="section-title">🐱 お世話係からのメッセージ</div>
+            <div class="section-title">🐱 専属お世話係からのメッセージ</div>
             <div class="result-text" id="textPower" style="position: relative;">
                 <!-- ここにテキスト -->
-                <button class="save-msg-btn" onclick="saveCurrentMessage('power')">🔖 この言葉をお守りにする</button>
             </div>
 
             <div class="pet-btn-wrapper">
@@ -363,7 +377,7 @@
             </div>
 
             <div class="breathe-btn-wrapper">
-                <button class="breathe-trigger-btn" onclick="startBreathing()">🧘‍♀️ 猫ちゃんと1分間深呼吸する</button>
+                <button class="breathe-trigger-btn" onclick="window.startBreathing()">🧘‍♀️ 猫ちゃんと1分間深呼吸する</button>
             </div>
 
             <div class="section-title">
@@ -378,6 +392,7 @@
             <div class="affiliate-box">
                 <div style="width: 100%; text-align: left;">
                     <div class="affection-title" id="affectionTitle">親密度: 顔見知り</div>
+                    <div class="affection-stars" id="affectionStars"></div>
                     <div class="affection-meter"><div class="affection-fill" id="affectionFill"></div></div>
                     <div class="affection-label" id="affectionLabel">好感度レベル: 1</div>
                     <div style="font-size: 0.7rem; color: #ff4757; text-align: center; margin-top: 8px; font-weight: bold; background: #fff0f3; padding: 4px; border-radius: 8px; border: 1px dashed #ffb7c5;">💡 プレゼントを贈ると推し猫がドレスアップするにゃ！</div>
@@ -391,17 +406,17 @@
                 <div class="product-links-group" id="productLinksGroup">
                     <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-rakuten" id="productLinkRakuten">楽天市場で探す🐾</a>
                     <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-amazon" id="productLinkAmazon">Amazonで探す📦</a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-yahoo" id="productLinkYahoo">Yahoo!でお得に揃える🛍️</a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="buy-btn btn-yahoo" id="productLinkYahoo">Yahoo!でお得に探す🛍️</a>
                 </div>
             </div>
 
             <div class="sns-btn-group">
-                <button class="sns-btn x" id="shareXBtn">📱 X / Threads でシェアする（次回SR以上確定！）</button>
-                <button class="sns-btn insta" id="shareInstaBtn">📸 インスタ用スクショを撮る（次回SR以上確定！）</button>
+                <button class="sns-btn x" id="shareXBtn">📱 X / Threads でシェアする（次回【素敵な出会い】の予感！）</button>
+                <button class="sns-btn insta" id="shareInstaBtn">📸 インスタ用スクショを撮る（次回【素敵な出会い】の予感！）</button>
             </div>
 
             <button class="reset-btn" id="resetBtn">別の猫ちゃんを呼ぶ</button>
-            <button class="clear-stamp-btn" onclick="clearStamps()">🧹 背景の思い出（スタンプとプレゼント）をリセット</button>
+            <button class="clear-stamp-btn" onclick="window.clearStamps()">🧹 背景の思い出（スタンプとプレゼント）をリセット</button>
         </div>
     </main>
 
@@ -410,7 +425,7 @@
         <div class="breathe-circle" id="breatheCircle">🐱</div>
         <div class="breathe-text" id="breatheText">まずは、息を全部吐き出すにゃん...</div>
         <div class="breathe-subtext" id="breatheSubtext"></div>
-        <button class="close-breathe" onclick="stopBreathing()">途中でやめる</button>
+        <button class="close-breathe" onclick="window.stopBreathing()">途中でやめる</button>
     </div>
 
     <div class="modal" id="nameModal">
@@ -418,8 +433,8 @@
             <h2 style="color:var(--accent-color); margin-top:0;">🐾 お名前を教えてにゃ</h2>
             <p style="font-size: 0.85rem; color:var(--text-muted);">猫ちゃんがあなたを名前で呼びます</p>
             <input type="text" id="nameInput" class="name-input" placeholder="例: はなこ" maxlength="30">
-            <button class="save-btn" onclick="saveName()">決定にゃん！</button>
-            <button class="close-modal-btn" onclick="closeNameModal()">✖</button>
+            <button class="save-btn" onclick="window.saveName()">決定にゃん！</button>
+            <button class="close-modal-btn" onclick="window.closeNameModal()">✖</button>
         </div>
     </div>
 
@@ -428,16 +443,17 @@
             <h2 style="color:var(--accent-color); margin-top:0;">🔑 秘密の合言葉</h2>
             <p style="font-size: 0.85rem; color:var(--text-muted);">SNSで発表された今日の合言葉を入力してにゃ</p>
             <input type="text" id="secretInput" class="name-input" placeholder="ひらがなで入力">
-            <button class="save-btn" onclick="checkSecret()">おまじないを唱える</button>
-            <button class="close-modal-btn" onclick="closeSecretModal()">✖</button>
+            <button class="save-btn" onclick="window.checkSecret()">おまじないを唱える</button>
+            <button class="close-modal-btn" onclick="window.closeSecretModal()">✖</button>
             <p style="font-size: 0.75rem; margin-top: 15px;"><a href="#" style="color: var(--accent-color);">本日の合言葉は公式SNSをチェック！</a></p>
         </div>
     </div>
 
     <div class="modal" id="bookModal">
         <div class="modal-content book-content">
-            <button class="close-modal-btn" onclick="closeBookModal()">✖</button>
+            <button class="close-modal-btn" onclick="window.closeBookModal()">✖</button>
             <h2 style="color:var(--accent-color); margin-top:0;">📖 出会った猫図鑑</h2>
+            <p style="font-size: 0.75rem; color:var(--text-muted); margin-bottom: 10px;">💡 発見した猫ちゃんをタップすると、好きな名前（愛称）をつけられるにゃ！</p>
             <div class="book-stats">収集率: <span id="bookProgress">0/150</span></div>
             <div class="book-grid" id="bookGrid"></div>
         </div>
@@ -445,30 +461,30 @@
 
     <div class="modal" id="trophyModal">
         <div class="modal-content book-content">
-            <button class="close-modal-btn" onclick="closeTrophyModal()">✖</button>
-            <h2 style="color:var(--accent-color); margin-top:0;">🏆 獲得トロフィー (100の試練)</h2>
+            <button class="close-modal-btn" onclick="window.closeTrophyModal()">✖</button>
+            <h2 style="color:var(--accent-color); margin-top:0;">🏆 獲得実績 (100の試練)</h2>
             <div class="book-stats">実績解除: <span id="trophyProgress">0/100</span></div>
             <div id="trophyList" style="margin-top: 15px; text-align: left;"></div>
         </div>
     </div>
 
-    <!-- お守り帳モーダル -->
+    <!-- お守り帳モーダル（タイムカプセル対応） -->
     <div class="modal" id="savedMessagesModal">
         <div class="modal-content book-content">
-            <button class="close-modal-btn" onclick="closeSavedMessagesModal()">✖</button>
+            <button class="close-modal-btn" onclick="window.closeSavedMessagesModal()">✖</button>
             <h2 style="color:var(--accent-color); margin-top:0;">🔖 お守り帳</h2>
-            <p style="font-size: 0.75rem; color:var(--text-muted); margin-bottom: 15px;">心が疲れた時、いつでもこの言葉たちを見返してにゃ。</p>
+            <p style="font-size: 0.75rem; color:var(--text-muted); margin-bottom: 15px;">心が疲れた時、いつでも見返してにゃ。<br>未来の自分へのメッセージ（タイムカプセル）もここにあるにゃん🐾</p>
             <div id="savedMessagesList" style="margin-top: 10px; text-align: left;"></div>
         </div>
     </div>
 
     <div class="modal" id="licenseModal">
         <div class="modal-content book-content">
-            <button class="close-modal-btn" onclick="closeLicenseModal()">✖</button>
+            <button class="close-modal-btn" onclick="window.closeLicenseModal()">✖</button>
             <h2 style="color:var(--accent-color); margin-top:0;">💳 お世話係ライセンス</h2>
             <div class="license-card" id="licenseCard"></div>
             <div class="sns-btn-group" style="margin-top: 10px;">
-                <button class="sns-btn x" onclick="shareLicense()">📱 ライセンスを自慢する（次回SR以上！）</button>
+                <button class="sns-btn x" onclick="window.shareLicense()">📱 ライセンスを自慢する（次回特別ボーナス！）</button>
             </div>
         </div>
     </div>
@@ -482,53 +498,31 @@
 
     <script>
         // =========================================
-        // 1. グローバル変数と初期化 (安全なデータ移行付き)
+        // 1. グローバル変数と初期化
         // =========================================
         let userName = localStorage.getItem('nyanko_name') || 'あなた';
         let loginStreak = parseInt(localStorage.getItem('nyanko_login_streak')) || 0;
         let lastLoginDate = localStorage.getItem('nyanko_last_login');
+        let loginHistory = JSON.parse(localStorage.getItem('nyanko_login_history')) || [];
         
-        // 既存データの完全なセーフティネット
         let stats = JSON.parse(localStorage.getItem('nyanko_stats'));
-        if (!stats || typeof stats !== 'object' || Array.isArray(stats)) {
-            stats = {};
-        }
+        if (!stats || typeof stats !== 'object' || Array.isArray(stats)) stats = {};
         stats.draws = stats.draws || 0;
         stats.pets = stats.pets || 0;
         stats.clicks = stats.clicks || 0;
         stats.shares = stats.shares || 0;
         stats.breathes = stats.breathes || 0;
         stats.secrets = stats.secrets || 0;
-        stats.totalDays = stats.totalDays || 0; // 超長期リテンション用の通算日数
-        
+        stats.totalDays = stats.totalDays || 0; 
         stats.moods = stats.moods || { tired: 0, stress: 0, sleepy: 0, lucky: 0 };
-        stats.moods.tired = stats.moods.tired || 0;
-        stats.moods.stress = stats.moods.stress || 0;
-        stats.moods.sleepy = stats.moods.sleepy || 0;
-        stats.moods.lucky = stats.moods.lucky || 0;
-        
         stats.time = stats.time || { morning: false, noon: false, night: false, midnight: false };
-        stats.time.morning = stats.time.morning || false;
-        stats.time.noon = stats.time.noon || false;
-        stats.time.night = stats.time.night || false;
-        stats.time.midnight = stats.time.midnight || false;
-
-        // 古いバージョンからの回数移行
-        if (localStorage.getItem('nyanko_total_encounters')) {
-            stats.draws = parseInt(localStorage.getItem('nyanko_total_encounters')) || stats.draws;
-            localStorage.removeItem('nyanko_total_encounters');
-        }
-        if (localStorage.getItem('nyanko_total_pets')) {
-            stats.pets = parseInt(localStorage.getItem('nyanko_total_pets')) || stats.pets;
-            localStorage.removeItem('nyanko_total_pets');
-        }
 
         let affectionData = JSON.parse(localStorage.getItem('nyanko_affection')) || {};
         let contributionData = JSON.parse(localStorage.getItem('nyanko_contribution')) || {};
         let bgStamps = JSON.parse(localStorage.getItem('nyanko_bg_stamps')) || [];
         let roomItems = JSON.parse(localStorage.getItem('nyanko_room_items')) || [];
-        let savedMessages = JSON.parse(localStorage.getItem('nyanko_saved_messages')) || []; // お守り帳データ
-        
+        let savedMessages = JSON.parse(localStorage.getItem('nyanko_saved_messages')) || []; 
+        let catNames = JSON.parse(localStorage.getItem('nyanko_cat_names')) || {}; 
         let catDecorations = JSON.parse(localStorage.getItem('nyanko_cat_decorations')) || {};
         let unlockedTrophies = JSON.parse(localStorage.getItem('nyanko_trophies')) || [];
 
@@ -537,11 +531,9 @@
         let currentCatId = null;
         let isBreathing = false;
         let breatheInterval;
-        
         let currentSelectedMood = null;
         let shareBonusActive = localStorage.getItem('nyanko_share_bonus') === 'true';
         let secretBonusActive = localStorage.getItem('nyanko_secret_bonus') === 'true';
-        
         let isNightFever = false;
         let isMorningFever = false;
 
@@ -549,7 +541,33 @@
         const userA8Id = urlParams.get('a8') ? urlParams.get('a8').trim() : '';
         const a8BaseUrl = "https://px.a8.net/svt/ejp?a8mat=";
 
-        // 季節の絵文字自動取得
+        function saveStats() { localStorage.setItem('nyanko_stats', JSON.stringify(stats)); }
+
+        // 月の満ち欠け（ルナフェイズ）簡易計算
+        function getMoonPhase() {
+            const date = new Date();
+            const year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            const day = date.getDate();
+            let c = year;
+            let e = month;
+            if (month < 3) { c -= 1; e += 12; }
+            const jd = Math.floor(365.25 * c) + Math.floor(c / 400) - Math.floor(c / 100) + Math.floor(30.59 * (e - 2)) + day + 1721088;
+            const daysSinceNew = jd - 2451549.5;
+            const newMoons = daysSinceNew / 29.53;
+            const phase = (newMoons - Math.floor(newMoons)) * 29.53;
+            
+            if (phase < 1.84) return { name: '新月', emoji: '🌑', text: '新しいことを始めるのに最高の日！今の悩みは一度リセットするにゃん。' };
+            if (phase < 5.53) return { name: '三日月', emoji: '🌒', text: '少しずつ光が満ちてきてるにゃ。あなたの努力もちゃんと形になってきてるにゃん。' };
+            if (phase < 9.22) return { name: '上弦の月', emoji: '🌓', text: 'エネルギーがぐんぐん高まってる時期にゃ！直感に従って動くと吉だにゃん。' };
+            if (phase < 12.91) return { name: '十三夜', emoji: '🌔', text: '満月までもう少し。今のあなたの美しさが一番際立っている時期にゃん。' };
+            if (phase < 16.61) return { name: '満月', emoji: '🌕', text: 'エネルギーが最高潮に満ちる満月の夜にゃ！今日は自分を思い切り甘やかすにゃ！' };
+            if (phase < 20.30) return { name: '十六夜', emoji: '🌖', text: '満月を過ぎて、少しずつ手放していく時期にゃ。不要なプライドは捨てるにゃん。' };
+            if (phase < 23.99) return { name: '下弦の月', emoji: '🌗', text: 'デトックスの時期にゃ。人間関係のモヤモヤも、一旦距離を置いてみるのが正解にゃん。' };
+            if (phase < 27.68) return { name: '二十六夜', emoji: '🌘', text: '新月に向けて心が静かになっていく時期にゃ。温かいお茶を飲んでリラックスするにゃん。' };
+            return { name: '新月', emoji: '🌑', text: '新しいサイクルの始まりにゃ！深呼吸して、まっさらな気持ちでスタートするにゃん。' };
+        }
+
         function getSeasonEmoji() {
             const m = new Date().getMonth() + 1;
             if (m >= 3 && m <= 5) return '🌸';
@@ -558,8 +576,14 @@
             return '❄️';
         }
 
+        function getCatDisplayName(catId) {
+            const baseCat = catData.find(c => c.id == catId);
+            if (!baseCat) return "猫ちゃん";
+            return catNames[catId] ? catNames[catId] : baseCat.name;
+        }
+
         // =========================================
-        // 2. データ群 (【限界突破】全150種猫)
+        // 2. データ群 (全150種猫)
         // =========================================
         const catData = [
             // --- SEC (3種) ---
@@ -616,7 +640,6 @@
             { id: 83, rarity: "SR", name: "名探偵猫", emoji: "🕵️", power: "謎はすべて解けたにゃ！「[NAME]」の悩みの原因は、単なる『考えすぎ』にゃん。難しく考えず、シンプルに直感に従うのが正解だにゃ。", itemTitle: "ミステリー小説", itemDesc: "脳を別世界に飛ばす。", keyword: "ミステリー小説" },
             { id: 84, rarity: "SR", name: "天文学者猫", emoji: "🔭", power: "星が綺麗にゃ〜。「[NAME]」、宇宙の広さに比べたら、今の悩みなんてミジンコ以下にゃん。夜空を見上げて、悩みを宇宙に溶かすにゃ。", itemTitle: "月球儀", itemDesc: "手元に宇宙を。", keyword: "月球儀 ライト" },
             { id: 85, rarity: "SR", name: "天才ハッカー猫", emoji: "🕶️", power: "カタカタ…ターン！「[NAME]」の脳内に侵入したネガティブウイルスは、私が完全に駆除しておいたにゃん。これでサクサク動けるはずだにゃ！", itemTitle: "メカニカルキーボード", itemDesc: "打鍵感でストレス解消。", keyword: "メカニカルキーボード" },
-            
             // --- R (85種) ---
             { id: 39, rarity: "R", name: "甘えん坊 ハチワレ", emoji: "🐱", power: "スリスリ…「[NAME]」、もっと私を構うにゃ！他人に気を使うより、自分と私を甘やかすのが最優先課題にゃん。", itemTitle: "ねこ用ちゅーる", itemDesc: "絶対喜ぶおやつ。", keyword: "猫 ちゅーる" },
             { id: 40, rarity: "R", name: "ツンデレ 黒猫", emoji: "🐈‍⬛", power: "別に「[NAME]」のことが心配なわけじゃないにゃ…。でも、たまには休まないと倒れるにゃん。早く寝なさいにゃ！", itemTitle: "キャットグラス", itemDesc: "部屋の浄化。", keyword: "猫草" },
@@ -697,7 +720,6 @@
             { id: 150, rarity: "LR", name: "創造神 にゃんこ", emoji: "🌍", power: "この世界を作ったのは私にゃ。「[NAME]」、あなたは私の最高傑作にゃん。自信を持って、好きなようにこの世界を楽しんでにゃ！", itemTitle: "一生モノの 高級時計", itemDesc: "神の時間を刻む。", keyword: "高級 腕時計" }
         ];
 
-        // メッセージ無限拡張（気分別に各10種以上）
         const moods = ["超絶甘えん坊な", "少し眠そうな", "やたらテンションが高い", "何かを企んでいる", "悟りを開いた", "お腹を空かせた", "なでてほしい", "ツンデレな", "かまってちゃんな", "パトロール中の", "丸くなっている", "獲物を狙う", "香箱座りの", "尻尾をパタパタさせる", "耳をすませている", "毛づくろい中の"];
         
         const affirmationsDefault = [
@@ -762,7 +784,10 @@
             "世界で一番長く生きた猫は38歳（人間換算で約170歳）という記録があるにゃ！"
         ];
 
-        // 合言葉のランダム日替わりロジック
+        const luckyColors = ["さくらピンク", "ミントグリーン", "レモンイエロー", "ラベンダーパープル", "スカイブルー", "ハニーオレンジ", "スノウホワイト", "マロンブラウン", "ローズレッド", "ロイヤルゴールド", "シルバーグレー", "ピーチコーラル"];
+        const luckyActions = ["温かいお茶をゆっくり飲む", "空を見上げて深呼吸する", "いつもより5分早く寝る", "好きな音楽を1曲聴く", "自分をギュッと抱きしめる", "鏡の前でニコッと笑う", "昔の楽しかった写真を1枚見る", "背筋をピシッと伸ばしてみる", "甘いものを一口食べる", "お気に入りの靴下を履く", "窓を開けて空気の入れ替えをする", "「ありがとう」と誰かに言う（自分でもOK）"];
+        const secretQuestions = ["今日、一番ホッとした瞬間はどんな時だったにゃ？", "今、誰かに褒めてほしいことは何にゃ？", "もし魔法が使えたら、今すぐ何をしたいにゃん？", "最近、ちょっと笑っちゃった出来事はあったにゃ？", "今の自分に「お疲れ様！」って言ってあげるなら、どんな言葉にゃ？", "今日の自分を100点満点で採点すると何点にゃ？（もちろん100点以上でもOKにゃ！）"];
+
         const allSecretWords = [
             "ちゅーる", "またたび", "にくきゅう", "にゃんこ", "おひるね",
             "ごロゴロ", "もふもふ", "さんくす", "まねきねこ", "ねこぱんち"
@@ -776,19 +801,19 @@
         }
 
         const todaySecretWord = getTodaySecret();
+        const todayDateGlobal = new Date();
+        const isNyanNyanDay = todayDateGlobal.getDate() === 22;
 
         if (urlParams.get('admin') === 'true') {
              setTimeout(() => showToast("🔧 本日の合言葉: " + todaySecretWord), 2000);
         }
 
         const decoItems = ["👑", "🎀", "🎩", "🌸", "👓", "✨", "🐟", "👔", "🎓", "🧣", "🎸", "🍔", "💎", "⭐"];
-        // 季節の絵文字と基本のスタンプ
         const baseStampEmojis = ['🐱', '🧶', '🐟', '🧸', '🐾', '🎀'];
         function getBgStampEmojis() {
             return [...baseStampEmojis, getSeasonEmoji()];
         }
 
-        // なでなで反応バリエーション超拡張
         const petReactions = {
             high: [
                 "[NAME]、大好きにゃあああん💕", "スリスリ…ずっと離れないにゃ！", "ゴロゴロ🎵至福の時にゃ〜", 
@@ -815,19 +840,26 @@
             ]
         };
 
-        // おねだりメッセージ・ストーリー化拡張
-        function getOnedariMessage(catName, userName, syncRate, isLR) {
+        function getOnedariMessage(catName, userName, syncRate, isLR, moonPhase) {
             const safeName = userName === "あなた" ? "ご主人" : userName;
             let prefix = "";
             
             if (isLR) {
-                prefix = `「【合言葉解禁・神の啓示にゃ！】<br>選ばれし${safeName}よ、この神宝（アイテム）を手にすれば世界はあなたのものにゃん！！」<br>`;
+                prefix = `「【星の導き・特別な出会いにゃ！】<br>選ばれし${safeName}よ、この神宝（アイテム）を手にすれば世界はあなたのものにゃん！！」<br>`;
                 return prefix;
             }
             
-            if (syncRate >= 110) prefix = `「限界突破の相性${syncRate}%にゃ！！これは運命を超えた啓示にゃん！絶対一緒にお揃いにしたいにゃ！」<br>`;
-            else if (syncRate >= 100) prefix = `「今日の相性${syncRate}%は奇跡にゃ！だから特別な提案があるにゃ！」<br>`;
-            else if (syncRate >= 95) prefix = `「相性バッチリの私から、${safeName}ちゃんに特別なお願いにゃ！」<br>`;
+            if (moonPhase.name === '満月' && Math.random() > 0.5) {
+                prefix = `「満月のエネルギーが最高潮にゃ！今夜は特別に自分を甘やかすためのお願いがあるにゃん！」<br>`;
+            } else if (moonPhase.name === '新月' && Math.random() > 0.5) {
+                prefix = `「新しいサイクルが始まる新月にゃ！新しいアイテムで新鮮な気持ちになりたいにゃん！」<br>`;
+            } else if (syncRate >= 110) {
+                prefix = `「限界突破の相性${syncRate}%にゃ！！これは運命を超えためぐりあわせにゃん！絶対一緒にお揃いにしたいにゃ！」<br>`;
+            } else if (syncRate >= 100) {
+                prefix = `「今日の相性${syncRate}%は奇跡にゃ！だから特別な提案があるにゃ！」<br>`;
+            } else if (syncRate >= 95) {
+                prefix = `「相性バッチリの私から、${safeName}ちゃんに特別なお願いにゃ！」<br>`;
+            }
 
             const msgs = [
                 `「${safeName}ちゃん、これがあったらもっと一緒にいられるにゃ💕」`,
@@ -850,63 +882,57 @@
         }
 
         // =========================================
-        // 2.5 【100トロフィー＆通算アニバーサリー】
+        // 2.5 【100トロフィー自動生成システム】
         // =========================================
         let trophiesData = [];
         
         function initTrophies() {
             // ① 占い回数 (12個)
             const drawGoals = [1, 5, 10, 30, 50, 100, 200, 300, 500, 777, 1000, 3000];
-            drawGoals.forEach(g => {
-                trophiesData.push({ id: `d${g}`, title: `おみくじマニア(Lv.${g})`, desc: `占いを累計${g}回引いた`, icon: "🔮", check: () => stats.draws >= g });
-            });
+            drawGoals.forEach(g => { trophiesData.push({ id: `d${g}`, title: `おみくじマニア(Lv.${g})`, desc: `占いを累計${g}回引いた`, icon: "🔮", check: () => stats.draws >= g }); });
+            
             // ② なでなで回数 (12個)
             const petGoals = [1, 50, 100, 300, 500, 1000, 2000, 3000, 5000, 7777, 10000, 50000];
-            petGoals.forEach(g => {
-                trophiesData.push({ id: `p${g}`, title: `愛の伝道師(Lv.${g})`, desc: `なでなでを累計${g}回達成`, icon: "💖", check: () => stats.pets >= g });
-            });
+            petGoals.forEach(g => { trophiesData.push({ id: `p${g}`, title: `愛の伝道師(Lv.${g})`, desc: `なでなでを累計${g}回達成`, icon: "💖", check: () => stats.pets >= g }); });
+            
             // ③ プレゼント贈る回数 (12個)
             const clickGoals = [1, 5, 10, 30, 50, 100, 200, 300, 500, 777, 1000, 2000];
-            clickGoals.forEach(g => {
-                trophiesData.push({ id: `c${g}`, title: `最高のパートナー(Lv.${g})`, desc: `猫に${g}回プレゼントを贈った`, icon: "🎁", check: () => stats.clicks >= g });
-            });
+            clickGoals.forEach(g => { trophiesData.push({ id: `c${g}`, title: `最高のパートナー(Lv.${g})`, desc: `猫に${g}回プレゼントを贈った`, icon: "🎁", check: () => stats.clicks >= g }); });
+            
             // ④ 図鑑収集度 (10個)
             const bookGoals = [1, 10, 30, 50, 70, 90, 110, 130, 140, 150];
-            bookGoals.forEach(g => {
-                trophiesData.push({ id: `b${g}`, title: `図鑑コレクター(${g})`, desc: `猫を${g}種類発見した`, icon: "📖", check: () => Object.keys(affectionData).length >= g });
-            });
+            bookGoals.forEach(g => { trophiesData.push({ id: `b${g}`, title: `図鑑コレクター(${g})`, desc: `猫を${g}種類発見した`, icon: "📖", check: () => Object.keys(affectionData).length >= g }); });
+            
             // ⑤ SNSシェア回数 (6個)
             const shareGoals = [1, 5, 10, 20, 50, 100];
-            shareGoals.forEach(g => {
-                trophiesData.push({ id: `s${g}`, title: `インフルエンサー(Lv.${g})`, desc: `SNSに${g}回シェアした`, icon: "📱", check: () => stats.shares >= g });
-            });
+            shareGoals.forEach(g => { trophiesData.push({ id: `s${g}`, title: `インフルエンサー(Lv.${g})`, desc: `SNSに${g}回シェアした`, icon: "📱", check: () => stats.shares >= g }); });
+            
             // ⑥ 気分選択 (8個: 4種×2)
             ['tired', 'stress', 'sleepy', 'lucky'].forEach(m => {
                 trophiesData.push({ id: `m1_${m}`, title: `${m}の達人`, desc: `気分[${m}]を10回選択`, icon: "💡", check: () => stats.moods[m] >= 10 });
                 trophiesData.push({ id: `m2_${m}`, title: `${m}の覇者`, desc: `気分[${m}]を50回選択`, icon: "🔥", check: () => stats.moods[m] >= 50 });
             });
-            // ⑦ 通算ログイン＆連続ログイン (10個) ※長期的アニバーサリーを強調
+            
+            // ⑦ 連続ログイン (10個)
             const loginGoals = [7, 30, 50, 100, 200, 300, 365, 500, 777, 1000];
-            loginGoals.forEach(g => {
-                trophiesData.push({ id: `l${g}`, title: `永遠の絆(${g}日目)`, desc: `通算で${g}日お世話した`, icon: "☀️", check: () => stats.totalDays >= g });
-            });
+            loginGoals.forEach(g => { trophiesData.push({ id: `l${g}`, title: `永遠の絆(${g}日目)`, desc: `通算で${g}日お世話した`, icon: "☀️", check: () => stats.totalDays >= g }); });
+            
             // ⑧ 合言葉成功 (5個)
             const secretGoals = [1, 5, 10, 20, 50];
-            secretGoals.forEach(g => {
-                trophiesData.push({ id: `sec${g}`, title: `合言葉マスター(${g})`, desc: `合言葉に${g}回成功した`, icon: "🔑", check: () => stats.secrets >= g });
-            });
+            secretGoals.forEach(g => { trophiesData.push({ id: `sec${g}`, title: `合言葉マスター(${g})`, desc: `合言葉に${g}回成功した`, icon: "🔑", check: () => stats.secrets >= g }); });
+            
             // ⑨ 深呼吸完了 (5個)
             const breathGoals = [1, 5, 10, 30, 50];
-            breathGoals.forEach(g => {
-                trophiesData.push({ id: `br${g}`, title: `ヨギ・キャット(${g})`, desc: `深呼吸を${g}回完了した`, icon: "🧘", check: () => stats.breathes >= g });
-            });
+            breathGoals.forEach(g => { trophiesData.push({ id: `br${g}`, title: `ヨギ・キャット(${g})`, desc: `深呼吸を${g}回完了した`, icon: "🧘", check: () => stats.breathes >= g }); });
+            
             // ⑩ 特定のレアリティ発見 (6個: LR追加)
             ["R", "SR", "SSR", "UR", "SEC", "LR"].forEach(r => {
-                trophiesData.push({ id: `r_${r}`, title: `奇跡の出会い(${r})`, desc: `レアリティ[${r}]を初めて発見`, icon: "✨", check: () => Object.keys(affectionData).some(id => {
+                trophiesData.push({ id: `r_${r}`, title: `奇跡の出会い(${r})`, desc: `【${r}】ランクの猫ちゃんと初めて出会った`, icon: "✨", check: () => Object.keys(affectionData).some(id => {
                     const c = catData.find(cat => cat.id == id);
                     return c ? c.rarity === r : false;
                 }) });
             });
+            
             // ⑪ 時間帯トロフィー (4個)
             trophiesData.push({ id: "t_night", title: "夜更かしさん", desc: "深夜(0-4時)に占いを引いた", icon: "🌙", check: () => stats.time.midnight });
             trophiesData.push({ id: "t_morn", title: "早起き鳥", desc: "朝(5-11時)に占いを引いた", icon: "🌅", check: () => stats.time.morning });
@@ -923,76 +949,37 @@
             // ⑬ 余りの穴埋め
             trophiesData.push({ id: "hidden_1", title: "究極の神", desc: "全てのトロフィーの99%をコンプ", icon: "🏆", check: () => unlockedTrophies.length >= (trophiesData.length - 1) });
         }
+
         initTrophies();
 
-        function saveStats() { localStorage.setItem('nyanko_stats', JSON.stringify(stats)); }
-
         // =========================================
-        // 3. 初期処理
+        // 各種関数
         // =========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            updateTheme();
-            updateLoginStreak();
-            updateNameDisplay();
-            loadStamps();
-            loadCatRoom(); 
-            checkShareBonusDisplay();
-            updateTrophyDisplay();
-
-            document.body.addEventListener('click', (e) => {
-                if(e.target.closest('button') || e.target.closest('a') || e.target.closest('.card-container') || document.body.classList.contains('screenshot-mode')) return;
-                createInteractivePaw(e.pageX, e.pageY);
-            });
-
-            document.body.addEventListener('click', (e) => {
-                if (document.body.classList.contains('screenshot-mode') && !e.target.closest('.sns-btn')) {
-                    document.body.classList.remove('screenshot-mode');
-                }
-            });
-
-            const cardContainer = document.getElementById('cardContainer');
-            if (cardContainer) {
-                cardContainer.addEventListener('click', drawCat);
+        function updateLoginCalendar() {
+            const todayStr = new Date().toDateString();
+            if (loginHistory.length === 0 || loginHistory[loginHistory.length - 1] !== todayStr) {
+                loginHistory.push(todayStr);
+                if (loginHistory.length > 7) loginHistory.shift();
+                localStorage.setItem('nyanko_login_history', JSON.stringify(loginHistory));
             }
-
-            document.getElementById('petBtn').addEventListener('click', petCat);
-            document.getElementById('resetBtn').addEventListener('click', resetGacha);
             
-            const handleAffiliateClick = () => {
-                if(currentResult) {
-                    addRoomItem('🎁');
-                    stats.clicks++;
-                    saveStats();
-                    
-                    if(currentCatId) {
-                        affectionData[currentCatId] += 2;
-                        localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
-                        
-                        if (!contributionData[currentCatId]) contributionData[currentCatId] = 0;
-                        contributionData[currentCatId]++;
-                        localStorage.setItem('nyanko_contribution', JSON.stringify(contributionData));
-                        
-                        if (!catDecorations[currentCatId]) {
-                            const newDeco = decoItems[Math.floor(Math.random() * decoItems.length)];
-                            catDecorations[currentCatId] = newDeco;
-                            localStorage.setItem('nyanko_cat_decorations', JSON.stringify(catDecorations));
-                            document.getElementById('cardDecoration').innerText = newDeco;
-                            showToast(`💕 プレゼント感謝にゃ！推し猫が「${newDeco}」でドレスアップしたにゃん！`);
-                        } else {
-                            showToast("💕 猫ちゃんがプレゼントを受け取ったにゃん！");
-                        }
-                        
-                        // 最新の好感度でUIを更新（プレステージ対応）
-                        updateAffectionUI(currentCatId);
-                        checkAchievements();
-                    }
-                }
-            };
-
-            document.getElementById('productLinkRakuten').addEventListener('click', handleAffiliateClick);
-            document.getElementById('productLinkAmazon').addEventListener('click', handleAffiliateClick);
-            document.getElementById('productLinkYahoo').addEventListener('click', handleAffiliateClick);
-        });
+            const calContainer = document.getElementById('loginCalendar');
+            calContainer.innerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                const paw = document.createElement('div');
+                paw.className = `cal-paw ${i < loginHistory.length ? 'active' : ''}`;
+                paw.innerText = '🐾';
+                calContainer.appendChild(paw);
+            }
+        }
+        
+        function getNextMilestone(days) {
+            const milestones = [7, 30, 50, 100, 200, 300, 365, 500, 777, 1000];
+            for (let m of milestones) {
+                if (days < m) return `次の記念日(${m}日)まであと${m - days}日！`;
+            }
+            return "伝説の領域にゃん！✨";
+        }
 
         function updateTheme() {
             const hour = new Date().getHours();
@@ -1032,7 +1019,7 @@
                 subTitle.innerText = "こんな時間まで起きてるにゃ？猫に癒やされて眠るにゃん";
                 if (hour >= 22 || hour < 2) {
                     isNightFever = true;
-                    feverBadge.innerText = "🌙 深夜フィーバー: レア確率1.5倍！";
+                    feverBadge.innerText = "🌙 深夜フィーバー: 特別な出会い確率1.5倍！";
                     feverBadge.classList.add('active');
                 } else {
                     feverBadge.classList.remove('active');
@@ -1044,7 +1031,6 @@
         function updateLoginStreak() {
             const today = new Date().toDateString();
             if (lastLoginDate !== today) {
-                // 1日1回だけ通算日数を増やす
                 stats.totalDays++;
                 saveStats();
 
@@ -1063,6 +1049,10 @@
             }
         }
 
+        function updateNameDisplay() {
+            document.querySelector('.head-btn').innerText = userName === 'あなた' ? '⚙️ 設定' : `⚙️ 名前: ${userName}`;
+        }
+
         function getCatTitle(count) {
             if (count === 0) return "迷い込んだ旅人";
             if (count <= 5) return "通りすがりの猫好き";
@@ -1074,10 +1064,9 @@
             return "💎 伝説のキャットマスター";
         }
 
-        // 親密度称号システム（限界突破プレステージ対応）
         function getAffectionTitle(aff) {
             const level = Math.ceil(aff / 4);
-            const loops = Math.floor(level / 25); // レベル25ごとにループ（限界突破）
+            const loops = Math.floor(level / 25); 
             
             let baseTitle = "";
             let remainingLevel = level % 25;
@@ -1099,7 +1088,6 @@
         function updateAffectionUI(catId) {
             const aff = affectionData[catId];
             const level = Math.ceil(aff / 4);
-            // バーはレベル25(親密度100)で1周とするループ表現
             const percentage = ((aff % 100) / 100) * 100;
             
             document.getElementById('affectionTitle').innerText = `親密度: ${getAffectionTitle(aff)}`;
@@ -1132,20 +1120,100 @@
             const badge = document.getElementById('trophyBadge');
             if (unlockedTrophies.length > 0) {
                 badge.style.display = 'inline-block';
-                badge.innerText = `🏆 獲得トロフィー: ${unlockedTrophies.length}/100`;
+                badge.innerText = `🏆 獲得実績: ${unlockedTrophies.length}/100`;
             }
         }
 
+        // =========================================
+        // DOMContentLoaded と イベントリスナー
+        // =========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTheme();
+            updateLoginStreak();
+            updateLoginCalendar();
+            updateNameDisplay();
+            loadStamps();
+            loadCatRoom(); 
+            checkShareBonusDisplay();
+            updateTrophyDisplay();
+
+            document.getElementById('nextMilestoneDisplay').innerText = getNextMilestone(stats.totalDays);
+
+            if (isNyanNyanDay) {
+                document.getElementById('nyanNyanBadge').style.display = 'inline-block';
+            }
+
+            document.body.addEventListener('click', (e) => {
+                if(e.target.closest('button') || e.target.closest('a') || e.target.closest('.card-container') || document.body.classList.contains('screenshot-mode') || e.target.closest('.modal')) return;
+                createInteractivePaw(e.pageX, e.pageY);
+            });
+
+            document.body.addEventListener('click', (e) => {
+                if (document.body.classList.contains('screenshot-mode') && !e.target.closest('.sns-btn')) {
+                    document.body.classList.remove('screenshot-mode');
+                }
+            });
+
+            const cardContainer = document.getElementById('cardContainer');
+            if (cardContainer) {
+                cardContainer.addEventListener('click', drawCat);
+            }
+
+            document.getElementById('petBtn').addEventListener('click', petCat);
+            document.getElementById('resetBtn').addEventListener('click', resetGacha);
+            
+            const handleAffiliateClick = () => {
+                if(currentResult) {
+                    addRoomItem('🎁');
+                    stats.clicks++;
+                    saveStats();
+                    
+                    if (Math.random() < 0.3) {
+                        setTimeout(() => {
+                            startCatShower(100);
+                            showToast("💖 猫ちゃんからの特大の愛の恩返しにゃん！！ 💖");
+                        }, 500);
+                    }
+
+                    if(currentCatId) {
+                        affectionData[currentCatId] += 2;
+                        localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
+                        
+                        if (!contributionData[currentCatId]) contributionData[currentCatId] = 0;
+                        contributionData[currentCatId]++;
+                        localStorage.setItem('nyanko_contribution', JSON.stringify(contributionData));
+                        
+                        if (!catDecorations[currentCatId]) {
+                            const newDeco = decoItems[Math.floor(Math.random() * decoItems.length)];
+                            catDecorations[currentCatId] = newDeco;
+                            localStorage.setItem('nyanko_cat_decorations', JSON.stringify(catDecorations));
+                            document.getElementById('cardDecoration').innerText = newDeco;
+                            showToast(`💕 プレゼント感謝にゃ！推し猫が「${newDeco}」でドレスアップしたにゃん！`);
+                        } else {
+                            showToast("💕 猫ちゃんがプレゼントを受け取ったにゃん！");
+                        }
+                        
+                        updateAffectionUI(currentCatId);
+                        checkAchievements();
+                    }
+                }
+            };
+
+            document.getElementById('productLinkRakuten').addEventListener('click', handleAffiliateClick);
+            document.getElementById('productLinkAmazon').addEventListener('click', handleAffiliateClick);
+            document.getElementById('productLinkYahoo').addEventListener('click', handleAffiliateClick);
+        });
+
+        // =========================================
+        // ガチャ（占い）ロジック
+        // =========================================
         window.setMood = function(mood, btnElement) {
             currentSelectedMood = mood;
             document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
             btnElement.classList.add('active');
-            showToast("カードをタップして引くにゃ！");
+            showToast("カードをタップして占うにゃ！");
         }
 
-        // =========================================
-        // 4. ガチャ（占い）ロジック
-        // =========================================
         function drawCat() {
             if (isFlipped) return;
             
@@ -1178,7 +1246,9 @@
                 shareBonusActive = false;
                 localStorage.setItem('nyanko_share_bonus', 'false');
             } else {
-                if (rand < 0.01 * feverMultiplier) targetRarity = "SEC";
+                if (isNyanNyanDay && rand < 0.05) targetRarity = "LR";
+                else if (isNyanNyanDay && rand < 0.15) targetRarity = "SEC";
+                else if (rand < 0.01 * feverMultiplier) targetRarity = "SEC";
                 else if (rand < 0.05 * feverMultiplier) targetRarity = "UR";
                 else if (rand < 0.15 * feverMultiplier) targetRarity = "SSR";
                 else if (rand < 0.40 * feverMultiplier) targetRarity = "SR";
@@ -1189,7 +1259,11 @@
             const filteredCats = catData.filter(c => c.rarity === targetRarity);
             const baseCat = filteredCats[Math.floor(Math.random() * filteredCats.length)];
             const mood = moods[Math.floor(Math.random() * moods.length)];
-            currentResult = { ...baseCat, mood: mood };
+            
+            const lColor = luckyColors[Math.floor(Math.random() * luckyColors.length)];
+            const lAction = luckyActions[Math.floor(Math.random() * luckyActions.length)];
+
+            currentResult = { ...baseCat, mood: mood, luckyColor: lColor, luckyAction: lAction };
             currentCatId = baseCat.id;
 
             if (!affectionData[currentCatId]) affectionData[currentCatId] = 0;
@@ -1198,28 +1272,18 @@
 
             document.getElementById('encounterBadge').innerText = `連続お世話: ${loginStreak}日目 / 通算: ${stats.totalDays}日🐾`;
             document.getElementById('titleBadge').innerText = getCatTitle(stats.draws);
+            document.getElementById('nextMilestoneDisplay').innerText = getNextMilestone(stats.totalDays);
 
             checkAchievements();
 
             const cardContainer = document.getElementById('cardContainer');
             let chargeTime = 3000; 
             
-            if (targetRarity === "LR") {
-                chargeTime = 6500;
-                cardContainer.classList.add('charging-lr-super');
-            } else if (targetRarity === "SEC" || targetRarity === "UR") {
-                chargeTime = 6000;
-                cardContainer.classList.add('charging-ur-super');
-            } else if (targetRarity === "SSR") {
-                chargeTime = 5000;
-                cardContainer.classList.add('charging-ssr-super');
-            } else if (targetRarity === "SR") {
-                chargeTime = 4000;
-                cardContainer.classList.add('charging-sr-super');
-            } else {
-                chargeTime = 3000;
-                cardContainer.classList.add('charging-r-super');
-            }
+            if (targetRarity === "LR") { chargeTime = 6500; cardContainer.classList.add('charging-lr-super'); } 
+            else if (targetRarity === "SEC" || targetRarity === "UR") { chargeTime = 6000; cardContainer.classList.add('charging-ur-super'); } 
+            else if (targetRarity === "SSR") { chargeTime = 5000; cardContainer.classList.add('charging-ssr-super'); } 
+            else if (targetRarity === "SR") { chargeTime = 4000; cardContainer.classList.add('charging-sr-super'); } 
+            else { chargeTime = 3000; cardContainer.classList.add('charging-r-super'); }
 
             setTimeout(() => {
                 cardContainer.classList.remove('charging-lr-super', 'charging-ur-super', 'charging-ssr-super', 'charging-sr-super', 'charging-r-super');
@@ -1248,33 +1312,28 @@
 
             document.getElementById('cardEmoji').innerText = currentResult.emoji;
             
-            // 限界突破（プレステージ）リボン表示
             let deco = catDecorations[currentCatId] || '';
-            if (affectionData[currentCatId] >= 100) deco += '💍';
             document.getElementById('cardDecoration').innerText = deco;
 
             document.getElementById('cardMood').innerText = currentResult.mood;
-            document.getElementById('cardName').innerText = currentResult.name;
+            document.getElementById('cardName').innerText = getCatDisplayName(currentCatId);
             document.getElementById('cardName').className = `card-name name-${rLow}`;
 
+            const affForStars = affectionData[currentCatId];
+            const starCount = Math.floor(Math.ceil(affForStars / 4) / 25);
+            document.getElementById('cardPrestigeStars').innerText = '⭐'.repeat(Math.min(starCount, 5));
+
             const pText = currentResult.power.replace(/\[NAME\]/g, userName);
-            // タグ付きテキストから不要なHTMLを一旦除去して表示
-            document.getElementById('textPower').innerHTML = pText + `<br><button class="save-msg-btn" onclick="saveCurrentMessage('power')">🔖 この言葉をお守りにする</button>`;
+            document.getElementById('textPower').innerHTML = pText + `<br><button class="save-msg-btn" onclick="window.saveCurrentMessage('power')">🔖 この言葉をお守りにする</button>`;
             
             let activeAffirmations = affirmationsDefault;
-            
-            if (currentSelectedMood === 'tired') {
-                activeAffirmations = activeAffirmations.concat(affirmationsTired);
-            } else if (currentSelectedMood === 'stress') {
-                activeAffirmations = activeAffirmations.concat(affirmationsStress);
-            } else if (currentSelectedMood === 'sleepy') {
-                activeAffirmations = activeAffirmations.concat(affirmationsSleepy);
-            }
+            if (currentSelectedMood === 'tired') activeAffirmations = activeAffirmations.concat(affirmationsTired);
+            else if (currentSelectedMood === 'stress') activeAffirmations = activeAffirmations.concat(affirmationsStress);
+            else if (currentSelectedMood === 'sleepy') activeAffirmations = activeAffirmations.concat(affirmationsSleepy);
             
             const aText = activeAffirmations[Math.floor(Math.random() * activeAffirmations.length)].replace(/\[NAME\]/g, userName);
-            document.getElementById('textAffirmation').innerHTML = aText + `<br><button class="save-msg-btn" onclick="saveCurrentMessage('affirmation')">🔖 この言葉をお守りにする</button>`;
+            document.getElementById('textAffirmation').innerHTML = aText + `<br><button class="save-msg-btn" onclick="window.saveCurrentMessage('affirmation')">🔖 この言葉をお守りにする</button>`;
 
-            // UI更新
             updateAffectionUI(currentCatId);
 
             const aff = affectionData[currentCatId];
@@ -1292,19 +1351,26 @@
 
             const todayStr = new Date().toLocaleDateString('ja-JP');
             const trivia = catTrivias[Math.floor(Math.random() * catTrivias.length)];
-            document.getElementById('textTrivia').innerHTML = `📅 <strong>${todayStr} の癒やし記録</strong><br><br>💡 <strong>ねこプチ情報：</strong><br>${trivia}`;
+            const moon = getMoonPhase();
+
+            document.getElementById('textTrivia').innerHTML = `
+                📅 <strong>${todayStr} の癒やしのお告げ</strong><br>
+                🌕 <strong>今の月齢:</strong> ${moon.emoji} ${moon.name}<br>
+                <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">${moon.text}</div>
+                🎨 <strong>ラッキーカラー:</strong> <span style="color:var(--accent-color); font-weight:bold;">${currentResult.luckyColor}</span><br>
+                ✨ <strong>開運アクション:</strong> ${currentResult.luckyAction}<br><br>
+                💡 <strong>ねこプチ情報：</strong><br>${trivia}
+            `;
             
-            document.getElementById('productSpeech').innerHTML = getOnedariMessage(currentResult.name, userName, syncRate, currentResult.rarity === "LR");
+            document.getElementById('productSpeech').innerHTML = getOnedariMessage(getCatDisplayName(currentCatId), userName, syncRate, currentResult.rarity === "LR", moon);
 
             const cleanTitle = currentResult.itemTitle.replace(/\+/g, ' '); 
             let searchKeyword = currentResult.keyword;
-            if (aff >= 10 && currentResult.rarity !== "LR") {
-                searchKeyword += " +高級";
-            }
+            if (aff >= 10 && currentResult.rarity !== "LR") searchKeyword += " +高級";
             
-            document.getElementById('productLinkRakuten').innerHTML = `楽天市場で<br>「${displayTitle}」を贈る🐾`;
+            document.getElementById('productLinkRakuten').innerHTML = `楽天市場で<br>「${displayTitle}」を探す🐾`;
             document.getElementById('productLinkAmazon').innerHTML = `Amazonで<br>「${cleanTitle}」を探す📦`;
-            document.getElementById('productLinkYahoo').innerHTML = `Yahoo!ショッピングで<br>お得に揃える🛍️`;
+            document.getElementById('productLinkYahoo').innerHTML = `Yahoo!ショッピングで<br>お得に探す🛍️`;
 
             let finalLinkRakuten = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(searchKeyword)}/`;
             let finalLinkAmazon = `https://www.amazon.co.jp/s?k=${encodeURIComponent(cleanTitle)}`;
@@ -1326,76 +1392,6 @@
             }, 800);
         }
 
-        // =========================================
-        // 新機能：お守り（メッセージ保存）ロジック
-        // =========================================
-        window.saveCurrentMessage = function(type) {
-            let textToSave = "";
-            if (type === 'affirmation') {
-                const el = document.getElementById('textAffirmation').cloneNode(true);
-                el.querySelector('button').remove(); // ボタンを削除してテキストだけ取得
-                textToSave = el.innerText.trim();
-            } else {
-                const el = document.getElementById('textPower').cloneNode(true);
-                el.querySelector('button').remove();
-                textToSave = el.innerText.trim();
-            }
-
-            const newMessage = {
-                id: Date.now(),
-                text: textToSave,
-                catName: currentResult.name,
-                emoji: currentResult.emoji,
-                date: new Date().toLocaleDateString('ja-JP')
-            };
-
-            // 重複チェック
-            if (savedMessages.some(m => m.text === textToSave)) {
-                showToast("この言葉はすでにお守りにしてあるにゃん🐾");
-                return;
-            }
-
-            savedMessages.unshift(newMessage);
-            if (savedMessages.length > 50) savedMessages.pop(); // 最大50件まで
-            localStorage.setItem('nyanko_saved_messages', JSON.stringify(savedMessages));
-            
-            showToast("🔖 お守り帳に言葉を保存したにゃん！");
-        };
-
-        window.openSavedMessagesModal = function() {
-            const list = document.getElementById('savedMessagesList');
-            list.innerHTML = '';
-            
-            if (savedMessages.length === 0) {
-                list.innerHTML = '<div style="text-align:center; color:var(--text-muted);">まだお守りが無いにゃ。<br>占いで好きな言葉を保存してにゃん。</div>';
-            } else {
-                savedMessages.forEach(msg => {
-                    const item = document.createElement('div');
-                    item.className = 'saved-msg-item';
-                    item.innerHTML = `
-                        <button class="delete-msg-btn" onclick="deleteSavedMessage(${msg.id})">✖</button>
-                        <div class="saved-msg-date">${msg.date}</div>
-                        <div>${msg.text}</div>
-                        <div class="saved-msg-cat">${msg.emoji} ${msg.catName} より</div>
-                    `;
-                    list.appendChild(item);
-                });
-            }
-            document.getElementById('savedMessagesModal').classList.add('show');
-        };
-
-        window.closeSavedMessagesModal = function() {
-            document.getElementById('savedMessagesModal').classList.remove('show');
-        };
-
-        window.deleteSavedMessage = function(id) {
-            if(confirm("このお守りを手放すにゃ？")) {
-                savedMessages = savedMessages.filter(m => m.id !== id);
-                localStorage.setItem('nyanko_saved_messages', JSON.stringify(savedMessages));
-                openSavedMessagesModal(); // 再描画
-            }
-        };
-
         function resetGacha() {
             isFlipped = false;
             currentResult = null;
@@ -1416,7 +1412,7 @@
         }
 
         // =========================================
-        // 5. なでなで・好感度・パレードロジック
+        // なでなで・好感度・パレード・箱庭ロジック
         // =========================================
         function petCat() {
             if(!currentCatId) return;
@@ -1451,7 +1447,6 @@
 
             createInteractivePaw(Math.random() * window.innerWidth, window.innerHeight / 2 + (Math.random() * 200 - 100));
 
-            // スタンプ配列から季節の絵文字も自動選択
             const emojisToUse = getBgStampEmojis();
             const emoji = emojisToUse[Math.floor(Math.random() * emojisToUse.length)];
             addStampToBg(emoji, Math.floor(Math.random() * 90) + 5, Math.floor(Math.random() * 90) + 5);
@@ -1491,7 +1486,7 @@
         function addStampToBg(emoji, xPercent, yPercent) {
             const stamp = { e: emoji, x: xPercent, y: yPercent };
             bgStamps.push(stamp);
-            if(bgStamps.length > 150) bgStamps.shift(); // 上限150
+            if(bgStamps.length > 150) bgStamps.shift(); 
             localStorage.setItem('nyanko_bg_stamps', JSON.stringify(bgStamps));
             renderStamp(stamp);
         }
@@ -1575,7 +1570,7 @@
         }
 
         // =========================================
-        // 7. マインドフルネス（深呼吸）ロジック
+        // 深呼吸ロジック
         // =========================================
         window.startBreathing = function() {
             if(isBreathing) return;
@@ -1638,7 +1633,7 @@
         };
 
         // =========================================
-        // 8. モーダル管理
+        // 各種モーダル管理
         // =========================================
         window.openNameModal = function() {
             document.getElementById('nameInput').value = userName === 'あなた' ? '' : userName;
@@ -1655,9 +1650,6 @@
             updateNameDisplay();
             showToast(`これからは「${userName}」って呼ぶにゃん🐾`);
         };
-        function updateNameDisplay() {
-            document.querySelector('.head-btn').innerText = userName === 'あなた' ? '⚙️ 設定' : `⚙️ 名前: ${userName}`;
-        }
 
         window.openSecretModal = function() {
             document.getElementById('secretInput').value = '';
@@ -1673,7 +1665,7 @@
                 localStorage.setItem('nyanko_secret_bonus', 'true');
                 checkShareBonusDisplay();
                 closeSecretModal();
-                showToast("✨ 魔法の言葉が認証されたにゃ！次回【LR確定】にゃん！"); 
+                showToast("✨ 魔法の言葉が認証されたにゃ！次回【幻のレジェンド猫】確定にゃん！"); 
                 
                 stats.secrets++;
                 saveStats();
@@ -1721,13 +1713,14 @@
                 if (isCollected) {
                     const hearts = '💖'.repeat(Math.min(3, Math.ceil(affectionData[cat.id] / 3))) || '💖';
                     const deco = catDecorations[cat.id] || '';
+                    item.onclick = () => window.renameCat(cat.id);
                     item.innerHTML = `
                         <div class="book-rarity" style="color:var(--accent-color);">${cat.rarity}</div>
                         <div class="book-emoji-container">
                             <div class="book-emoji">${cat.emoji}</div>
                             <div class="book-decoration">${deco}</div>
                         </div>
-                        <div class="book-name">${cat.name}</div>
+                        <div class="book-name">${getCatDisplayName(cat.id)}</div>
                         <div style="font-size:0.6rem; margin-top:4px; letter-spacing:-2px;">${hearts}</div>
                     `;
                 } else {
@@ -1747,6 +1740,27 @@
         window.closeBookModal = function() {
             document.getElementById('bookModal').classList.remove('show');
         };
+        
+        window.renameCat = function(catId) {
+            const baseCat = catData.find(c => c.id == catId);
+            if(!baseCat) return;
+            const currentName = catNames[catId] || baseCat.name;
+            const newName = prompt(`「${baseCat.name}」にあなただけの愛称（名前）をつけるにゃん🐾\n（空欄にすると元の名前に戻るにゃ）`, currentName);
+            
+            if (newName !== null) {
+                if (newName.trim() === "") {
+                    delete catNames[catId];
+                } else {
+                    catNames[catId] = newName.trim();
+                }
+                localStorage.setItem('nyanko_cat_names', JSON.stringify(catNames));
+                window.openBookModal(); 
+                if (currentCatId == catId) {
+                    document.getElementById('cardName').innerText = getCatDisplayName(currentCatId);
+                }
+                showToast("猫ちゃんの名前を変更したにゃん！");
+            }
+        };
 
         window.openLicenseModal = function() {
             let sortedCats = Object.keys(contributionData).sort((a, b) => contributionData[b] - contributionData[a]);
@@ -1759,6 +1773,10 @@
                     let pts = contributionData[topCatId];
                     let deco = catDecorations[topCatId] || '';
                     
+                    const affForStars = affectionData[topCatId] || 0;
+                    const starCount = Math.floor(Math.ceil(affForStars / 4) / 25);
+                    const starsStr = starCount > 0 ? '⭐'.repeat(Math.min(starCount, 5)) : '';
+                    
                     oshiHtml = `
                         <div class="license-oshi">
                             <div class="license-oshi-title">👑 最愛の殿堂入り推し猫 👑</div>
@@ -1766,7 +1784,7 @@
                                 ${topCat.emoji}
                                 <div class="card-decoration" style="font-size: 1.5rem;">${deco}</div>
                             </div>
-                            <div class="license-oshi-name">${topCat.name}</div>
+                            <div class="license-oshi-name">${getCatDisplayName(topCatId)} <span style="color:#ffd700;">${starsStr}</span></div>
                             <div class="license-oshi-points">愛情ポイント: ${pts} pt</div>
                         </div>
                     `;
@@ -1792,6 +1810,115 @@
             document.getElementById('licenseModal').classList.remove('show');
         };
 
+        // タイムカプセル機能対応
+        window.saveCurrentMessage = function(type) {
+            let textToSave = "";
+            if (type === 'affirmation') {
+                const el = document.getElementById('textAffirmation').cloneNode(true);
+                el.querySelector('button').remove(); 
+                textToSave = el.innerText.trim();
+            } else {
+                const el = document.getElementById('textPower').cloneNode(true);
+                el.querySelector('button').remove();
+                textToSave = el.innerText.trim();
+            }
+
+            if (savedMessages.some(m => m.text === textToSave)) {
+                showToast("この言葉はすでにお守りにしてあるにゃん🐾");
+                return;
+            }
+
+            const randomQ = secretQuestions[Math.floor(Math.random() * secretQuestions.length)];
+            const memo = prompt(`🔖 今の気持ちやメモ書きを残せるにゃん🐾\n\n💬 猫ちゃんからの質問：\n「${randomQ}」\n（空欄でもOKにゃ）`, "");
+            if (memo === null) return; 
+
+            // タイムカプセルの選択
+            const isTimeCapsule = confirm("⏳ このお守りを『未来の自分への手紙（タイムカプセル）』にするにゃ？\n※OKを押すと、指定した日まで中身が見られなくなるにゃ！");
+            let unlockTimestamp = 0;
+            
+            if (isTimeCapsule) {
+                const days = prompt("何日後の自分に届けるにゃ？（例: 7, 30, 365）", "30");
+                const parsedDays = parseInt(days);
+                if (!isNaN(parsedDays) && parsedDays > 0) {
+                    unlockTimestamp = Date.now() + (parsedDays * 24 * 60 * 60 * 1000);
+                    showToast(`⏳ ${parsedDays}日後のあなたへ、この想いを届けるにゃん！`);
+                } else {
+                    showToast("日数が正しくないから、普通のお守りとして保存したにゃん。");
+                }
+            }
+
+            const newMessage = {
+                id: Date.now(),
+                text: textToSave,
+                memo: memo.trim(),
+                catName: getCatDisplayName(currentCatId),
+                emoji: currentResult.emoji,
+                date: new Date().toLocaleDateString('ja-JP'),
+                unlockDate: unlockTimestamp
+            };
+
+            savedMessages.unshift(newMessage);
+            if (savedMessages.length > 100) savedMessages.pop(); 
+            localStorage.setItem('nyanko_saved_messages', JSON.stringify(savedMessages));
+            
+            if (!isTimeCapsule || unlockTimestamp === 0) {
+                showToast("🔖 お守り帳に言葉と記憶を保存したにゃん！");
+            }
+        };
+
+        window.openSavedMessagesModal = function() {
+            const list = document.getElementById('savedMessagesList');
+            list.innerHTML = '';
+            
+            if (savedMessages.length === 0) {
+                list.innerHTML = '<div style="text-align:center; color:var(--text-muted);">まだお守りが無いにゃ。<br>占いで好きな言葉を保存してにゃん。</div>';
+            } else {
+                const now = Date.now();
+                savedMessages.forEach(msg => {
+                    const item = document.createElement('div');
+                    
+                    if (msg.unlockDate && msg.unlockDate > now) {
+                        // タイムカプセル（ロック中）
+                        const daysLeft = Math.ceil((msg.unlockDate - now) / (1000 * 60 * 60 * 24));
+                        item.className = 'saved-msg-item locked';
+                        item.innerHTML = `
+                            <div style="font-size: 2rem;">🔒</div>
+                            <div style="font-weight: bold; margin-top: 10px;">未来のあなたへのお守り</div>
+                            <div style="font-size: 0.8rem; margin-top: 5px;">開封まであと ${daysLeft} 日にゃん🐾</div>
+                        `;
+                    } else {
+                        // 通常表示
+                        item.className = 'saved-msg-item';
+                        let memoHtml = "";
+                        if (msg.memo) {
+                            memoHtml = `<div class="saved-msg-memo">📝 ${msg.memo}</div>`;
+                        }
+                        item.innerHTML = `
+                            <button class="delete-msg-btn" onclick="window.deleteSavedMessage(${msg.id})">✖</button>
+                            <div class="saved-msg-date">${msg.date}</div>
+                            <div>${msg.text}</div>
+                            ${memoHtml}
+                            <div class="saved-msg-cat">${msg.emoji} ${msg.catName} より</div>
+                        `;
+                    }
+                    list.appendChild(item);
+                });
+            }
+            document.getElementById('savedMessagesModal').classList.add('show');
+        };
+
+        window.closeSavedMessagesModal = function() {
+            document.getElementById('savedMessagesModal').classList.remove('show');
+        };
+
+        window.deleteSavedMessage = function(id) {
+            if(confirm("このお守りを手放すにゃ？")) {
+                savedMessages = savedMessages.filter(m => m.id !== id);
+                localStorage.setItem('nyanko_saved_messages', JSON.stringify(savedMessages));
+                window.openSavedMessagesModal(); 
+            }
+        };
+
         // =========================================
         // 9. SNSシェア関連
         // =========================================
@@ -1799,7 +1926,7 @@
             shareBonusActive = true;
             localStorage.setItem('nyanko_share_bonus', 'true');
             checkShareBonusDisplay();
-            showToast("🎁 シェア感謝にゃん！次回占う時【SR以上確定】にゃ！");
+            showToast("🎁 シェア感謝にゃん！次回占う時【特別な出会い】の予感！");
             
             stats.shares++;
             saveStats();
@@ -1808,9 +1935,12 @@
 
         document.getElementById('shareXBtn').addEventListener('click', () => {
             let trophyText = unlockedTrophies.length > 0 ? `\n🏆実績: ${unlockedTrophies.length}個解除！` : "";
-            // お守り対応でタグが入っている可能性があるためinnerTextを使用
-            const affirmationText = document.getElementById('textAffirmation').innerText.replace("🔖 この言葉をお守りにする", "").trim();
-            const text = `【推し猫リトリート🐾】\nランク: ${getCatTitle(stats.totalDays)}${trophyText}\n今のお世話係は「${currentResult.mood} ${currentResult.name}」でした！\n\n💖猫ちゃんからの全肯定:\n「${affirmationText}」\n\n👇あなたも癒やされる\n${window.location.href}\n#推し猫リトリート #癒やし #猫`;
+            const affirmationEl = document.getElementById('textAffirmation');
+            let affirmationText = "";
+            if(affirmationEl) {
+                affirmationText = affirmationEl.innerText.replace("🔖 この言葉をお守りにする", "").trim();
+            }
+            const text = `【推し猫リトリート🐾】\nランク: ${getCatTitle(stats.totalDays)}${trophyText}\n今のお世話係は「${currentResult ? currentResult.mood : ''} ${currentResult ? getCatDisplayName(currentCatId) : ''}」でした！\n\n💖猫ちゃんからの全肯定:\n「${affirmationText}」\n\n👇あなたも癒やされる\n${window.location.href}\n#推し猫リトリート #癒やし #猫`;
             copyText(text);
             activateShareBonus();
         });
@@ -1827,7 +1957,7 @@
             if(sortedCats.length > 0) {
                 let topCat = catData.find(c => c.id == sortedCats[0]);
                 if (topCat) {
-                    oshiText = `\n👑最推し: ${topCat.name} (${contributionData[sortedCats[0]]}pt)`;
+                    oshiText = `\n👑最推し: ${getCatDisplayName(topCat.id)} (${contributionData[sortedCats[0]]}pt)`;
                 }
             }
             const text = `【推し猫リトリート🐾 認定ライセンス】\n氏名: ${userName}\n称号: ${getCatTitle(stats.totalDays)}${oshiText}\n🏆実績: ${unlockedTrophies.length}/100個解除\n\n👇あなたもライセンスを発行する\n${window.location.href}\n#推し猫リトリート #推し活`;
@@ -1859,7 +1989,7 @@
             setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
     </script>
-    <!-- LinkSwitchタグ (バリューコマース全自動収益化) -->
+    <!-- LinkSwitchタグ -->
     <script type="text/javascript" language="javascript">
         var vc_pid = "892628071";
     </script>
