@@ -145,42 +145,44 @@
         
         /* 視認性極大化のUIアップデート */
         .section-title { 
-            font-size: 1.05rem; color: var(--text-main); 
-            background: linear-gradient(90deg, rgba(255, 141, 161, 0.2) 0%, transparent 100%);
-            border-left: 6px solid var(--accent-color); 
-            padding: 12px 15px; margin: 30px 0 15px 0; 
-            font-weight: 900; border-radius: 4px;
-            display: flex; align-items: center; justify-content: space-between; 
-            letter-spacing: 0.05em;
+            font-size: 1rem; color: var(--text-main); 
+            background: linear-gradient(90deg, rgba(255, 141, 161, 0.15) 0%, transparent 100%);
+            border-left: 5px solid var(--accent-color); 
+            padding: 10px 12px; margin: 25px 0 15px 0; 
+            font-weight: bold; border-radius: 4px;
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; /* スマホで重ならないように修正 */
         }
-        body.theme-night .section-title { background: linear-gradient(90deg, rgba(221, 160, 221, 0.25) 0%, transparent 100%); color: #fff; }
+        body.theme-night .section-title { background: linear-gradient(90deg, rgba(221, 160, 221, 0.2) 0%, transparent 100%); color: #fff; }
         
-        .sync-rate { font-size: 0.85rem; background: linear-gradient(135deg, var(--accent-color), #ff6f91); color: white; padding: 5px 12px; border-radius: 20px; box-shadow: 0 3px 8px rgba(255,141,161,0.4); font-weight: bold; }
+        .sync-rate { font-size: 0.85rem; background: var(--accent-color); color: white; padding: 4px 12px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); white-space: nowrap; }
         
-        .result-text { font-size: 0.95rem; line-height: 1.8; color: var(--text-main); background: rgba(255, 255, 255, 0.95); padding: 20px 20px 35px 20px; border-radius: 20px; border: 2px solid rgba(255, 141, 161, 0.4); backdrop-filter: blur(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; }
-        body.theme-night .result-text { background: rgba(43, 27, 61, 0.9); border-color: rgba(221, 160, 221, 0.4); color: #f8f8ff; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .result-text { font-size: 0.95rem; line-height: 1.7; color: var(--text-main); background: rgba(255, 255, 255, 0.95); padding: 18px 18px 30px 18px; border-radius: 16px; border: 2px solid rgba(255, 141, 161, 0.3); backdrop-filter: blur(5px); box-shadow: 0 4px 10px rgba(0,0,0,0.03); position: relative; }
+        body.theme-night .result-text { background: rgba(43, 27, 61, 0.85); border-color: rgba(221, 160, 221, 0.3); color: #f0f8ff; }
+
+        /* プチ情報エリアの専用美しいカードスタイル追加 */
+        #textTrivia { padding: 15px; }
+        .trivia-date { font-weight: bold; font-size: 1rem; color: var(--accent-color); margin-bottom: 15px; text-align: center; border-bottom: 2px dashed rgba(255, 141, 161, 0.5); padding-bottom: 10px; }
+        body.theme-night .trivia-date { color: #dda0dd; border-bottom-color: rgba(221, 160, 221, 0.5); }
+        .trivia-item { background: rgba(255,255,255,0.7); padding: 12px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05); }
+        body.theme-night .trivia-item { background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.05); }
+        .trivia-item-title { font-size: 0.75rem; font-weight: bold; color: var(--text-muted); margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+        .trivia-item-desc { font-size: 0.85rem; line-height: 1.5; color: var(--text-main); font-weight: bold; }
+        .trivia-item-val { font-size: 1rem; font-weight: bold; color: var(--accent-color); }
+        body.theme-night .trivia-item-val { color: #dda0dd; }
+        .trivia-info-box { background: linear-gradient(135deg, rgba(255,240,245,0.8) 0%, rgba(255,255,255,0.8) 100%); border: 2px solid var(--accent-color); border-radius: 12px; padding: 12px; margin-top: 15px; }
+        body.theme-night .trivia-info-box { background: linear-gradient(135deg, rgba(58,43,77,0.8) 0%, rgba(43,27,61,0.8) 100%); border-color: #dda0dd; }
+        .trivia-info-title { font-weight: bold; color: var(--accent-color); font-size: 0.85rem; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
+        body.theme-night .trivia-info-title { color: #dda0dd; }
+        .trivia-info-text { font-size: 0.85rem; line-height: 1.6; color: var(--text-main); }
         
-        .affirmation-text { font-size: 1.1rem; font-weight: bold; color: var(--accent-color); text-align: center; border: 3px dashed var(--accent-color); background: #fffafb; }
+        .affirmation-text { font-size: 1.05rem; font-weight: bold; color: var(--accent-color); text-align: center; border: 2px dashed var(--accent-color); background: #fff0f5; }
         body.theme-night .affirmation-text { background: #3a2b4d; color: #dda0dd; border-color: #dda0dd; }
 
-        .save-msg-btn { position: absolute; bottom: 8px; right: 15px; background: rgba(255,141,161,0.1); border: 1px solid var(--accent-color); color: var(--accent-color); font-size: 0.75rem; font-weight: bold; cursor: pointer; text-decoration: none; padding: 6px 12px; border-radius: 15px; transition: all 0.2s;}
-        .save-msg-btn:hover { background: var(--accent-color); color: white; }
-        body.theme-night .save-msg-btn { color: #dda0dd; border-color: #dda0dd; background: rgba(221,160,221,0.1); }
-        body.theme-night .save-msg-btn:hover { background: #dda0dd; color: #3a2b4d; }
+        .save-msg-btn { position: absolute; bottom: 5px; right: 15px; background: none; border: none; color: var(--accent-color); font-size: 0.75rem; font-weight: bold; cursor: pointer; text-decoration: underline; padding: 5px; }
+        body.theme-night .save-msg-btn { color: #dda0dd; }
 
-        /* 今日の記録エリア（プチ情報）の視認性強化 */
-        #textTrivia { font-size: 0.9rem; background: linear-gradient(to bottom right, #ffffff, #fff0f5); border: 2px solid #ffb7c5; padding: 20px; margin-bottom: 20px; }
-        body.theme-night #textTrivia { background: linear-gradient(to bottom right, #2b1b3d, #3a2b4d); border-color: #dda0dd; }
-        .trivia-item { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed rgba(255,141,161,0.3); }
-        body.theme-night .trivia-item { border-bottom-color: rgba(221,160,221,0.3); }
-        .trivia-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .trivia-label { font-weight: 900; color: #d81b60; display: flex; align-items: center; gap: 5px; margin-bottom: 3px; font-size: 0.95rem; }
-        body.theme-night .trivia-label { color: #ffb7c5; }
-        .trivia-content { padding-left: 25px; color: var(--text-main); }
-        .trivia-moon-text { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
-
-        .pet-btn-wrapper { text-align: center; margin: 35px 0 15px 0; position: relative; }
-        .pet-btn { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); border: none; color: #d81b60; font-size: 1.15rem; font-weight: bold; padding: 15px 35px; border-radius: 35px; cursor: pointer; box-shadow: 0 6px 20px rgba(255,154,158,0.5); transition: transform 0.1s; letter-spacing: 0.05em; }
+        .pet-btn-wrapper { text-align: center; margin: 25px 0 10px 0; position: relative; }
+        .pet-btn { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); border: none; color: #d81b60; font-size: 1.1rem; font-weight: bold; padding: 12px 30px; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,154,158,0.4); transition: transform 0.1s; }
         .pet-btn:active { transform: scale(0.95); }
         .pet-reaction { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); font-size: 0.85rem; font-weight: bold; color: #ff4757; background: white; padding: 5px 12px; border-radius: 15px; border: 2px solid #ff4757; opacity: 0; transition: opacity 0.3s; white-space: nowrap; pointer-events: none; z-index: 2; }
         .pet-reaction.show { opacity: 1; top: -45px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -196,22 +198,16 @@
         .affection-meter { width: 100%; height: 6px; background: rgba(0,0,0,0.1); border-radius: 3px; overflow: hidden; margin-bottom: 5px; position: relative; }
         .affection-fill { height: 100%; background: linear-gradient(90deg, #ff9a9e, #ff6f91); width: 0%; transition: width 0.5s ease-out; }
         .affection-label { font-size: 0.65rem; color: var(--accent-color); text-align: right; margin-top: 2px; font-weight: bold; }
-        .affection-title { font-size: 0.85rem; color: #d81b60; text-align: center; font-weight: 900; margin-bottom: 2px; letter-spacing: 0.05em;}
-        body.theme-night .affection-title { color: #ffb7c5; }
-        .affection-stars { font-size: 0.8rem; color: #ffd700; text-align: center; margin-bottom: 5px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .affection-title { font-size: 0.8rem; color: #ff4757; text-align: center; font-weight: bold; margin-bottom: 2px; }
+        .affection-stars { font-size: 0.7rem; color: #ffd700; text-align: center; margin-bottom: 5px; text-shadow: 0 1px 1px rgba(0,0,0,0.2); }
 
-        .product-speech { background: white; border: 3px solid var(--accent-color); border-radius: 20px; padding: 15px; margin-bottom: 12px; font-size: 0.95rem; color: #d81b60; font-weight: 900; position: relative; text-align: center; box-shadow: 0 5px 15px rgba(255,141,161,0.2); z-index: 2; line-height: 1.5; animation: float 3s infinite ease-in-out; letter-spacing: 0.02em; }
-        body.theme-night .product-speech { background: #2b1b3d; color: #ffb7c5; border-color: #dda0dd; box-shadow: 0 5px 15px rgba(221,160,221,0.2); }
-        .product-speech::after { content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); border-width: 12px 12px 0; border-style: solid; border-color: var(--accent-color) transparent transparent transparent; display: block; width: 0; }
-        body.theme-night .product-speech::after { border-color: #dda0dd transparent transparent transparent; }
-        .product-speech::before { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-width: 10px 10px 0; border-style: solid; border-color: white transparent transparent transparent; display: block; width: 0; z-index: 1; }
-        body.theme-night .product-speech::before { border-color: #2b1b3d transparent transparent transparent; }
+        .product-speech { background: white; border: 2px solid var(--accent-color); border-radius: 15px; padding: 12px; margin-bottom: 8px; font-size: 0.85rem; color: var(--accent-color); font-weight: bold; position: relative; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 2; line-height: 1.4; animation: float 3s infinite ease-in-out; }
+        .product-speech::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); border-width: 10px 10px 0; border-style: solid; border-color: var(--accent-color) transparent transparent transparent; display: block; width: 0; }
+        .product-speech::before { content: ''; position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%); border-width: 8px 8px 0; border-style: solid; border-color: white transparent transparent transparent; display: block; width: 0; z-index: 1; }
 
-        .product-info { text-align: center; background: rgba(255,255,255,0.5); padding: 10px; border-radius: 10px; margin: 10px 0; }
-        body.theme-night .product-info { background: rgba(0,0,0,0.3); }
-        .product-title { font-size: 0.95rem; font-weight: 900; margin-bottom: 5px; color: #d81b60; }
-        body.theme-night .product-title { color: #ffb7c5; }
-        .product-desc { font-size: 0.85rem; color: var(--text-main); line-height: 1.5; font-weight: bold; }
+        .product-info { text-align: center; }
+        .product-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; color: #d81b60; }
+        .product-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
         
         .product-links-group { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-top: 5px; }
         .buy-btn { color: #fff; text-decoration: none; font-size: 0.9rem; font-weight: bold; padding: 14px 20px; border-radius: 25px; text-align: center; transition: transform 0.2s; display: block; }
@@ -405,7 +401,7 @@
                 <span>📝 今日の記録とねこプチ情報</span>
                 <span class="sync-rate" id="syncRateDisplay"></span>
             </div>
-            <div class="result-text" id="textTrivia" style="font-size: 0.85rem; background: rgba(255, 240, 245, 0.95); border: 2px solid rgba(255, 141, 161, 0.5);"></div>
+            <div class="result-text" id="textTrivia"></div>
 
             <div class="section-title" id="affiliateHeader">🐟 猫ちゃんからのリクエストにゃ🎁</div>
             <div class="product-speech" id="productSpeech">ここに吹き出しが入るにゃん</div>
@@ -442,6 +438,32 @@
     </main>
 
     <!-- モーダル類 -->
+
+    <!-- カスタム確認ダイアログ -->
+    <div class="modal" id="customConfirmModal">
+        <div class="modal-content">
+            <h2 style="color:var(--accent-color); margin-top:0;">確認にゃ</h2>
+            <p id="customConfirmMessage" style="font-size: 0.85rem; color:var(--text-muted); white-space: pre-wrap; line-height: 1.5;"></p>
+            <div style="display:flex; justify-content:center; gap: 10px; margin-top:15px;">
+                <button class="save-btn" onclick="window.closeCustomConfirm(true)">はい</button>
+                <button class="save-btn" style="background:#aaa;" onclick="window.closeCustomConfirm(false)">いいえ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- カスタム入力ダイアログ -->
+    <div class="modal" id="customPromptModal">
+        <div class="modal-content">
+            <h2 style="color:var(--accent-color); margin-top:0;">入力にゃ</h2>
+            <p id="customPromptMessage" style="font-size: 0.85rem; color:var(--text-muted); white-space: pre-wrap; line-height: 1.5; text-align: left;"></p>
+            <input type="text" id="customPromptInput" class="name-input" placeholder="">
+            <div style="display:flex; justify-content:center; gap: 10px; margin-top:15px;">
+                <button class="save-btn" onclick="window.closeCustomPrompt(true)">決定にゃん！</button>
+                <button class="save-btn" style="background:#aaa;" onclick="window.closeCustomPrompt(false)">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
     <div class="breathe-overlay" id="breatheOverlay">
         <div class="breathe-circle" id="breatheCircle">🐱</div>
         <div class="breathe-text" id="breatheText">まずは、息を全部吐き出すにゃん...</div>
@@ -510,52 +532,6 @@
         </div>
     </div>
 
-    <!-- 汎用確認モーダル -->
-    <div class="modal" id="customConfirmModal">
-        <div class="modal-content">
-            <h2 style="color:var(--accent-color); margin-top:0;">🐾 確認だにゃ</h2>
-            <p id="customConfirmText" style="font-size: 0.95rem; color:var(--text-main); margin-bottom: 20px; font-weight:bold;"></p>
-            <div style="display: flex; justify-content: center; gap: 15px;">
-                <button class="save-btn" id="customConfirmYesBtn" style="background: #ff4757; margin-top:0;">はい</button>
-                <button class="head-btn" style="padding: 10px 20px; border-radius: 15px; font-size: 1rem; margin-top:0;" onclick="window.closeCustomConfirm()">いいえ</button>
-            </div>
-            <button class="close-modal-btn" onclick="window.closeCustomConfirm()">✖</button>
-        </div>
-    </div>
-
-    <!-- お守り保存専用モーダル -->
-    <div class="modal" id="saveMemoModal">
-        <div class="modal-content">
-            <h2 style="color:var(--accent-color); margin-top:0;">🔖 お守りを残すにゃ</h2>
-            <div id="saveMemoQuestion" style="font-size: 0.85rem; color:var(--text-main); font-weight:bold; margin-bottom:10px; text-align:left; background: rgba(255,141,161,0.1); padding: 10px; border-radius: 10px; border-left: 4px solid var(--accent-color);"></div>
-            <textarea id="saveMemoInput" class="name-input" style="height: 70px; resize: none; text-align: left; width: 90%; box-sizing: border-box;" placeholder="今の気持ちをここに残せるにゃ（空欄でもOK）"></textarea>
-            
-            <div style="margin-top: 15px; text-align: left; background: #fff0f5; padding: 10px; border-radius: 10px; border: 1px dashed var(--accent-color);">
-                <div style="font-size: 0.85rem; font-weight: bold; color: var(--text-main);">⏳ 未来の自分への手紙にする？</div>
-                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 3px;">※指定した日数が経つまで中身が見られなくなるにゃ！不要なら空欄のままにしてにゃ。</div>
-                <div style="display:flex; align-items:center; gap: 5px; margin-top: 8px;">
-                    <input type="number" id="timecapsuleInput" class="name-input" style="width: 70px; padding: 5px; margin-top: 0; text-align: right;" placeholder="例: 30" min="1">
-                    <span style="font-size: 0.85rem; font-weight: bold; color: var(--text-main);">日後の自分へ</span>
-                </div>
-            </div>
-
-            <button class="save-btn" onclick="window.confirmSaveMessage()" style="width: 100%; margin-top: 20px;">大切に保存するにゃ</button>
-            <button class="close-modal-btn" onclick="window.closeSaveMemoModal()">✖</button>
-        </div>
-    </div>
-
-    <!-- 名前変更モーダル -->
-    <div class="modal" id="renameCatModal">
-        <div class="modal-content">
-            <h2 style="color:var(--accent-color); margin-top:0;">🐾 愛称をつけるにゃ</h2>
-            <p id="renameCatTarget" style="font-size: 0.85rem; color:var(--text-muted); font-weight:bold;"></p>
-            <input type="text" id="renameCatInput" class="name-input" placeholder="好きな名前を入力してにゃ">
-            <p style="font-size: 0.7rem; color:#aaa; margin-top: 5px;">空欄にすると元の名前に戻るにゃん</p>
-            <button class="save-btn" onclick="window.confirmRenameCat()">決定にゃん！</button>
-            <button class="close-modal-btn" onclick="window.closeRenameCatModal()">✖</button>
-        </div>
-    </div>
-
     <div class="toast" id="toast">🐾 メッセージが入るにゃ</div>
 
     <footer style="margin-top:auto; padding:20px; font-size:0.7rem; color:var(--text-muted); text-align:center;">
@@ -564,6 +540,46 @@
     </footer>
 
     <script>
+        // =========================================
+        // カスタムダイアログ用ロジック
+        // =========================================
+        let confirmOkCallback = null;
+        let confirmCancelCallback = null;
+
+        window.showCustomConfirm = function(message, okCallback, cancelCallback = null) {
+            document.getElementById('customConfirmMessage').innerText = message;
+            confirmOkCallback = okCallback;
+            confirmCancelCallback = cancelCallback;
+            document.getElementById('customConfirmModal').classList.add('show');
+        }
+
+        window.closeCustomConfirm = function(isOk) {
+            document.getElementById('customConfirmModal').classList.remove('show');
+            if(isOk && confirmOkCallback) confirmOkCallback();
+            else if (!isOk && confirmCancelCallback) confirmCancelCallback();
+        }
+
+        let promptCallback = null;
+        let promptCancelCallback = null;
+
+        window.showCustomPrompt = function(message, defaultValue, placeholder, callback, cancelCallback = null) {
+            document.getElementById('customPromptMessage').innerText = message;
+            document.getElementById('customPromptInput').value = defaultValue || '';
+            document.getElementById('customPromptInput').placeholder = placeholder || '';
+            promptCallback = callback;
+            promptCancelCallback = cancelCallback;
+            document.getElementById('customPromptModal').classList.add('show');
+        }
+
+        window.closeCustomPrompt = function(isOk) {
+            document.getElementById('customPromptModal').classList.remove('show');
+            if(isOk && promptCallback) {
+                promptCallback(document.getElementById('customPromptInput').value);
+            } else if (!isOk && promptCancelCallback) {
+                promptCancelCallback();
+            }
+        }
+
         // =========================================
         // 1. グローバル変数と初期化
         // =========================================
@@ -707,6 +723,7 @@
             { id: 83, rarity: "SR", name: "名探偵猫", emoji: "🕵️", power: "謎はすべて解けたにゃ！「[NAME]」の悩みの原因は、単なる『考えすぎ』にゃん。難しく考えず、シンプルに直感に従うのが正解だにゃ。", itemTitle: "ミステリー小説", itemDesc: "脳を別世界に飛ばす。", keyword: "ミステリー小説" },
             { id: 84, rarity: "SR", name: "天文学者猫", emoji: "🔭", power: "星が綺麗にゃ〜。「[NAME]」、宇宙の広さに比べたら、今の悩みなんてミジンコ以下にゃん。夜空を見上げて、悩みを宇宙に溶かすにゃ。", itemTitle: "月球儀", itemDesc: "手元に宇宙を。", keyword: "月球儀 ライト" },
             { id: 85, rarity: "SR", name: "天才ハッカー猫", emoji: "🕶️", power: "カタカタ…ターン！「[NAME]」の脳内に侵入したネガティブウイルスは、私が完全に駆除しておいたにゃん。これでサクサク動けるはずだにゃ！", itemTitle: "メカニカルキーボード", itemDesc: "打鍵感でストレス解消。", keyword: "メカニカルキーボード" },
+            
             // --- R (85種) ---
             { id: 39, rarity: "R", name: "甘えん坊 ハチワレ", emoji: "🐱", power: "スリスリ…「[NAME]」、もっと私を構うにゃ！他人に気を使うより、自分と私を甘やかすのが最優先課題にゃん。", itemTitle: "ねこ用ちゅーる", itemDesc: "絶対喜ぶおやつ。", keyword: "猫 ちゅーる" },
             { id: 40, rarity: "R", name: "ツンデレ 黒猫", emoji: "🐈‍⬛", power: "別に「[NAME]」のことが心配なわけじゃないにゃ…。でも、たまには休まないと倒れるにゃん。早く寝なさいにゃ！", itemTitle: "キャットグラス", itemDesc: "部屋の浄化。", keyword: "猫草" },
@@ -787,6 +804,7 @@
             { id: 150, rarity: "LR", name: "創造神 にゃんこ", emoji: "🌍", power: "この世界を作ったのは私にゃ。「[NAME]」、あなたは私の最高傑作にゃん。自信を持って、好きなようにこの世界を楽しんでにゃ！", itemTitle: "一生モノの 高級時計", itemDesc: "神の時間を刻む。", keyword: "高級 腕時計" }
         ];
 
+        // メッセージ無限拡張
         const moods = ["超絶甘えん坊な", "少し眠そうな", "やたらテンションが高い", "何かを企んでいる", "悟りを開いた", "お腹を空かせた", "なでてほしい", "ツンデレな", "かまってちゃんな", "パトロール中の", "丸くなっている", "獲物を狙う", "香箱座りの", "尻尾をパタパタさせる", "耳をすませている", "毛づくろい中の"];
         
         const affirmationsDefault = [
@@ -806,7 +824,7 @@
         const affirmationsStress = [
             "モヤモヤする時は甘いものを食べて全部忘れるにゃ！[NAME]は悪くないにゃん。", "他人の心無い言葉なんて猫砂に埋めてスッキリするにゃ！私が味方にゃ！",
             "理不尽な世界には猫パンチをお見舞いしてやるにゃ！", "嫌なヤツの靴に私が吐いておいてやるから、[NAME]は笑ってるにゃん！",
-            "ストレスは万病の元にゃ。今すぐ紙をビリビリに破いて発散するにゃ！", "理不尽な要求は「にゃーん」と言って聞こえないフリをするにゃん。",
+            "ストレスは万病の元にゃ。今すぐ紙をビリビリに破いて発散するにゃ！", "理平尽な要求は「にゃーん」と言って聞こえないフリをするにゃん。",
             "あなたの心を乱すものは、全て私が爪研ぎの刑にしてやるにゃ！", "大声で叫んでいいにゃ！私がゴロゴロ音でかき消してあげるにゃん。",
             "イライラしたらとりあえず私の肉球をぷにぷにするにゃ。", "どうにもならない時は、美味しいものを食べて全てを忘れるのが生物の真理にゃ！"
         ];
@@ -855,58 +873,6 @@
         const luckyActions = ["温かいお茶をゆっくり飲む", "空を見上げて深呼吸する", "いつもより5分早く寝る", "好きな音楽を1曲聴く", "自分をギュッと抱きしめる", "鏡の前でニコッと笑う", "昔の楽しかった写真を1枚見る", "背筋をピシッと伸ばしてみる", "甘いものを一口食べる", "お気に入りの靴下を履く", "窓を開けて空気の入れ替えをする", "「ありがとう」と誰かに言う（自分でもOK）"];
         const secretQuestions = ["今日、一番ホッとした瞬間はどんな時だったにゃ？", "今、誰かに褒めてほしいことは何にゃ？", "もし魔法が使えたら、今すぐ何をしたいにゃん？", "最近、ちょっと笑っちゃった出来事はあったにゃ？", "今の自分に「お疲れ様！」って言ってあげるなら、どんな言葉にゃ？", "今日の自分を100点満点で採点すると何点にゃ？（もちろん100点以上でもOKにゃ！）"];
 
-        const allSecretWords = [
-            "ちゅーる", "またたび", "にくきゅう", "にゃんこ", "おひるね",
-            "ごロゴロ", "もふもふ", "さんくす", "まねきねこ", "ねこぱんち"
-        ];
-        
-        function getTodaySecret() {
-            const today = new Date();
-            const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-            const index = seed % allSecretWords.length;
-            return allSecretWords[index];
-        }
-
-        const todaySecretWord = getTodaySecret();
-        const todayDateGlobal = new Date();
-        const isNyanNyanDay = todayDateGlobal.getDate() === 22;
-
-        if (urlParams.get('admin') === 'true') {
-             setTimeout(() => showToast("🔧 本日の合言葉: " + todaySecretWord), 2000);
-        }
-
-        const decoItems = ["👑", "🎀", "🎩", "🌸", "👓", "✨", "🐟", "👔", "🎓", "🧣", "🎸", "🍔", "💎", "⭐"];
-        const baseStampEmojis = ['🐱', '🧶', '🐟', '🧸', '🐾', '🎀'];
-        function getBgStampEmojis() {
-            return [...baseStampEmojis, getSeasonEmoji()];
-        }
-
-        const petReactions = {
-            high: [
-                "[NAME]、大好きにゃあああん💕", "スリスリ…ずっと離れないにゃ！", "ゴロゴロ🎵至福の時にゃ〜", 
-                "チュッ🐾（鼻キス）", "（膝の上でとろけている…）", "もっと！もっと撫でるにゃ！💖",
-                "（あなたを見つめてゆっくりまばたきしている）", "ぐるるるる…（大音量のゴロゴロ）", 
-                "お腹も見せてあげるにゃ！撫で放題にゃん！", "（あなたの手に頭をこすりつけている）"
-            ],
-            mid: [
-                "ゴロゴロ…もっと撫でてにゃ💕", "悪くないにゃん", "あごの下もお願いするにゃ", 
-                "しっぽがピンと立っちゃうにゃ！", "ふみふみ…🐾", "そこそこ！そこが気持ちいいにゃ",
-                "（目を細めて気持ちよさそうにしている）", "もうちょっと右にゃ", 
-                "まあ、撫でさせてあげてもいいにゃ", "（耳をピクピクさせて喜んでいる）"
-            ],
-            low: [
-                "まあまあにゃ。続けるにゃ🐾", "ちょっとだけなら許すにゃ", "（じっと手を見ている…）", 
-                "ツンツン…", "にゃん？", "今日はそういう気分じゃないにゃ", 
-                "（しっぽをパタパタさせて少し考え中）", "フンッ（ちょっとだけ顔をそむけた）",
-                "今は毛づくろい中だから後にしてにゃ", "（あくびをして無視された…）"
-            ],
-            bad: [
-                "シャーッ！（触るな）", "スンッ…（そっぽを向く）", "プイッ", "（足早に逃げた…）", 
-                "猫パンチ！🐾", "ガブッ！（軽く噛まれた）", "シャアアァァ！！", 
-                "（ダッシュで机の下に隠れた）", "今は絶対にダメにゃ！", "（冷たい目で見下されている…）"
-            ]
-        };
-
         function getOnedariMessage(catName, userName, syncRate, isLR, moonPhase) {
             const safeName = userName === "あなた" ? "ご主人" : userName;
             let prefix = "";
@@ -947,329 +913,6 @@
             ];
             return prefix + msgs[Math.floor(Math.random() * msgs.length)];
         }
-
-        // =========================================
-        // 2.5 【100トロフィー自動生成システム】
-        // =========================================
-        let trophiesData = [];
-        
-        function initTrophies() {
-            // ① 占い回数 (12個)
-            const drawGoals = [1, 5, 10, 30, 50, 100, 200, 300, 500, 777, 1000, 3000];
-            drawGoals.forEach(g => { trophiesData.push({ id: `d${g}`, title: `おみくじマニア(Lv.${g})`, desc: `占いを累計${g}回引いた`, icon: "🔮", check: () => stats.draws >= g }); });
-            
-            // ② なでなで回数 (12個)
-            const petGoals = [1, 50, 100, 300, 500, 1000, 2000, 3000, 5000, 7777, 10000, 50000];
-            petGoals.forEach(g => { trophiesData.push({ id: `p${g}`, title: `愛の伝道師(Lv.${g})`, desc: `なでなでを累計${g}回達成`, icon: "💖", check: () => stats.pets >= g }); });
-            
-            // ③ プレゼント贈る回数 (12個)
-            const clickGoals = [1, 5, 10, 30, 50, 100, 200, 300, 500, 777, 1000, 2000];
-            clickGoals.forEach(g => { trophiesData.push({ id: `c${g}`, title: `最高のパートナー(Lv.${g})`, desc: `猫に${g}回プレゼントを贈った`, icon: "🎁", check: () => stats.clicks >= g }); });
-            
-            // ④ 図鑑収集度 (10個)
-            const bookGoals = [1, 10, 30, 50, 70, 90, 110, 130, 140, 150];
-            bookGoals.forEach(g => { trophiesData.push({ id: `b${g}`, title: `図鑑コレクター(${g})`, desc: `猫を${g}種類発見した`, icon: "📖", check: () => Object.keys(affectionData).length >= g }); });
-            
-            // ⑤ SNSシェア回数 (6個)
-            const shareGoals = [1, 5, 10, 20, 50, 100];
-            shareGoals.forEach(g => { trophiesData.push({ id: `s${g}`, title: `インフルエンサー(Lv.${g})`, desc: `SNSに${g}回シェアした`, icon: "📱", check: () => stats.shares >= g }); });
-            
-            // ⑥ 気分選択 (8個: 4種×2)
-            ['tired', 'stress', 'sleepy', 'lucky'].forEach(m => {
-                trophiesData.push({ id: `m1_${m}`, title: `${m}の達人`, desc: `気分[${m}]を10回選択`, icon: "💡", check: () => stats.moods[m] >= 10 });
-                trophiesData.push({ id: `m2_${m}`, title: `${m}の覇者`, desc: `気分[${m}]を50回選択`, icon: "🔥", check: () => stats.moods[m] >= 50 });
-            });
-            
-            // ⑦ 連続ログイン (10個)
-            const loginGoals = [7, 30, 50, 100, 200, 300, 365, 500, 777, 1000];
-            loginGoals.forEach(g => { trophiesData.push({ id: `l${g}`, title: `永遠の絆(${g}日目)`, desc: `通算で${g}日お世話した`, icon: "☀️", check: () => stats.totalDays >= g }); });
-            
-            // ⑧ 合言葉成功 (5個)
-            const secretGoals = [1, 5, 10, 20, 50];
-            secretGoals.forEach(g => { trophiesData.push({ id: `sec${g}`, title: `合言葉マスター(${g})`, desc: `合言葉に${g}回成功した`, icon: "🔑", check: () => stats.secrets >= g }); });
-            
-            // ⑨ 深呼吸完了 (5個)
-            const breathGoals = [1, 5, 10, 30, 50];
-            breathGoals.forEach(g => { trophiesData.push({ id: `br${g}`, title: `ヨギ・キャット(${g})`, desc: `深呼吸を${g}回完了した`, icon: "🧘", check: () => stats.breathes >= g }); });
-            
-            // ⑩ 特定のレアリティ発見 (6個: LR追加)
-            ["R", "SR", "SSR", "UR", "SEC", "LR"].forEach(r => {
-                trophiesData.push({ id: `r_${r}`, title: `奇跡の出会い(${r})`, desc: `【${r}】ランクの猫ちゃんと初めて出会った`, icon: "✨", check: () => Object.keys(affectionData).some(id => {
-                    const c = catData.find(cat => cat.id == id);
-                    return c ? c.rarity === r : false;
-                }) });
-            });
-            
-            // ⑪ 時間帯トロフィー (4個)
-            trophiesData.push({ id: "t_night", title: "夜更かしさん", desc: "深夜(0-4時)に占いを引いた", icon: "🌙", check: () => stats.time.midnight });
-            trophiesData.push({ id: "t_morn", title: "早起き鳥", desc: "朝(5-11時)に占いを引いた", icon: "🌅", check: () => stats.time.morning });
-            trophiesData.push({ id: "t_noon", title: "陽だまり散歩", desc: "昼(12-17時)に占いを引いた", icon: "☀️", check: () => stats.time.noon });
-            trophiesData.push({ id: "t_eve", title: "夕暮れ哀愁", desc: "夜(18-23時)に占いを引いた", icon: "🌆", check: () => stats.time.night });
-            
-            // ⑫ 推し特化 (10個)
-            const oshiGoals = [5, 10, 20, 50, 100];
-            oshiGoals.forEach(g => {
-                trophiesData.push({ id: `oshi_${g}`, title: `猫に愛されし者(${g})`, desc: `1匹の猫の好感度が${g}突破`, icon: "👑", check: () => Object.values(affectionData).some(v => v >= g) });
-                trophiesData.push({ id: `pt_${g}`, title: `愛の億万長者(${g}回)`, desc: `1匹の猫に${g}回以上プレゼントを贈った`, icon: "💎", check: () => Object.values(contributionData).some(v => v >= g) });
-            });
-            
-            // ⑬ 余りの穴埋め
-            trophiesData.push({ id: "hidden_1", title: "究極の神", desc: "全てのトロフィーの99%をコンプ", icon: "🏆", check: () => unlockedTrophies.length >= (trophiesData.length - 1) });
-        }
-
-        initTrophies();
-
-        // =========================================
-        // 各種関数
-        // =========================================
-        function updateLoginCalendar() {
-            const todayStr = new Date().toDateString();
-            if (loginHistory.length === 0 || loginHistory[loginHistory.length - 1] !== todayStr) {
-                loginHistory.push(todayStr);
-                if (loginHistory.length > 7) loginHistory.shift();
-                localStorage.setItem('nyanko_login_history', JSON.stringify(loginHistory));
-            }
-            
-            const calContainer = document.getElementById('loginCalendar');
-            calContainer.innerHTML = '';
-            for (let i = 0; i < 7; i++) {
-                const paw = document.createElement('div');
-                paw.className = `cal-paw ${i < loginHistory.length ? 'active' : ''}`;
-                paw.innerText = '🐾';
-                calContainer.appendChild(paw);
-            }
-        }
-        
-        function getNextMilestone(days) {
-            const milestones = [7, 30, 50, 100, 200, 300, 365, 500, 777, 1000];
-            for (let m of milestones) {
-                if (days < m) return `次の記念日(${m}日)まであと${m - days}日！`;
-            }
-            return "伝説の領域にゃん！✨";
-        }
-
-        function updateTheme() {
-            const hour = new Date().getHours();
-            const mainTitle = document.getElementById('mainTitle');
-            const subTitle = document.getElementById('subTitle');
-            const feverBadge = document.getElementById('feverBadge');
-            
-            isNightFever = false;
-            isMorningFever = false;
-
-            if (hour >= 5 && hour < 12) {
-                document.body.className = 'theme-morning';
-                stats.time.morning = true;
-                mainTitle.innerText = "🌅 朝の推し猫占い";
-                subTitle.innerText = "おはよう！今日も1日、無理せずいくにゃん";
-                if (hour >= 5 && hour < 9) {
-                    isMorningFever = true;
-                    feverBadge.innerText = "🌅 朝活ボーナス: なでなで好感度2倍！";
-                    feverBadge.classList.add('active');
-                }
-            } else if (hour >= 12 && hour < 18) {
-                document.body.className = '';
-                stats.time.noon = true;
-                mainTitle.innerText = "☀️ 陽だまり推し猫占い";
-                subTitle.innerText = "お疲れ様にゃ。ちょっと一息入れていくにゃん";
-                feverBadge.classList.remove('active');
-            } else if (hour >= 18 && hour < 22) {
-                document.body.className = 'theme-night';
-                stats.time.night = true;
-                mainTitle.innerText = "🌙 夜の推し猫占い";
-                subTitle.innerText = "今日もよく頑張ったにゃ。ゆっくり休むにゃん";
-                feverBadge.classList.remove('active');
-            } else {
-                document.body.className = 'theme-night';
-                stats.time.midnight = true;
-                mainTitle.innerText = "🌙 深夜の猫保健室";
-                subTitle.innerText = "こんな時間まで起きてるにゃ？猫に癒やされて眠るにゃん";
-                if (hour >= 22 || hour < 2) {
-                    isNightFever = true;
-                    feverBadge.innerText = "🌙 深夜フィーバー: 特別な出会い確率1.5倍！";
-                    feverBadge.classList.add('active');
-                } else {
-                    feverBadge.classList.remove('active');
-                }
-            }
-            saveStats();
-        }
-
-        function updateLoginStreak() {
-            const today = new Date().toDateString();
-            if (lastLoginDate !== today) {
-                stats.totalDays++;
-                saveStats();
-
-                if (lastLoginDate === new Date(Date.now() - 86400000).toDateString()) {
-                    loginStreak++;
-                } else {
-                    loginStreak = 1;
-                }
-                lastLoginDate = today;
-                localStorage.setItem('nyanko_login_streak', loginStreak);
-                localStorage.setItem('nyanko_last_login', today);
-            }
-            if (stats.totalDays > 0) {
-                document.getElementById('statusBoard').style.display = 'flex';
-                document.getElementById('encounterBadge').innerText = `連続お世話: ${loginStreak}日目 / 通算: ${stats.totalDays}日🐾`;
-            }
-        }
-
-        function updateNameDisplay() {
-            document.querySelector('.head-btn').innerText = userName === 'あなた' ? '⚙️ 設定' : `⚙️ 名前: ${userName}`;
-        }
-
-        function getCatTitle(count) {
-            if (count === 0) return "迷い込んだ旅人";
-            if (count <= 5) return "通りすがりの猫好き";
-            if (count <= 20) return "見習いお世話係";
-            if (count <= 50) return "頼れるキャットシッター";
-            if (count <= 100) return "猫カフェの名誉店長";
-            if (count <= 300) return "猫語を解する者";
-            if (count <= 1000) return "👑 猫に愛されし神";
-            return "💎 伝説のキャットマスター";
-        }
-
-        function getAffectionTitle(aff) {
-            const level = Math.ceil(aff / 4);
-            const loops = Math.floor(level / 25); 
-            
-            let baseTitle = "";
-            let remainingLevel = level % 25;
-            if (remainingLevel === 0 && level > 0) remainingLevel = 25;
-
-            if (remainingLevel >= 20) baseTitle = "宇宙を超えた運命の番";
-            else if (remainingLevel >= 15) baseTitle = "唯一無二のパートナー";
-            else if (remainingLevel >= 10) baseTitle = "最高の相棒";
-            else if (remainingLevel >= 5) baseTitle = "心の友";
-            else if (remainingLevel >= 2) baseTitle = "心を開きつつある";
-            else baseTitle = "顔見知り";
-
-            if (loops === 0) return baseTitle;
-            if (loops === 1) return `👑 永遠の ${baseTitle}`;
-            if (loops === 2) return `💎 神話級の ${baseTitle}`;
-            return `🌌 次元を超えた ${baseTitle} (限界突破+${loops})`;
-        }
-
-        function updateAffectionUI(catId) {
-            const aff = affectionData[catId];
-            const level = Math.ceil(aff / 4);
-            const percentage = ((aff % 100) / 100) * 100;
-            
-            document.getElementById('affectionTitle').innerText = `親密度: ${getAffectionTitle(aff)}`;
-            document.getElementById('affectionFill').style.width = `${percentage}%`;
-            document.getElementById('affectionLabel').innerText = `この子の好感度レベル: ${level} (限界突破中!)`;
-        }
-
-        function checkShareBonusDisplay() {
-            document.getElementById('shareBonusBadge').classList.toggle('active', shareBonusActive);
-            document.getElementById('secretBonusBadge').classList.toggle('active', secretBonusActive);
-        }
-
-        function checkAchievements() {
-            let newlyUnlocked = false;
-            trophiesData.forEach(t => {
-                if (!unlockedTrophies.includes(t.id) && t.check()) {
-                    unlockedTrophies.push(t.id);
-                    localStorage.setItem('nyanko_trophies', JSON.stringify(unlockedTrophies));
-                    newlyUnlocked = true;
-                    setTimeout(() => {
-                        showToast(`🏆 実績解除！【${t.title}】を獲得したにゃ！`);
-                        startCatShower(30);
-                    }, 1000);
-                }
-            });
-            if (newlyUnlocked) updateTrophyDisplay();
-        }
-
-        function updateTrophyDisplay() {
-            const badge = document.getElementById('trophyBadge');
-            if (unlockedTrophies.length > 0) {
-                badge.style.display = 'inline-block';
-                badge.innerText = `🏆 獲得実績: ${unlockedTrophies.length}/100`;
-            }
-        }
-
-        // =========================================
-        // DOMContentLoaded と イベントリスナー
-        // =========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            updateTheme();
-            updateLoginStreak();
-            updateLoginCalendar();
-            updateNameDisplay();
-            loadStamps();
-            loadCatRoom(); 
-            checkShareBonusDisplay();
-            updateTrophyDisplay();
-
-            document.getElementById('nextMilestoneDisplay').innerText = getNextMilestone(stats.totalDays);
-
-            if (isNyanNyanDay) {
-                document.getElementById('nyanNyanBadge').style.display = 'inline-block';
-            }
-
-            document.body.addEventListener('click', (e) => {
-                if(e.target.closest('button') || e.target.closest('a') || e.target.closest('.card-container') || document.body.classList.contains('screenshot-mode') || e.target.closest('.modal')) return;
-                createInteractivePaw(e.pageX, e.pageY);
-            });
-
-            document.body.addEventListener('click', (e) => {
-                if (document.body.classList.contains('screenshot-mode') && !e.target.closest('.sns-btn')) {
-                    document.body.classList.remove('screenshot-mode');
-                }
-            });
-
-            const cardContainer = document.getElementById('cardContainer');
-            if (cardContainer) {
-                cardContainer.addEventListener('click', drawCat);
-            }
-
-            document.getElementById('petBtn').addEventListener('click', petCat);
-            document.getElementById('resetBtn').addEventListener('click', resetGacha);
-            
-            const handleAffiliateClick = () => {
-                if(currentResult) {
-                    addRoomItem('🎁');
-                    stats.clicks++;
-                    saveStats();
-                    
-                    if (Math.random() < 0.3) {
-                        setTimeout(() => {
-                            startCatShower(100);
-                            showToast("💖 猫ちゃんからの特大の愛の恩返しにゃん！！ 💖");
-                        }, 500);
-                    }
-
-                    if(currentCatId) {
-                        affectionData[currentCatId] += 2;
-                        localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
-                        
-                        if (!contributionData[currentCatId]) contributionData[currentCatId] = 0;
-                        contributionData[currentCatId]++;
-                        localStorage.setItem('nyanko_contribution', JSON.stringify(contributionData));
-                        
-                        if (!catDecorations[currentCatId]) {
-                            const newDeco = decoItems[Math.floor(Math.random() * decoItems.length)];
-                            catDecorations[currentCatId] = newDeco;
-                            localStorage.setItem('nyanko_cat_decorations', JSON.stringify(catDecorations));
-                            document.getElementById('cardDecoration').innerText = newDeco;
-                            showToast(`💕 プレゼント感謝にゃ！推し猫が「${newDeco}」でドレスアップしたにゃん！`);
-                        } else {
-                            showToast("💕 猫ちゃんがプレゼントを受け取ったにゃん！");
-                        }
-                        
-                        updateAffectionUI(currentCatId);
-                        checkAchievements();
-                    }
-                }
-            };
-
-            document.getElementById('productLinkRakuten').addEventListener('click', handleAffiliateClick);
-            document.getElementById('productLinkAmazon').addEventListener('click', handleAffiliateClick);
-            document.getElementById('productLinkYahoo').addEventListener('click', handleAffiliateClick);
-        });
 
         // =========================================
         // ガチャ（占い）ロジック
@@ -1420,26 +1063,28 @@
             const trivia = catTrivias[Math.floor(Math.random() * catTrivias.length)];
             const moon = getMoonPhase();
 
-            // 今日の記録とねこプチ情報のHTML構成を視認性の高い形に変更
             document.getElementById('textTrivia').innerHTML = `
+                <div class="trivia-date">📅 ${todayStr} の癒やしのお告げ</div>
+                
                 <div class="trivia-item">
-                    <div class="trivia-label">📅 ${todayStr} の癒やしのお告げ</div>
+                    <div class="trivia-item-title"><span>🌕</span> 今の月齢: ${moon.emoji} ${moon.name}</div>
+                    <div class="trivia-item-desc">${moon.text}</div>
                 </div>
-                <div class="trivia-item">
-                    <div class="trivia-label"><span style="font-size:1.2rem;">🌕</span> 今の月齢: ${moon.emoji} ${moon.name}</div>
-                    <div class="trivia-content trivia-moon-text">${moon.text}</div>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <div class="trivia-item" style="flex: 1; min-width: 120px;">
+                        <div class="trivia-item-title"><span>🎨</span> ラッキーカラー</div>
+                        <div class="trivia-item-val">${currentResult.luckyColor}</div>
+                    </div>
+                    <div class="trivia-item" style="flex: 1; min-width: 120px;">
+                        <div class="trivia-item-title"><span>✨</span> 開運アクション</div>
+                        <div class="trivia-item-val" style="color:var(--text-main); font-size:0.85rem;">${currentResult.luckyAction}</div>
+                    </div>
                 </div>
-                <div class="trivia-item">
-                    <div class="trivia-label"><span style="font-size:1.2rem;">🎨</span> ラッキーカラー</div>
-                    <div class="trivia-content" style="font-weight:bold; color:var(--accent-color);">${currentResult.luckyColor}</div>
-                </div>
-                <div class="trivia-item">
-                    <div class="trivia-label"><span style="font-size:1.2rem;">✨</span> 開運アクション</div>
-                    <div class="trivia-content" style="font-weight:bold;">${currentResult.luckyAction}</div>
-                </div>
-                <div class="trivia-item">
-                    <div class="trivia-label"><span style="font-size:1.2rem;">💡</span> ねこプチ情報</div>
-                    <div class="trivia-content" style="font-size:0.85rem;">${trivia}</div>
+
+                <div class="trivia-info-box">
+                    <div class="trivia-info-title"><span>💡</span> ねこプチ情報</div>
+                    <div class="trivia-info-text">${trivia}</div>
                 </div>
             `;
             
@@ -1491,637 +1136,7 @@
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        // =========================================
-        // なでなで・好感度・パレード・箱庭ロジック
-        // =========================================
-        function petCat() {
-            if(!currentCatId) return;
-            const affectionGain = isMorningFever ? 2 : 1;
-            affectionData[currentCatId] += affectionGain;
-            localStorage.setItem('nyanko_affection', JSON.stringify(affectionData));
-            
-            stats.pets++;
-            saveStats();
-            checkAchievements();
-
-            const aff = affectionData[currentCatId];
-            let msg = "にゃん！";
-            
-            const isTsundere = Math.random() < 0.15;
-
-            if(aff > 20 && !isTsundere) {
-                msg = petReactions.high[Math.floor(Math.random() * petReactions.high.length)].replace(/\[NAME\]/g, userName);
-            } else if(aff > 10 && !isTsundere) {
-                msg = petReactions.mid[Math.floor(Math.random() * petReactions.mid.length)].replace(/\[NAME\]/g, userName);
-            } else if((aff > 5 && !isTsundere) || (aff > 20 && isTsundere)) {
-                msg = petReactions.low[Math.floor(Math.random() * petReactions.low.length)].replace(/\[NAME\]/g, userName);
-            } else {
-                msg = petReactions.bad[Math.floor(Math.random() * petReactions.bad.length)].replace(/\[NAME\]/g, userName);
-            }
-
-            const reaction = document.getElementById('petReaction');
-            reaction.innerText = msg;
-            reaction.classList.remove('show');
-            void reaction.offsetWidth;
-            reaction.classList.add('show');
-
-            createInteractivePaw(Math.random() * window.innerWidth, window.innerHeight / 2 + (Math.random() * 200 - 100));
-
-            const emojisToUse = getBgStampEmojis();
-            const emoji = emojisToUse[Math.floor(Math.random() * emojisToUse.length)];
-            addStampToBg(emoji, Math.floor(Math.random() * 90) + 5, Math.floor(Math.random() * 90) + 5);
-
-            updateAffectionUI(currentCatId);
-
-            if (aff > 15 && Math.random() < 0.3) {
-                startCatShower(20);
-            }
-        }
-
-        function startCatShower(amount) {
-            const emojis = ['🐱', '🐈', '🐾', '💕', '✨', '🐟', '🎁', getSeasonEmoji()];
-            for(let i=0; i<amount; i++) {
-                setTimeout(() => {
-                    const el = document.createElement('div');
-                    el.className = 'parade-item';
-                    el.innerText = emojis[Math.floor(Math.random()*emojis.length)];
-                    el.style.left = Math.random() * window.innerWidth + 'px';
-                    el.style.animationDuration = (2 + Math.random() * 2) + 's';
-                    document.body.appendChild(el);
-                    setTimeout(() => el.remove(), 4000);
-                }, i * 50);
-            }
-        }
-
-        function createInteractivePaw(x, y) {
-            const paw = document.createElement('div');
-            paw.className = 'interactive-paw';
-            paw.innerText = ['🐾','💕','✨'][Math.floor(Math.random()*3)];
-            paw.style.left = (x - 12) + 'px';
-            paw.style.top = (y - 15) + 'px';
-            document.body.appendChild(paw);
-            setTimeout(() => paw.remove(), 1200);
-        }
-
-        function addStampToBg(emoji, xPercent, yPercent) {
-            const stamp = { e: emoji, x: xPercent, y: yPercent };
-            bgStamps.push(stamp);
-            if(bgStamps.length > 150) bgStamps.shift(); 
-            localStorage.setItem('nyanko_bg_stamps', JSON.stringify(bgStamps));
-            renderStamp(stamp);
-        }
-
-        function renderStamp(stamp) {
-            const el = document.createElement('div');
-            el.className = 'bg-stamp';
-            el.innerText = stamp.e;
-            el.style.left = stamp.x + '%';
-            el.style.top = stamp.y + '%';
-            document.getElementById('stampContainer').appendChild(el);
-        }
-
-        function loadStamps() {
-            const container = document.getElementById('stampContainer');
-            container.innerHTML = '';
-            bgStamps.forEach(stamp => renderStamp(stamp));
-        }
-
-        function addRoomItem(emoji) {
-            roomItems.push(emoji);
-            if(roomItems.length > 20) roomItems.shift();
-            localStorage.setItem('nyanko_room_items', JSON.stringify(roomItems));
-            loadCatRoom();
-        }
-
-        function loadCatRoom() {
-            const container = document.getElementById('catRoomContainer');
-            container.innerHTML = '';
-            
-            roomItems.forEach(item => {
-                const itemEl = document.createElement('div');
-                itemEl.className = 'roaming-item';
-                itemEl.innerText = item;
-                itemEl.style.fontSize = (Math.random() * 1 + 1.5) + 'rem';
-                itemEl.style.left = (Math.random() * 80 + 10) + '%';
-                itemEl.style.bottom = (Math.random() * 20 + 2) + '%';
-                container.appendChild(itemEl);
-            });
-
-            const collectedIds = Object.keys(affectionData);
-            if(collectedIds.length === 0) return;
-
-            const maxCats = Math.min(collectedIds.length, 8);
-            for(let i=0; i<maxCats; i++) {
-                const randomId = collectedIds[Math.floor(Math.random() * collectedIds.length)];
-                const catInfo = catData.find(c => c.id == randomId);
-                if(!catInfo) continue;
-
-                const catEl = document.createElement('div');
-                catEl.className = 'roaming-cat';
-                catEl.innerText = catInfo.emoji;
-                catEl.style.bottom = (Math.random() * 30 + 5) + '%';
-                
-                const action = Math.random();
-                if(action < 0.35) {
-                    catEl.style.left = (Math.random() * 80 + 10) + '%';
-                    catEl.style.animation = 'sleeping 3s infinite ease-in-out';
-                    catEl.innerText += '💤';
-                    catEl.style.fontSize = '2.5rem';
-                } else if(action < 0.65) {
-                    catEl.style.fontSize = '2.5rem';
-                    catEl.style.animation = `walkRight ${Math.random() * 15 + 15}s linear infinite`;
-                } else {
-                    catEl.style.fontSize = '2.5rem';
-                    catEl.style.animation = `walkLeft ${Math.random() * 15 + 15}s linear infinite`;
-                }
-                container.appendChild(catEl);
-            }
-        }
-
-        // 汎用確認ダイアログのロジック
-        let confirmAction = null;
-        window.showCustomConfirm = function(message, action) {
-            document.getElementById('customConfirmText').innerText = message;
-            confirmAction = action;
-            document.getElementById('customConfirmModal').classList.add('show');
-        };
-        window.closeCustomConfirm = function() {
-            document.getElementById('customConfirmModal').classList.remove('show');
-            confirmAction = null;
-        };
-        document.getElementById('customConfirmYesBtn').addEventListener('click', () => {
-            if(confirmAction) confirmAction();
-            window.closeCustomConfirm();
-        });
-
-        window.clearStamps = function() {
-            window.showCustomConfirm("背景の思い出（スタンプとプレゼント）をすべて消去するにゃ？", () => {
-                bgStamps = [];
-                roomItems = [];
-                localStorage.removeItem('nyanko_bg_stamps');
-                localStorage.removeItem('nyanko_room_items');
-                loadStamps();
-                loadCatRoom();
-                showToast("綺麗にお掃除したにゃん🧹");
-            });
-        }
-
-        // =========================================
-        // 7. マインドフルネス（深呼吸）ロジック
-        // =========================================
-        window.startBreathing = function() {
-            if(isBreathing) return;
-            isBreathing = true;
-            const overlay = document.getElementById('breatheOverlay');
-            const circle = document.getElementById('breatheCircle');
-            const text = document.getElementById('breatheText');
-            const subtext = document.getElementById('breatheSubtext');
-            
-            overlay.classList.add('show');
-            circle.style.transform = 'scale(1)';
-            text.innerText = "まずは、息を全部吐き出すにゃん...";
-            subtext.innerText = "";
-
-            let cycle = 0;
-            const maxCycles = 5;
-            const praises = ["上手だにゃ", "いい感じにゃん", "嫌なものを全部出すにゃ", "肩の力を抜くにゃ", `${userName}、えらいにゃん`];
-
-            setTimeout(() => { breatheCycle(); }, 3000);
-
-            function breatheCycle() {
-                if(!isBreathing) return;
-                if(cycle >= maxCycles) {
-                    finishBreathing();
-                    return;
-                }
-
-                text.innerText = "すーっ……（吸う）";
-                subtext.innerText = "";
-                circle.style.transition = 'transform 4s ease-out';
-                circle.style.transform = 'scale(1.8)';
-                
-                breatheInterval = setTimeout(() => {
-                    if(!isBreathing) return;
-                    text.innerText = "はーっ……（吐く）";
-                    subtext.innerText = praises[Math.floor(Math.random() * praises.length)];
-                    circle.style.transition = 'transform 6s ease-in-out';
-                    circle.style.transform = 'scale(1)';
-                    
-                    cycle++;
-                    breatheInterval = setTimeout(breatheCycle, 6000);
-                }, 4000);
-            }
-
-            function finishBreathing() {
-                text.innerText = `${userName}、えらいにゃん！\n心がしっかり整ったにゃ🐾`;
-                subtext.innerText = "今日もゆっくり休んでにゃ";
-                isBreathing = false;
-                
-                stats.breathes++;
-                saveStats();
-                checkAchievements();
-            }
-        };
-
-        window.stopBreathing = function() {
-            isBreathing = false;
-            clearTimeout(breatheInterval);
-            document.getElementById('breatheOverlay').classList.remove('show');
-        };
-
-        // =========================================
-        // 各種モーダル管理
-        // =========================================
-        window.openNameModal = function() {
-            document.getElementById('nameInput').value = userName === 'あなた' ? '' : userName;
-            document.getElementById('nameModal').classList.add('show');
-        };
-        window.closeNameModal = function() {
-            document.getElementById('nameModal').classList.remove('show');
-        };
-        window.saveName = function() {
-            const val = document.getElementById('nameInput').value.trim();
-            userName = val || 'あなた';
-            localStorage.setItem('nyanko_name', userName);
-            closeNameModal();
-            updateNameDisplay();
-            showToast(`これからは「${userName}」って呼ぶにゃん🐾`);
-        };
-
-        window.openSecretModal = function() {
-            document.getElementById('secretInput').value = '';
-            document.getElementById('secretModal').classList.add('show');
-        };
-        window.closeSecretModal = function() {
-            document.getElementById('secretModal').classList.remove('show');
-        };
-        window.checkSecret = function() {
-            const input = document.getElementById('secretInput').value.trim();
-            if (input === todaySecretWord) {
-                secretBonusActive = true;
-                localStorage.setItem('nyanko_secret_bonus', 'true');
-                checkShareBonusDisplay();
-                closeSecretModal();
-                showToast("✨ 魔法の言葉が認証されたにゃ！次回【幻のレジェンド猫】確定にゃん！"); 
-                
-                stats.secrets++;
-                saveStats();
-                checkAchievements();
-            } else {
-                showToast("💦 うーん、ちょっと違うみたいにゃ…");
-            }
-        };
-
-        window.openTrophyModal = function() {
-            const list = document.getElementById('trophyList');
-            list.innerHTML = '';
-            trophiesData.forEach(t => {
-                const isUnlocked = unlockedTrophies.includes(t.id);
-                const item = document.createElement('div');
-                item.className = `trophy-item ${isUnlocked ? '' : 'trophy-locked'}`;
-                item.innerHTML = `
-                    <div class="trophy-icon">${isUnlocked ? t.icon : '🔒'}</div>
-                    <div class="trophy-text">
-                        <div class="trophy-title">${isUnlocked ? t.title : '？？？'}</div>
-                        <div class="trophy-desc">${isUnlocked ? t.desc : '条件は秘密にゃ'}</div>
-                    </div>
-                `;
-                list.appendChild(item);
-            });
-            document.getElementById('trophyProgress').innerText = `${unlockedTrophies.length}/${trophiesData.length}`;
-            document.getElementById('trophyModal').classList.add('show');
-        };
-        window.closeTrophyModal = function() {
-            document.getElementById('trophyModal').classList.remove('show');
-        };
-
-        window.openBookModal = function() {
-            const grid = document.getElementById('bookGrid');
-            grid.innerHTML = '';
-            let collectedCount = 0;
-
-            catData.forEach(cat => {
-                const isCollected = affectionData[cat.id] > 0;
-                if (isCollected) collectedCount++;
-
-                const item = document.createElement('div');
-                item.className = `book-item ${isCollected ? '' : 'unknown'}`;
-                
-                if (isCollected) {
-                    const hearts = '💖'.repeat(Math.min(3, Math.ceil(affectionData[cat.id] / 3))) || '💖';
-                    const deco = catDecorations[cat.id] || '';
-                    item.onclick = () => window.renameCat(cat.id);
-                    item.innerHTML = `
-                        <div class="book-rarity" style="color:var(--accent-color);">${cat.rarity}</div>
-                        <div class="book-emoji-container">
-                            <div class="book-emoji">${cat.emoji}</div>
-                            <div class="book-decoration">${deco}</div>
-                        </div>
-                        <div class="book-name">${getCatDisplayName(cat.id)}</div>
-                        <div style="font-size:0.6rem; margin-top:4px; letter-spacing:-2px;">${hearts}</div>
-                    `;
-                } else {
-                    item.innerHTML = `
-                        <div class="book-rarity" style="color:#999;">???</div>
-                        <div class="book-emoji">❓</div>
-                        <div class="book-name">未発見</div>
-                    `;
-                }
-                grid.appendChild(item);
-            });
-
-            document.getElementById('bookProgress').innerText = `${collectedCount} / ${catData.length}`;
-            document.getElementById('bookModal').classList.add('show');
-        };
-
-        window.closeBookModal = function() {
-            document.getElementById('bookModal').classList.remove('show');
-        };
-        
-        let pendingRenameCatId = null;
-
-        window.renameCat = function(catId) {
-            const baseCat = catData.find(c => c.id == catId);
-            if(!baseCat) return;
-            
-            pendingRenameCatId = catId;
-            const currentName = catNames[catId] || baseCat.name;
-            
-            document.getElementById('renameCatTarget').innerText = `「${baseCat.name}」の新しい名前`;
-            document.getElementById('renameCatInput').value = currentName === baseCat.name ? '' : currentName;
-            
-            document.getElementById('renameCatModal').classList.add('show');
-        };
-
-        window.closeRenameCatModal = function() {
-            document.getElementById('renameCatModal').classList.remove('show');
-            pendingRenameCatId = null;
-        };
-
-        window.confirmRenameCat = function() {
-            if (!pendingRenameCatId) return;
-            
-            const newName = document.getElementById('renameCatInput').value.trim();
-            const baseCat = catData.find(c => c.id == pendingRenameCatId);
-            
-            if (newName === "") {
-                delete catNames[pendingRenameCatId];
-            } else {
-                catNames[pendingRenameCatId] = newName;
-            }
-            localStorage.setItem('nyanko_cat_names', JSON.stringify(catNames));
-            
-            window.closeRenameCatModal();
-            window.openBookModal(); 
-            
-            if (currentCatId == pendingRenameCatId) {
-                document.getElementById('cardName').innerText = getCatDisplayName(currentCatId);
-            }
-            showToast("猫ちゃんの愛称を変更したにゃん🐾");
-        };
-
-        window.openLicenseModal = function() {
-            let sortedCats = Object.keys(contributionData).sort((a, b) => contributionData[b] - contributionData[a]);
-            let oshiHtml = `<div style="font-size:0.8rem; color:var(--text-muted); padding: 10px; text-align:center;">まだ猫ちゃんにプレゼントを贈っていないにゃん🐾<br>占いを引いてプレゼントするにゃ！</div>`;
-            
-            if (sortedCats.length > 0) {
-                let topCatId = sortedCats[0];
-                let topCat = catData.find(c => c.id == topCatId);
-                if (topCat) {
-                    let pts = contributionData[topCatId];
-                    let deco = catDecorations[topCatId] || '';
-                    
-                    const affForStars = affectionData[topCatId] || 0;
-                    const starCount = Math.floor(Math.ceil(affForStars / 4) / 25);
-                    const starsStr = starCount > 0 ? '⭐'.repeat(Math.min(starCount, 5)) : '';
-                    
-                    oshiHtml = `
-                        <div class="license-oshi">
-                            <div class="license-oshi-title">👑 最愛の殿堂入り推し猫 👑</div>
-                            <div class="license-oshi-emoji">
-                                ${topCat.emoji}
-                                <div class="card-decoration" style="font-size: 1.5rem;">${deco}</div>
-                            </div>
-                            <div class="license-oshi-name">${getCatDisplayName(topCatId)} <span style="color:#ffd700;">${starsStr}</span></div>
-                            <div class="license-oshi-points">愛情ポイント: ${pts} pt</div>
-                        </div>
-                    `;
-                }
-            }
-
-            const cardHtml = `
-                <div class="license-header">認定お世話係 証</div>
-                <div class="license-row"><span>氏名:</span> <span>${userName}</span></div>
-                <div class="license-row"><span>称号:</span> <span>${getCatTitle(stats.totalDays)}</span></div>
-                <div class="license-row"><span>お世話日数:</span> <span>通算 ${stats.totalDays} 日</span></div>
-                <div class="license-row"><span>実績獲得率:</span> <span>${unlockedTrophies.length} / 100 個</span></div>
-                <div style="width: 100%; height: 8px; background: #eee; border-radius: 4px; margin: 5px 0 15px 0; overflow: hidden;">
-                    <div style="width: ${unlockedTrophies.length}%; height: 100%; background: linear-gradient(90deg, #ffd700, #ff8c00);"></div>
-                </div>
-                ${oshiHtml}
-            `;
-            
-            document.getElementById('licenseCard').innerHTML = cardHtml;
-            document.getElementById('licenseModal').classList.add('show');
-        };
-        window.closeLicenseModal = function() {
-            document.getElementById('licenseModal').classList.remove('show');
-        };
-
-        let pendingSaveText = "";
-
-        window.saveCurrentMessage = function(type) {
-            let textToSave = "";
-            if (type === 'affirmation') {
-                const el = document.getElementById('textAffirmation').cloneNode(true);
-                const btn = el.querySelector('button');
-                if(btn) btn.remove(); 
-                textToSave = el.innerText.trim();
-            } else {
-                const el = document.getElementById('textPower').cloneNode(true);
-                const btn = el.querySelector('button');
-                if(btn) btn.remove();
-                textToSave = el.innerText.trim();
-            }
-
-            if (savedMessages.some(m => m.text === textToSave)) {
-                showToast("この言葉はすでにお守りにしてあるにゃん🐾");
-                return;
-            }
-
-            pendingSaveText = textToSave;
-            const randomQ = secretQuestions[Math.floor(Math.random() * secretQuestions.length)];
-            document.getElementById('saveMemoQuestion').innerText = `💬 猫ちゃんからの質問：\n「${randomQ}」`;
-            document.getElementById('saveMemoInput').value = "";
-            document.getElementById('timecapsuleInput').value = "";
-            
-            document.getElementById('saveMemoModal').classList.add('show');
-        };
-
-        window.closeSaveMemoModal = function() {
-            document.getElementById('saveMemoModal').classList.remove('show');
-            pendingSaveText = "";
-        };
-
-        window.confirmSaveMessage = function() {
-            if(!pendingSaveText) return;
-            
-            const memo = document.getElementById('saveMemoInput').value.trim();
-            const daysInput = document.getElementById('timecapsuleInput').value.trim();
-            
-            let unlockTimestamp = 0;
-            if (daysInput && !isNaN(parseInt(daysInput)) && parseInt(daysInput) > 0) {
-                const parsedDays = parseInt(daysInput);
-                unlockTimestamp = Date.now() + (parsedDays * 24 * 60 * 60 * 1000);
-            }
-
-            const newMessage = {
-                id: Date.now(),
-                text: pendingSaveText,
-                memo: memo,
-                catName: getCatDisplayName(currentCatId),
-                emoji: currentResult.emoji,
-                date: new Date().toLocaleDateString('ja-JP'),
-                unlockDate: unlockTimestamp
-            };
-
-            savedMessages.unshift(newMessage);
-            if (savedMessages.length > 100) savedMessages.pop(); 
-            localStorage.setItem('nyanko_saved_messages', JSON.stringify(savedMessages));
-            
-            window.closeSaveMemoModal();
-            
-            if (unlockTimestamp > 0) {
-                showToast(`⏳ ${daysInput}日後のあなたへ、この想いを届けるにゃん！`);
-            } else {
-                showToast("🔖 お守り帳に言葉と記憶を保存したにゃん！");
-            }
-        };
-
-        window.openSavedMessagesModal = function() {
-            const list = document.getElementById('savedMessagesList');
-            list.innerHTML = '';
-            
-            if (savedMessages.length === 0) {
-                list.innerHTML = '<div style="text-align:center; color:var(--text-muted);">まだお守りが無いにゃ。<br>占いで好きな言葉を保存してにゃん。</div>';
-            } else {
-                const now = Date.now();
-                savedMessages.forEach(msg => {
-                    const item = document.createElement('div');
-                    
-                    if (msg.unlockDate && msg.unlockDate > now) {
-                        const daysLeft = Math.ceil((msg.unlockDate - now) / (1000 * 60 * 60 * 24));
-                        item.className = 'saved-msg-item locked';
-                        item.innerHTML = `
-                            <div style="font-size: 2rem;">🔒</div>
-                            <div style="font-weight: bold; margin-top: 10px;">未来のあなたへのお守り</div>
-                            <div style="font-size: 0.8rem; margin-top: 5px;">開封まであと ${daysLeft} 日にゃん🐾</div>
-                        `;
-                    } else {
-                        item.className = 'saved-msg-item';
-                        let memoHtml = "";
-                        if (msg.memo) {
-                            memoHtml = `<div class="saved-msg-memo">📝 ${msg.memo}</div>`;
-                        }
-                        item.innerHTML = `
-                            <button class="delete-msg-btn" onclick="window.deleteSavedMessage(${msg.id})">✖</button>
-                            <div class="saved-msg-date">${msg.date}</div>
-                            <div>${msg.text}</div>
-                            ${memoHtml}
-                            <div class="saved-msg-cat">${msg.emoji} ${msg.catName} より</div>
-                        `;
-                    }
-                    list.appendChild(item);
-                });
-            }
-            document.getElementById('savedMessagesModal').classList.add('show');
-        };
-
-        window.closeSavedMessagesModal = function() {
-            document.getElementById('savedMessagesModal').classList.remove('show');
-        };
-
-        window.deleteSavedMessage = function(id) {
-            window.showCustomConfirm("このお守りを手放すにゃ？", () => {
-                savedMessages = savedMessages.filter(m => m.id !== id);
-                localStorage.setItem('nyanko_saved_messages', JSON.stringify(savedMessages));
-                window.openSavedMessagesModal(); 
-                showToast("お守りを空に還したにゃん🌌");
-            });
-        };
-
-        // =========================================
-        // 9. SNSシェア関連
-        // =========================================
-        function activateShareBonus() {
-            shareBonusActive = true;
-            localStorage.setItem('nyanko_share_bonus', 'true');
-            checkShareBonusDisplay();
-            showToast("🎁 シェア感謝にゃん！次回占う時【特別な出会い】の予感！");
-            
-            stats.shares++;
-            saveStats();
-            checkAchievements();
-        }
-
-        document.getElementById('shareXBtn').addEventListener('click', () => {
-            let trophyText = unlockedTrophies.length > 0 ? `\n🏆実績: ${unlockedTrophies.length}個解除！` : "";
-            const affirmationEl = document.getElementById('textAffirmation');
-            let affirmationText = "";
-            if(affirmationEl) {
-                affirmationText = affirmationEl.innerText.replace("🔖 この言葉をお守りにする", "").trim();
-            }
-            const text = `【推し猫リトリート🐾】\nランク: ${getCatTitle(stats.totalDays)}${trophyText}\n今のお世話係は「${currentResult ? currentResult.mood : ''} ${currentResult ? getCatDisplayName(currentCatId) : ''}」でした！\n\n💖猫ちゃんからの全肯定:\n「${affirmationText}」\n\n👇あなたも癒やされる\n${window.location.href}\n#推し猫リトリート #癒やし #猫`;
-            copyText(text);
-            activateShareBonus();
-        });
-
-        document.getElementById('shareInstaBtn').addEventListener('click', () => {
-            document.body.classList.add('screenshot-mode');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            activateShareBonus();
-        });
-        
-        window.shareLicense = function() {
-            let sortedCats = Object.keys(contributionData).sort((a, b) => contributionData[b] - contributionData[a]);
-            let oshiText = "";
-            if(sortedCats.length > 0) {
-                let topCat = catData.find(c => c.id == sortedCats[0]);
-                if (topCat) {
-                    oshiText = `\n👑最推し: ${getCatDisplayName(topCat.id)} (${contributionData[sortedCats[0]]}pt)`;
-                }
-            }
-            const text = `【推し猫リトリート🐾 認定ライセンス】\n氏名: ${userName}\n称号: ${getCatTitle(stats.totalDays)}${oshiText}\n🏆実績: ${unlockedTrophies.length}/100個解除\n\n👇あなたもライセンスを発行する\n${window.location.href}\n#推し猫リトリート #推し活`;
-            copyText(text);
-            activateShareBonus();
-        };
-
-        function copyText(text) {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(() => {}).catch(() => fallbackCopy(text));
-            } else {
-                fallbackCopy(text);
-            }
-        }
-
-        function fallbackCopy(text) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            try { document.execCommand('copy'); } catch (err) { alert("画面をスクショしてシェアしてにゃん🐾"); }
-            document.body.removeChild(textArea);
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            if(msg) toast.innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => { toast.classList.remove('show'); }, 3000);
-        }
     </script>
-    <!-- LinkSwitchタグ -->
     <script type="text/javascript" language="javascript">
         var vc_pid = "892628071";
     </script>
